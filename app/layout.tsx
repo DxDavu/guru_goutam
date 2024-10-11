@@ -18,7 +18,7 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: "Guru Goutam Infotech",
-  description: "by Innogenex",
+  description: "by Innogenx",
 };
 
 export default function RootLayout({
