@@ -4,14 +4,19 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import Menu from './Menu';
-import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
+import { SignInButton, SignedIn, SignedOut, UserButton, useUser } from '@clerk/nextjs';
 
 export default function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
+  const { isLoaded, isSignedIn, user } = useUser();
 
   const handleNavToggle = () => {
     setIsOpen(!isOpen);
   };
+
+  if (!isLoaded) {
+    return null; // Show nothing until the Clerk user data is loaded samm
+  }
 
   return (
     <nav className="bg-white border-b border-gray-200">
@@ -20,16 +25,11 @@ export default function NavBar() {
           {/* Left Side: Logo + Company Name */}
           <div className="flex items-center space-x-4">
             <Link href="/dashboard">
-            <Image src="/logo.png" alt="Guru Goutam Logo" width={200} height={60} />
-              {/* <span className="text-2xl font-semibold text-orange-600">
-                Guru Goutam
-              </span> */}
+              <Image src="/logo.png" alt="Guru Goutam Logo" width={200} height={60} />
             </Link>          
-          
-          <div className="hidden md:flex space-x-6">
-            <Menu isOpen={isOpen} />
-          </div>
-
+            <div className="hidden md:flex space-x-6">
+              <Menu isOpen={isOpen} />
+            </div>
           </div>
 
           {/* Right Side: Settings and Profile */}
@@ -44,13 +44,16 @@ export default function NavBar() {
               />
             </Link>
             <div className="flex items-center space-x-2">
-            <SignedOut>
-              <SignInButton />
-            </SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
-              <span className="text-sm font-medium text-gray-800">Ajay Kumar</span>
+              <SignedOut>
+                <SignInButton />
+              </SignedOut>
+              <SignedIn>
+                <UserButton />
+                {/* Use the `user` object from Clerk */}
+                <span className="text-sm font-medium text-gray-800">
+                  {user?.firstName || 'User'}
+                </span>
+              </SignedIn>
             </div>
           </div>
 
