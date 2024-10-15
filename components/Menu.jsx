@@ -1,14 +1,11 @@
+// @/components/Menu.jsx
+
 'use client';
 
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
-type MenuItem = {
-  label: string;
-  href: string;
-};
-
-const menuItems: MenuItem[] = [
+const menuItems = [
   {
     label: 'Dashboard',
     href: '/dashboard',
@@ -21,9 +18,13 @@ const menuItems: MenuItem[] = [
     label: 'CRM',
     href: '/crm',
   },
+  {
+    label: 'Operations',
+    href: '/operations',
+  },
 ];
 
-export default function Menu({ isOpen }: { isOpen: boolean }) {
+export default function Menu({ isOpen }) {
   const router = useRouter();
 
   return (
