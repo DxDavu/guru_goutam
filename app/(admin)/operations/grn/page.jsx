@@ -5,7 +5,7 @@ import CreateGRN from '@/components/CreateGRN';
 import EditGRN from '@/components/EditGRN';
 import { DataTable } from '@/components/DataTable'; // Import the generic DataTable component
 import { FaTrashAlt, FaEdit, FaFileAlt, FaPrint } from 'react-icons/fa';
-
+//hkkdd
 // Common table columns for Rent
 const rentColumns = (handleEdit, handleDelete) => [
   {
