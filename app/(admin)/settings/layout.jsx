@@ -1,9 +1,11 @@
+// app/(admin)/settings/layout.jsx
+
 'use client';
 
 import Link from 'next/link';
 import { useState } from 'react';
 
-export default function SettingsLayout({ children }: { children: React.ReactNode }) {
+export default function SettingsLayout({ children }) {
   const [activeTab, setActiveTab] = useState('User');
 
   return (
@@ -55,9 +57,7 @@ export default function SettingsLayout({ children }: { children: React.ReactNode
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 p-8">
-        {children}
-      </main>
+      <main className="flex-1 p-8">{children}</main>
     </div>
   );
 }
