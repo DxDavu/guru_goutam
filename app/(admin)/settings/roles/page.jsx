@@ -1,9 +1,15 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+<<<<<<< HEAD
 import CreateRolesForm from '@/components/CreateRolesForm';
 import EditRolesForm from '@/components/EditRolesForm';
 import { DataTable } from '@/components/DataTable';
+=======
+import CreateRolesForm from '@/components/CreateRolesForm'; // Updated component name
+import EditRolesForm from '@/components/EditRolesForm'; // Updated component name
+import { DataTable } from '@/components/DataTable'; // Import the generic DataTable component
+>>>>>>> b285a78b32330d5c4637af2db8cf20cf4050341f
 import { FaTrashAlt, FaEdit } from 'react-icons/fa';
 
 // Define the columns for the Role table
@@ -24,11 +30,19 @@ const columns = (handleEdit, handleDelete) => [
     ),
   },
   {
+<<<<<<< HEAD
     accessorKey: 'role',
     header: 'Role',
   },
   {
     accessorKey: 'department',
+=======
+    accessorKey: 'role', // Changed to 'role'
+    header: 'Role', // Updated header to 'Role'
+  },
+  {
+    accessorKey: 'department', // New column for department
+>>>>>>> b285a78b32330d5c4637af2db8cf20cf4050341f
     header: 'Department',
   },
   {
@@ -56,13 +70,21 @@ const columns = (handleEdit, handleDelete) => [
       <td className="py-2 px-5 flex">
         <button
           className="px-3 py-2 bg-red-500 text-white rounded-[10px] mr-2"
+<<<<<<< HEAD
           onClick={() => handleDelete(row.original.si_no)}
+=======
+          onClick={() => handleDelete(row.original.si_no)} // Adjusted to use si_no
+>>>>>>> b285a78b32330d5c4637af2db8cf20cf4050341f
         >
           <FaTrashAlt />
         </button>
         <button
           className="px-3 py-2 bg-blue-500 text-white rounded-[10px]"
+<<<<<<< HEAD
           onClick={() => handleEdit(row.original)}
+=======
+          onClick={() => handleEdit(row.original)} // Call handleEdit on click
+>>>>>>> b285a78b32330d5c4637af2db8cf20cf4050341f
         >
           <FaEdit />
         </button>
@@ -72,6 +94,7 @@ const columns = (handleEdit, handleDelete) => [
 ];
 
 // Role Page Component
+<<<<<<< HEAD
 export default function Role() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isEditFormOpen, setIsEditFormOpen] = useState(false);
@@ -102,12 +125,59 @@ export default function Role() {
     };
 
     fetchRoles();
+=======
+export default function Role() { 
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isEditFormOpen, setIsEditFormOpen] = useState(false);
+  const [selectedRole, setSelectedRole] = useState(null); // Renamed to selectedRole
+  const [roles, setRoles] = useState([]); // Renamed to roles
+  
+  // State to manage visibility of the main role page
+  const [isRolePageVisible, setIsRolePageVisible] = useState(true);
+
+  // Dummy data for the roles
+  useEffect(() => {
+    const dummyData = [
+      {
+        si_no: '1',
+        role: 'Manager',
+        department: 'Operations',
+        description: 'Manages daily operations.',
+        active_status: true,
+      },
+      {
+        si_no: '2',
+        role: 'Developer',
+        department: 'Engineering',
+        description: 'Responsible for coding.',
+        active_status: false,
+      },
+      {
+        si_no: '3',
+        role: 'HR',
+        department: 'Human Resources',
+        description: 'Handles employee relations.',
+        active_status: true,
+      },
+      {
+        si_no: '4',
+        role: 'Designer',
+        department: 'Creative',
+        description: 'Designs UI/UX.',
+        active_status: true,
+      },
+    ];
+
+    // Set dummy data to state
+    setRoles(dummyData);
+>>>>>>> b285a78b32330d5c4637af2db8cf20cf4050341f
   }, []);
 
   // Function to handle editing a role
   const handleEdit = (role) => {
     setSelectedRole(role);
     setIsEditFormOpen(true);
+<<<<<<< HEAD
     setIsRolePageVisible(false);
   };
 
@@ -124,16 +194,31 @@ export default function Role() {
     } catch (error) {
       console.error('Error deleting role:', error);
     }
+=======
+    setIsRolePageVisible(false); // Hide RolePage when editing
+  };
+
+  // Function to handle deleting a role
+  const handleDelete = (roleId) => {
+    console.log(`Deleting role with ID: ${roleId}`);
+    // Logic to delete role
+>>>>>>> b285a78b32330d5c4637af2db8cf20cf4050341f
   };
 
   // Function to handle creating a new role
   const handleCreateRole = () => {
+<<<<<<< HEAD
     setIsRolePageVisible(false);
     setIsFormOpen(true);
+=======
+    setIsRolePageVisible(false); // Hide RolePage
+    setIsFormOpen(true); // Show CreateRolesForm
+>>>>>>> b285a78b32330d5c4637af2db8cf20cf4050341f
   };
 
   return (
     <div>
+<<<<<<< HEAD
       {isLoading ? (
         <div>Loading...</div>
       ) : isError ? (
@@ -144,6 +229,15 @@ export default function Role() {
             <h1 className="text-2xl font-semibold">Roles</h1>
             <button
               onClick={handleCreateRole}
+=======
+      {isRolePageVisible ? (
+        <>
+          <div className="flex justify-between items-center">
+            <h1 className="text-2xl font-semibold">Roles</h1>
+            {/* Conditionally render the Create Role button */}
+            <button
+              onClick={handleCreateRole} // Call the function to open CreateRolesForm
+>>>>>>> b285a78b32330d5c4637af2db8cf20cf4050341f
               className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
             >
               + Add Role
@@ -156,12 +250,23 @@ export default function Role() {
           </div>
         </>
       ) : (
+<<<<<<< HEAD
         <>
           {isFormOpen ? (
             <CreateRolesForm onClose={() => setIsRolePageVisible(true)} />
           ) : (
             isEditFormOpen &&
             selectedRole && <EditRolesForm role={selectedRole} onClose={() => setIsRolePageVisible(true)} />
+=======
+        // Display Create Form or Edit Form based on state
+        <>
+          {isFormOpen ? (
+            <CreateRolesForm onClose={() => setIsRolePageVisible(true)} /> // Updated component name
+          ) : (
+            isEditFormOpen && selectedRole && (
+              <EditRolesForm role={selectedRole} onClose={() => setIsRolePageVisible(true)} /> // Updated component name
+            )
+>>>>>>> b285a78b32330d5c4637af2db8cf20cf4050341f
           )}
         </>
       )}
