@@ -1,8 +1,11 @@
 import { useState } from 'react';
 
-export default function CreateDepartmentForm() {
+export default function CreateRolesForm() {
   const [activeStatus, setActiveStatus] = useState(true);
   const [selectedDepartment, setSelectedDepartment] = useState(''); // State for selected department
+
+  // Dummy data for department options
+  const departments = ['HR', 'IT', 'Finance', 'Marketing', 'Operations'];
 
   const toggleActiveStatus = () => {
     setActiveStatus((prevStatus) => !prevStatus);
@@ -15,23 +18,42 @@ export default function CreateDepartmentForm() {
   return (
     <div className="min-h-screen">
       <div className="p-6 max-w-4xl">
-        <h2 className="text-xl font-bold mb-4">Create Department</h2>
+        <h2 className="text-xl font-bold mb-4">Create Role</h2>
 
-        {/* Department Name and Description Section */}
+        {/* Tax Name and Description Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Left Side - Department Name */}
+          {/* Left Side - Tax Name */}
           <div>
-            <div className="mb-4">
-              <label htmlFor="departmentName" className="block text-sm font-medium text-gray-700">
-                Department Name*
-              </label>
-              <input
-                type="text"
-                id="departmentName"
-                placeholder="Enter Department Name"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                onChange={handleDepartmentChange} // Update the department state on change
-              />
+            <div className="flex space-x-6 mb-6">
+              <div className="mb-4">
+                <label htmlFor="roleName" className="block text-sm font-medium text-gray-700">
+                  Role Name*
+                </label>
+                <input
+                  type="text"
+                  id="roleName"
+                  placeholder="Enter Role Name"
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="department" className="block text-sm font-medium text-gray-700">
+                  Department*
+                </label>
+                <select
+                  id="department"
+                  value={selectedDepartment}
+                  onChange={handleDepartmentChange}
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                >
+                  <option value="" disabled>Select Department</option>
+                  {departments.map((dept, index) => (
+                    <option key={index} value={dept}>
+                      {dept}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
 
             <div>

@@ -1,12 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import CreateDepartmentForm from '@/components/CreateDepartmentForm'; // Updated component name
-import EditDepartmentForm from '@/components/EditDepartmentForm'; // Updated component name
+import CreateLeadStatus from '@/components/CreateLeadStatus'; // Updated component name
+import EditLeadStatus from '@/components/EditLeadStatus'; // Updated component name
 import { DataTable } from '@/components/DataTable'; // Import the generic DataTable component
 import { FaTrashAlt, FaEdit } from 'react-icons/fa';
 
-// Define the columns for the Department table
+// Define the columns for the Lead Status table
 const columns = (handleEdit, handleDelete) => [
   {
     accessorKey: 'si_no',
@@ -23,15 +23,15 @@ const columns = (handleEdit, handleDelete) => [
       </td>
     ),
   },
-  
   {
-    accessorKey: 'department', // Column for department
-    header: 'Department',
+    accessorKey: 'status',
+    header: 'Status',
   },
   {
     accessorKey: 'description',
     header: 'Description',
   },
+  
   {
     accessorKey: 'status',
     header: 'Status',
@@ -68,96 +68,102 @@ const columns = (handleEdit, handleDelete) => [
   },
 ];
 
-// Department Page Component
-export default function Department() { 
+// Lead Status Page Component
+export default function LeadStatus() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isEditFormOpen, setIsEditFormOpen] = useState(false);
-  const [selectedDepartment, setSelectedDepartment] = useState(null); // Renamed to selectedDepartment
-  const [departments, setDepartments] = useState([]); // Renamed to departments
+  const [selectedCondition, setSelectedCondition] = useState(null);
+  const [leadStatus, setLeadStatus] = useState([]); // Renamed to leadStatus
   
-  // State to manage visibility of the main department page
-  const [isDepartmentPageVisible, setIsDepartmentPageVisible] = useState(true);
+  // State to manage visibility of the main lead status page
+  const [isLeadStatusPageVisible, setIsLeadStatusPageVisible] = useState(true);
 
-  // Dummy data for the departments
+  // Dummy data for the lead status
   useEffect(() => {
     const dummyData = [
       {
         si_no: '1',
-        department: 'Operations',
-        description: 'Manages daily operations.',
+        status: 'Initial Review',
+        description: 'Checklist for the initial review of the lead.',
         active_status: true,
       },
       {
         si_no: '2',
-        department: 'Engineering',
-        description: 'Responsible for coding.',
+        status: 'Approval Checklist',
+        description: 'Steps required for approval.',
         active_status: false,
       },
       {
         si_no: '3',
-        department: 'Human Resources',
-        description: 'Handles employee relations.',
+        status: 'Final Inspection',
+        description: 'Ensure all items are inspected before delivery.',
         active_status: true,
       },
       {
         si_no: '4',
-        department: 'Creative',
-        description: 'Designs UI/UX.',
+        status: 'Packaging Checklist',
+        description: 'Checklist for packaging and labeling.',
         active_status: true,
+      },
+      {
+        si_no: '5',
+        status: 'Delivery Checklist',
+        description: 'Steps to confirm during delivery.',
+        active_status: false,
       },
     ];
 
     // Set dummy data to state
-    setDepartments(dummyData);
+    setLeadStatus(dummyData);
   }, []);
 
-  // Function to handle editing a department
-  const handleEdit = (department) => {
-    setSelectedDepartment(department);
+  // Function to handle editing a lead status item
+  const handleEdit = (condition) => {
+    setSelectedCondition(condition);
     setIsEditFormOpen(true);
-    setIsDepartmentPageVisible(false); // Hide DepartmentPage when editing
+    setIsLeadStatusPageVisible(false); // Hide LeadStatusPage when editing
   };
 
-  // Function to handle deleting a department
-  const handleDelete = (departmentId) => {
-    console.log(`Deleting department with ID: ${departmentId}`);
-    // Logic to delete department
+  // Function to handle deleting a lead status item
+  const handleDelete = (conditionId) => {
+    console.log(`Deleting lead status item with ID: ${conditionId}`);
+    // Logic to delete lead status item
   };
 
-  // Function to handle creating a new department
-  const handleCreateDepartment = () => {
-    setIsDepartmentPageVisible(false); // Hide DepartmentPage
-    setIsFormOpen(true); // Show CreateDepartmentForm
+  // Function to handle creating a new lead status item
+  const handleCreateLeadStatus = () => {
+    setIsLeadStatusPageVisible(false); // Hide LeadStatusPage
+    setIsFormOpen(true); // Show CreateLeadStatusForm
   };
 
   return (
     <div>
-      {isDepartmentPageVisible ? (
+      {isLeadStatusPageVisible ? (
         <>
           <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-semibold">Departments</h1>
-            {/* Conditionally render the Create Department button */}
+            <h1 className="text-2xl font-semibold">Lead Status</h1>
+            {/* Conditionally render the Create Lead Status button */}
             <button
-              onClick={handleCreateDepartment} // Call the function to open CreateDepartmentForm
+              onClick={handleCreateLeadStatus} // Call the function to open CreateLeadStatusForm
               className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
             >
-              + Add Department
+              + Add Status
             </button>
           </div>
 
-          {/* Departments Table */}
+          {/* Lead Status Table */}
           <div className="mt-6">
-            <DataTable columns={columns(handleEdit, handleDelete)} data={departments} />
+            <DataTable columns={columns(handleEdit, handleDelete)} data={leadStatus} />
           </div>
         </>
       ) : (
         // Display Create Form or Edit Form based on state
         <>
           {isFormOpen ? (
-            <CreateDepartmentForm onClose={() => setIsDepartmentPageVisible(true)} /> // Updated component name
+            <CreateLeadStatus onClose={() => setIsLeadStatusPageVisible(true)} /> // Updated component name
           ) : (
-            isEditFormOpen && selectedDepartment && (
-              <EditDepartmentForm department={selectedDepartment} onClose={() => setIsDepartmentPageVisible(true)} /> // Updated prop name
+            isEditFormOpen && selectedCondition && (
+              <EditLeadStatus condition={selectedCondition} onClose={() => setIsLeadStatusPageVisible(true)} /> // Updated component name
             )
           )}
         </>
