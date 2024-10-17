@@ -1,6 +1,9 @@
-// @/app/(admin)/settings/user/page.jsx
 
 'use client';
+
+// app/(admin)/settings/user/page.jsx (Server Component)
+import { getUserPermissions } from '@/actions/getUserPermissions';
+import UserPageClient from './UserPageClient'; // Import the client componen
 
 import { useState, useEffect } from 'react';
 import CreateUserForm from '@/components/CreateUserForm';
