@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 
 export default function EditServiceStatus({ condition, onClose }) {
   const [activeStatus, setActiveStatus] = useState(condition.active_status);
-  const [status, setServiceStatus] = useState(condition.service_status); // Ensure this is the correct field
+  const [serviceName, setServiceName] = useState(condition.service_name); // Correct field name
   const [description, setDescription] = useState(condition.description);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -10,7 +10,7 @@ export default function EditServiceStatus({ condition, onClose }) {
   useEffect(() => {
     // Set initial state based on the selected condition
     setActiveStatus(condition.active_status);
-    setServiceStatus(condition.status); // Ensure this matches the backend
+    setServiceName(condition.service_name); // Ensure this matches the backend
     setDescription(condition.description);
   }, [condition]);
 
@@ -21,7 +21,7 @@ export default function EditServiceStatus({ condition, onClose }) {
   const handleSave = async () => {
     const updatedStatus = {
       id: condition._id, // Ensure the correct ID field is passed
-      status, // Ensure the field names match the backend model
+      service_name: serviceName, // Use correct field name
       description,
       active_status: activeStatus,
     };
@@ -30,7 +30,7 @@ export default function EditServiceStatus({ condition, onClose }) {
     setError('');
   
     try {
-      const response = await fetch(`/api/service_status/${condition._id}`, {
+      const response = await fetch(`/api/service_status`, { // Update URL as necessary
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -39,7 +39,8 @@ export default function EditServiceStatus({ condition, onClose }) {
       });
   
       if (!response.ok) {
-        throw new Error('Failed to update service status');
+        const errorText = await response.text();
+        throw new Error(errorText);
       }
   
       const result = await response.json();
@@ -65,14 +66,14 @@ export default function EditServiceStatus({ condition, onClose }) {
           <div>
             <div className="mb-4">
               <label htmlFor="serviceStatus" className="block text-sm font-medium text-gray-700">
-                Service Status*
+                Service Name*
               </label>
               <input
                 type="text"
-                id="serviceStatus" 
-                value={status} 
-                onChange={(e) => setServiceStatus(e.target.value)} 
-                placeholder="Enter Service Status" 
+                id="serviceName" 
+                value={serviceName} 
+                onChange={(e) => setServiceName(e.target.value)} 
+                placeholder="Enter Service Name" 
                 required 
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />

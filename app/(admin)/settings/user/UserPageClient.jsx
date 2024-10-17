@@ -1,5 +1,3 @@
-// app/(admin)/settings/user/UserPageClient.jsx (Client Component)
-
 'use client'; // This ensures it's a client component
 
 import { useState, useEffect } from 'react';
@@ -14,6 +12,7 @@ export default function UserPageClient({ userPermissions }) {
   const [roles, setRoles] = useState([]);
   const [branches, setBranches] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedUser, setSelectedUser] = useState(null); // State for selected user
 
   // Utility function to check for permission
   const checkPermission = (moduleName, permissionType) => {
@@ -141,7 +140,7 @@ export default function UserPageClient({ userPermissions }) {
           departments={departments}
           roles={roles}
           branches={branches}
-          user={selectedUser}
+          user={selectedUser} // Pass the selected user to the form
         />
       )}
 

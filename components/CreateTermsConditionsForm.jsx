@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const TermsForm = () => {
+const CreateTermsConditionsForm = ({ onClose }) => {
   const [type, setType] = useState('');
   const [transactionType, setTransactionType] = useState('');
   const [points, setPoints] = useState('');
@@ -32,6 +32,7 @@ const TermsForm = () => {
 
       if (response.ok) {
         alert(data.message); // Show success message
+        onClose(); // Close the form after successful creation
         // Reset form fields
         setType('');
         setTransactionType('');
@@ -88,7 +89,7 @@ const TermsForm = () => {
                 <div className="space-y-2">
                   <input
                     type="text"
-                    placeholder="Enter Point"
+                    placeholder="Enter Points"
                     value={points}
                     onChange={(e) => setPoints(e.target.value)}
                     className="w-full border border-gray-300 p-2 rounded-md focus:ring-2 focus:ring-indigo-400 focus:outline-none"
@@ -119,10 +120,10 @@ const TermsForm = () => {
           </div>
 
           {/* Save Button */}
-          <div className="mt-6 text-right">
+          <div className="mt-6 text-center">
             <button
               type="submit"
-              className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 w-96"
             >
               Save
             </button>
@@ -133,4 +134,4 @@ const TermsForm = () => {
   );
 };
 
-export default TermsForm;
+export default CreateTermsConditionsForm;

@@ -1,5 +1,6 @@
+// app/api/service_status/route.js
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// app/api/service-status/route.js
 import { connectToDatabase } from '@/lib/database';
 import ServiceStatus from '@/lib/database/models/ServiceStatus.model'; // Ensure you have a model for ServiceStatus
 
@@ -21,8 +22,6 @@ export async function POST(req) {
     await connectToDatabase();
     const serviceStatusData = await req.json();
 
-    console.log('Service Status data received:', serviceStatusData);
-
     const newServiceStatus = new ServiceStatus(serviceStatusData);
     await newServiceStatus.save();
 
@@ -37,11 +36,14 @@ export async function POST(req) {
 export async function PUT(req) {
   try {
     await connectToDatabase();
-    const { id, ...updateData } = await req.json(); // Extract `id` and other fields
+    const { id, service_name, description, active_status } = await req.json();
 
-    // Update the service status by ID
-    const updatedServiceStatus = await ServiceStatus.findByIdAndUpdate(id, updateData, { new: true });
-    
+    const updatedServiceStatus = await ServiceStatus.findByIdAndUpdate(id, {
+      service_name,
+      description,
+      active_status,
+    }, { new: true });
+
     if (!updatedServiceStatus) {
       return new Response(JSON.stringify({ message: 'Service Status not found' }), { status: 404 });
     }
@@ -53,21 +55,20 @@ export async function PUT(req) {
   }
 }
 
-
+// DELETE a service status
 export async function DELETE(req) {
-    try {
-      await connectToDatabase();
-      const { id } = await req.json(); // Ensure you're getting the ID from the request body
-  
-      const deletedServiceStatus = await ServiceStatus.findByIdAndDelete(id); // Use the correct method to find by ID
-      if (!deletedServiceStatus) {
-        return new Response(JSON.stringify({ message: 'Service Status not found' }), { status: 404 });
-      }
-  
-      return new Response(JSON.stringify({ message: 'Service Status deleted successfully!' }), { status: 200 });
-    } catch (error) {
-      console.error('Error during deletion:', error); // Add error logging for debugging
-      return new Response(JSON.stringify({ message: 'Error deleting service status', error }), { status: 500 });
+  try {
+    await connectToDatabase();
+    const { id } = await req.json();
+
+    const deletedServiceStatus = await ServiceStatus.findByIdAndDelete(id);
+    if (!deletedServiceStatus) {
+      return new Response(JSON.stringify({ message: 'Service Status not found' }), { status: 404 });
     }
+
+    return new Response(JSON.stringify({ message: 'Service Status deleted successfully!' }), { status: 200 });
+  } catch (error) {
+    console.error('Error during deletion:', error);
+    return new Response(JSON.stringify({ message: 'Error deleting service status', error }), { status: 500 });
   }
-  
+}
