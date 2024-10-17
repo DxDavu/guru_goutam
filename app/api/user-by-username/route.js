@@ -4,11 +4,7 @@ import { connectToDatabase } from '@/lib/database';
 import User from '@/lib/database/models/User.model';
 
 // Fetch user by Clerk username (login_id) 
-<<<<<<< HEAD:app/api/user-by-username/route.js
 export async function GET(req) {
-=======
-export async function GET(req: Request) {
->>>>>>> b285a78b32330d5c4637af2db8cf20cf4050341f:app/api/user-by-username/route.ts
   try {
     await connectToDatabase();
     const { searchParams } = new URL(req.url);

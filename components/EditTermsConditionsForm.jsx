@@ -1,20 +1,19 @@
 import React, { useState, useEffect } from 'react';
 
-const EditTermsConditionstForm = ({ condition, onClose }) => {
-  // Define state variables for form fields, initializing them with condition props
-  const [type, setType] = useState(condition?.type || '');
-  const [transactionType, setTransactionType] = useState(condition?.transaction_type || '');
-  const [points, setPoints] = useState(condition?.point || '');
-  const [description, setDescription] = useState(condition?.description || ''); // Initialize description
-  const [isActive, setIsActive] = useState(condition?.active_status || false);
+const EditTermsConditionsForm = ({ condition, onClose }) => {
+  const [type, setType] = useState('');
+  const [transactionType, setTransactionType] = useState('');
+  const [points, setPoints] = useState('');
+  const [description, setDescription] = useState('');
+  const [isActive, setIsActive] = useState(false);
 
-  // Update the form fields if the condition prop changes
+  // Update form fields if the condition prop changes
   useEffect(() => {
     if (condition) {
       setType(condition.type || '');
       setTransactionType(condition.transactionType || '');
       setPoints(condition.points || '');
-      setDescription(condition.description || ''); // Set initial value for description
+      setDescription(condition.description || '');
       setIsActive(condition.active_status || false);
     }
   }, [condition]);
@@ -25,16 +24,16 @@ const EditTermsConditionstForm = ({ condition, onClose }) => {
 
     // Prepare the data for the API request
     const updateData = {
-      id: condition._id, // Assuming `condition` contains an `id` property
+      id: condition._id,
       type,
-      transaction_type: transactionType,
-      point: points,
-      description, // Include description
+      transactionType: transactionType,
+      points: points,
+      description,
       active_status: isActive,
     };
 
     try {
-      const response = await fetch('/api/terms_conditions', { // Adjust the API endpoint accordingly
+      const response = await fetch('/api/terms_conditions', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -42,18 +41,16 @@ const EditTermsConditionstForm = ({ condition, onClose }) => {
         body: JSON.stringify(updateData),
       });
 
-      const result = await response.json();
-
       if (response.ok) {
-        console.log(result.message,"Raju"); // Handle successful update
-        onClose(); // Close the form on successful submission
+        const result = await response.json();
+        console.log(result.message); // Success message
+        onClose(); // Close the form after successful update
       } else {
-        console.error(result.message); // Handle errors
-        // You can set an error state here to display to the user
+        const result = await response.json();
+        console.error('Error:', result.message); // Handle error response
       }
     } catch (error) {
-      console.error('Error updating term:', error);
-      // Handle the error accordingly
+      console.error('Error updating terms condition:', error);
     }
   };
 
@@ -63,7 +60,6 @@ const EditTermsConditionstForm = ({ condition, onClose }) => {
         <h1 className="text-2xl font-semibold mb-6">Edit Terms and Condition</h1>
 
         <form onSubmit={handleSubmit}>
-          {/* Left Section */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
               <div>
@@ -77,10 +73,6 @@ const EditTermsConditionstForm = ({ condition, onClose }) => {
                   <option value="Type 1">Type 1</option>
                   <option value="Type 2">Type 2</option>
                   <option value="Type 3">Type 3</option>
-
-                  
-
-                  {/* Add more options if needed */}
                 </select>
               </div>
 
@@ -94,7 +86,6 @@ const EditTermsConditionstForm = ({ condition, onClose }) => {
                   <option>Select Transaction Type</option>
                   <option value="Transaction 1">Transaction 1</option>
                   <option value="Transaction 2">Transaction 2</option>
-                  {/* Add more options if needed */}
                 </select>
               </div>
 
@@ -104,7 +95,7 @@ const EditTermsConditionstForm = ({ condition, onClose }) => {
                   type="text"
                   value={points}
                   onChange={(e) => setPoints(e.target.value)}
-                  placeholder="Enter Point"
+                  placeholder="Enter Points"
                   className="w-full border border-gray-300 p-2 rounded-md focus:ring-2 focus:ring-indigo-400 focus:outline-none"
                 />
               </div>
@@ -112,7 +103,7 @@ const EditTermsConditionstForm = ({ condition, onClose }) => {
               <div>
                 <label className="block text-gray-700 font-medium mb-1">Description</label>
                 <textarea
-                  value={description} // Use separate state for description
+                  value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Enter Description"
                   className="w-full border border-gray-300 p-2 rounded-md focus:ring-2 focus:ring-indigo-400 focus:outline-none"
@@ -120,7 +111,6 @@ const EditTermsConditionstForm = ({ condition, onClose }) => {
               </div>
             </div>
 
-            {/* Right Section */}
             <div className="space-y-4">
               <label className="block text-gray-700 font-medium mb-1">Control</label>
               <div className="flex items-center">
@@ -135,7 +125,6 @@ const EditTermsConditionstForm = ({ condition, onClose }) => {
             </div>
           </div>
 
-          {/* Save Button */}
           <div className="mt-6 text-right">
             <button
               type="submit"
@@ -157,4 +146,4 @@ const EditTermsConditionstForm = ({ condition, onClose }) => {
   );
 };
 
-export default EditTermsConditionstForm;
+export default EditTermsConditionsForm;

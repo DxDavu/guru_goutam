@@ -2,13 +2,15 @@ import { useState, useEffect } from 'react';
 
 export default function EditServiceStatus({ condition, onClose }) {
   const [activeStatus, setActiveStatus] = useState(condition.active_status);
-  const [leadStatus, setLeadStatus] = useState(condition.status);
+  const [status, setServiceStatus] = useState(condition.service_status); // Ensure this is the correct field
   const [description, setDescription] = useState(condition.description);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    // Set the initial state based on the selected condition
+    // Set initial state based on the selected condition
     setActiveStatus(condition.active_status);
-    setLeadStatus(condition.status);
+    setServiceStatus(condition.status); // Ensure this matches the backend
     setDescription(condition.description);
   }, [condition]);
 
@@ -16,30 +18,62 @@ export default function EditServiceStatus({ condition, onClose }) {
     setActiveStatus(prevStatus => !prevStatus);
   };
 
-  const handleSave = () => {
-    // Logic to save the updated lead status
-    console.log('Saving:', { leadStatus, description, activeStatus });
-    // Call onClose to return to the main page
-    onClose();
+  const handleSave = async () => {
+    const updatedStatus = {
+      id: condition._id, // Ensure the correct ID field is passed
+      status, // Ensure the field names match the backend model
+      description,
+      active_status: activeStatus,
+    };
+  
+    setLoading(true);
+    setError('');
+  
+    try {
+      const response = await fetch(`/api/service_status/${condition._id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedStatus), // Pass the correct data
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to update service status');
+      }
+  
+      const result = await response.json();
+      console.log('Service Status Updated:', result);
+      onClose(); // Close the modal if successful
+    } catch (err) {
+      console.error('Error updating service status:', err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
-
+  
   return (
     <div className="min-h-screen">
-      <div className="p-6 max-w-4xl ">
+      <div className="p-6 max-w-4xl">
         <h2 className="text-xl font-bold mb-4">Edit Status</h2>
+
+        {/* Error Message */}
+        {error && <div className="text-red-500 mb-4">{error}</div>}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div>
             <div className="mb-4">
-              <label htmlFor="leadStatus" className="block text-sm font-medium text-gray-700">
-                Lead Status*
+              <label htmlFor="serviceStatus" className="block text-sm font-medium text-gray-700">
+                Service Status*
               </label>
               <input
                 type="text"
-                id="leadStatus"
-                value={leadStatus}
-                onChange={(e) => setLeadStatus(e.target.value)} // Update the state
-                placeholder="Enter Lead Status"
+                id="serviceStatus" 
+                value={status} 
+                onChange={(e) => setServiceStatus(e.target.value)} 
+                placeholder="Enter Service Status" 
+                required 
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
             </div>
@@ -47,7 +81,7 @@ export default function EditServiceStatus({ condition, onClose }) {
               <label className="block text-gray-700 font-medium">Description</label>
               <textarea
                 value={description}
-                onChange={(e) => setDescription(e.target.value)} // Update the state
+                onChange={(e) => setDescription(e.target.value)} 
                 placeholder="Enter Description"
                 className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
                 rows="4"
@@ -62,14 +96,10 @@ export default function EditServiceStatus({ condition, onClose }) {
               <button
                 type="button"
                 onClick={toggleActiveStatus}
-                className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors duration-200 ${
-                  activeStatus ? 'bg-green-500' : 'bg-gray-200'
-                }`}
+                className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors duration-200 ${activeStatus ? 'bg-green-500' : 'bg-gray-200'}`}
               >
                 <span
-                  className={`${
-                    activeStatus ? 'translate-x-6' : 'translate-x-1'
-                  } inline-block w-4 h-4 transform bg-white rounded-full transition-transform duration-200`}
+                  className={`${activeStatus ? 'translate-x-6' : 'translate-x-1'} inline-block w-4 h-4 transform bg-white rounded-full transition-transform duration-200`}
                 />
               </button>
             </div>
@@ -78,10 +108,11 @@ export default function EditServiceStatus({ condition, onClose }) {
 
         <div className="mt-6 flex justify-center">
           <button 
-            onClick={handleSave} // Call save function
-            className="bg-blue-500 text-white px-6 py-2 rounded-md shadow-md hover:bg-blue-600 focus:outline-none w-96"
+            onClick={handleSave}
+            className={`bg-blue-500 text-white px-6 py-2 rounded-md shadow-md hover:bg-blue-600 focus:outline-none w-96 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            disabled={loading}
           >
-            Save
+            {loading ? 'Saving...' : 'Save'}
           </button>
         </div>
       </div>

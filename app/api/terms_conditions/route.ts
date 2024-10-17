@@ -41,28 +41,34 @@ export async function POST(req: Request) {
 }
 // PUT (update) a term
 export async function PUT(req: Request) {
-    try {
-      await connectToDatabase(); // Connect to the database
-      const { _id, ...updateData } = await req.json(); // Parse the JSON body
-      console.log('Received update data:', { _id, updateData }); // Log received data
-  
-      // Update the term in the database
-      const updatedTerm = await Term.findByIdAndUpdate(_id, updateData, { new: true }); 
-      if (!updatedTerm) {
-        return new Response(JSON.stringify({ message: 'Term not found' }), { status: 404 });
-      }
-  
-      console.log('Updated term:', updatedTerm); // Log updated term
-      return new Response(JSON.stringify({ message: 'Term updated successfully!', term: updatedTerm }), { status: 200 });
-    } catch (error: unknown) {
-      console.error('Error updating term:', error); // Log the error for debugging
-      if (error instanceof Error) {
-        return new Response(JSON.stringify({ message: 'Error updating term', error: error.message }), { status: 500 });
-      }
-      return new Response(JSON.stringify({ message: 'Error updating term', error: 'Unknown error' }), { status: 500 });
+  try {
+    await connectToDatabase(); // Ensure database connection
+
+    const { id, ...updateData } = await req.json(); // Parse the JSON body
+    console.log('Received update data:', { id, updateData });
+
+    // Check if there's any data to update
+    if (Object.keys(updateData).length === 0) {
+      return new Response(JSON.stringify({ message: 'No data to update' }), { status: 400 });
     }
+
+    // Update the term in the database
+    const updatedTerm = await Term.findByIdAndUpdate(id, updateData, { new: true });
+    if (!updatedTerm) {
+      return new Response(JSON.stringify({ message: 'Term not found' }), { status: 404 });
+    }
+
+    console.log('Updated term:', updatedTerm);
+    return new Response(JSON.stringify({ message: 'Term updated successfully!', term: updatedTerm }), { status: 200 });
+  } catch (error: unknown) {
+    console.error('Error updating term:', error);
+    if (error instanceof Error) {
+      return new Response(JSON.stringify({ message: 'Error updating term', error: error.message }), { status: 500 });
+    }
+    return new Response(JSON.stringify({ message: 'Error updating term', error: 'Unknown error' }), { status: 500 });
   }
-  
+}
+
 
 // DELETE a term
 // DELETE a term

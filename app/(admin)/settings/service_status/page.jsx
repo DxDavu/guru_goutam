@@ -6,7 +6,7 @@ import EditServiceStatus from '@/components/EditServiceStatus'; // Updated compo
 import { DataTable } from '@/components/DataTable'; // Import the generic DataTable component
 import { FaTrashAlt, FaEdit } from 'react-icons/fa';
 
-// Define the columns for the Lead Status table
+// Define the columns for the Service Status table
 const columns = (handleEdit, handleDelete) => [
   {
     accessorKey: 'si_no',
@@ -31,10 +31,9 @@ const columns = (handleEdit, handleDelete) => [
     accessorKey: 'description',
     header: 'Description',
   },
-  
   {
-    accessorKey: 'status',
-    header: 'Status',
+    accessorKey: 'active_status',
+    header: 'Active Status',
     cell: ({ row }) => (
       <td className="py-2 px-4">
         <div className="flex rounded">
@@ -53,7 +52,7 @@ const columns = (handleEdit, handleDelete) => [
       <td className="py-2 px-5 flex">
         <button
           className="px-3 py-2 bg-red-500 text-white rounded-[10px] mr-2"
-          onClick={() => handleDelete(row.original.si_no)} // Adjusted to use si_no
+          onClick={() => handleDelete(row.original._id)} // Adjusted to use si_no
         >
           <FaTrashAlt />
         </button>
@@ -68,102 +67,105 @@ const columns = (handleEdit, handleDelete) => [
   },
 ];
 
-// Lead Status Page Component
-export default function LeadStatus() {
+// Service Status Page Component
+export default function ServiceStatus() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isEditFormOpen, setIsEditFormOpen] = useState(false);
   const [selectedCondition, setSelectedCondition] = useState(null);
-  const [leadStatus, setLeadStatus] = useState([]); // Renamed to leadStatus
-  
-  // State to manage visibility of the main lead status page
-  const [isLeadStatusPageVisible, setIsLeadStatusPageVisible] = useState(true);
+  const [serviceStatus, setServiceStatus] = useState([]);
+  const [isServiceStatusPageVisible, setIsServiceStatusPageVisible] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Dummy data for the lead status
+  // Fetch data for the service status from the API
   useEffect(() => {
-    const dummyData = [
-      {
-        si_no: '1',
-        status: 'Initial Review',
-        description: 'Checklist for the initial review of the lead.',
-        active_status: true,
-      },
-      {
-        si_no: '2',
-        status: 'Approval Checklist',
-        description: 'Steps required for approval.',
-        active_status: false,
-      },
-      {
-        si_no: '3',
-        status: 'Final Inspection',
-        description: 'Ensure all items are inspected before delivery.',
-        active_status: true,
-      },
-      {
-        si_no: '4',
-        status: 'Packaging Checklist',
-        description: 'Checklist for packaging and labeling.',
-        active_status: true,
-      },
-      {
-        si_no: '5',
-        status: 'Delivery Checklist',
-        description: 'Steps to confirm during delivery.',
-        active_status: false,
-      },
-    ];
+    const fetchServiceStatus = async () => {
+      try {
+        const response = await fetch('/api/service_status'); // Replace with your API endpoint
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        setServiceStatus(data);
+      } catch (error) {
+        console.error('Error fetching service status:', error);
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    // Set dummy data to state
-    setLeadStatus(dummyData);
+    fetchServiceStatus();
   }, []);
 
-  // Function to handle editing a lead status item
+  // Function to handle editing a service status item
   const handleEdit = (condition) => {
     setSelectedCondition(condition);
     setIsEditFormOpen(true);
-    setIsLeadStatusPageVisible(false); // Hide LeadStatusPage when editing
+    setIsServiceStatusPageVisible(false);
   };
 
-  // Function to handle deleting a lead status item
-  const handleDelete = (conditionId) => {
-    console.log(`Deleting lead status item with ID: ${conditionId}`);
-    // Logic to delete lead status item
+  const handleDelete = async (statusId) => {
+    if (confirm(`Are you sure you want to delete service status with ID: ${statusId}?`)) {
+      try {
+        const response = await fetch('/api/service_status', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ id: statusId }), // Ensure this matches your API
+        });
+  
+        const responseBody = await response.json();
+        console.log('Response Body:', responseBody); // Log the response for debugging
+  
+        if (!response.ok) {
+          console.error('Delete request failed:', responseBody.message || 'Failed to delete service status');
+          throw new Error(responseBody.message || 'Failed to delete service status');
+        }
+  
+        // Refresh service statuses after deletion
+        setServiceStatus((prev) => prev.filter(status => status._id !== statusId));
+      } catch (error) {
+        console.error('Error deleting service status:', error);
+      }
+    }
+  };
+  
+  // Function to handle creating a new service status item
+  const handleCreateServiceStatus = () => {
+    setIsServiceStatusPageVisible(false);
+    setIsFormOpen(true);
   };
 
-  // Function to handle creating a new lead status item
-  const handleCreateLeadStatus = () => {
-    setIsLeadStatusPageVisible(false); // Hide LeadStatusPage
-    setIsFormOpen(true); // Show CreateLeadStatusForm
-  };
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <div>
-      {isLeadStatusPageVisible ? (
+      {isServiceStatusPageVisible ? (
         <>
           <div className="flex justify-between items-center">
             <h1 className="text-2xl font-semibold">Service Status</h1>
-            {/* Conditionally render the Create Lead Status button */}
             <button
-              onClick={handleCreateLeadStatus} // Call the function to open CreateLeadStatusForm
+              onClick={handleCreateServiceStatus}
               className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
             >
               + Add Status
             </button>
           </div>
 
-          {/* Lead Status Table */}
           <div className="mt-6">
-            <DataTable columns={columns(handleEdit, handleDelete)} data={leadStatus} />
+            <DataTable columns={columns(handleEdit, handleDelete)} data={serviceStatus} />
           </div>
         </>
       ) : (
-        // Display Create Form or Edit Form based on state
         <>
           {isFormOpen ? (
-            <CreateServiceStatus onClose={() => setIsLeadStatusPageVisible(true)} /> // Updated component name
+            <CreateServiceStatus onClose={() => setIsServiceStatusPageVisible(true)} />
           ) : (
             isEditFormOpen && selectedCondition && (
-              <EditServiceStatus condition={selectedCondition} onClose={() => setIsLeadStatusPageVisible(true)} /> // Updated component name
+              <EditServiceStatus condition={selectedCondition} onClose={() => setIsServiceStatusPageVisible(true)} />
             )
           )}
         </>
