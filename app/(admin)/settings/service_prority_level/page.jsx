@@ -1,9 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import CreateServicePriorityLevel from '@/components/CreateServicePriorityLevel'; // Updated component name
-import EditServicePriorityLevel from '@/components/EditServicePriorityLevel'; // Updated component name
-import { DataTable } from '@/components/DataTable'; // Import the generic DataTable component
+import CreateServicePriorityLevel from '@/components/CreateServicePriorityLevel';
+import EditServicePriorityLevel from '@/components/EditServicePriorityLevel';
+import { DataTable } from '@/components/DataTable';
 import { FaTrashAlt, FaEdit } from 'react-icons/fa';
 
 // Define the columns for the Priority Level table
@@ -24,8 +24,8 @@ const columns = (handleEdit, handleDelete) => [
     ),
   },
   {
-    accessorKey: 'priority_level', // Changed from proirity_level to priority_level
-    header: 'Priority Level', // Updated header to Priority Level
+    accessorKey: 'priority_level',
+    header: 'Priority Level',
   },
   {
     accessorKey: 'description',
@@ -52,13 +52,13 @@ const columns = (handleEdit, handleDelete) => [
       <td className="py-2 px-5 flex">
         <button
           className="px-3 py-2 bg-red-500 text-white rounded-[10px] mr-2"
-          onClick={() => handleDelete(row.original.si_no)} // Adjusted to use si_no
+          onClick={() => handleDelete(row.original.si_no)}
         >
           <FaTrashAlt />
         </button>
         <button
           className="px-3 py-2 bg-blue-500 text-white rounded-[10px]"
-          onClick={() => handleEdit(row.original)} // Call handleEdit on click
+          onClick={() => handleEdit(row.original)}
         >
           <FaEdit />
         </button>
@@ -72,36 +72,32 @@ export default function PriorityLevel() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isEditFormOpen, setIsEditFormOpen] = useState(false);
   const [selectedCondition, setSelectedCondition] = useState(null);
-  const [priorityLevels, setPriorityLevels] = useState([]); // Renamed to priorityLevels
+  const [priorityLevels, setPriorityLevels] = useState([]); // Priority levels from API
+  const [isLoading, setIsLoading] = useState(true); // Add loading state
+  const [isError, setIsError] = useState(false); // Add error state
   
   // State to manage visibility of the main priority level page
   const [isPriorityLevelPageVisible, setIsPriorityLevelPageVisible] = useState(true);
 
-  // Dummy data for the priority levels
+  // Fetch priority levels from the API
   useEffect(() => {
-    const dummyData = [
-      {
-        si_no: '1',
-        priority_level: 'High', // Changed from proirity_level to priority_level
-        description: 'Urgent tasks that need immediate attention.',
-        active_status: true,
-      },
-      {
-        si_no: '2',
-        priority_level: 'Medium',
-        description: 'Tasks that are important but not urgent.',
-        active_status: false,
-      },
-      {
-        si_no: '3',
-        priority_level: 'Low',
-        description: 'Tasks that can be scheduled later.',
-        active_status: true,
-      },
-    ];
+    const fetchPriorityLevels = async () => {
+      try {
+        const response = await fetch('/api/priority_levels'); // Replace with your API endpoint
+        if (!response.ok) {
+          throw new Error('Failed to fetch priority levels');
+        }
+        const data = await response.json();
+        setPriorityLevels(data);
+        setIsLoading(false); // Loading complete
+      } catch (error) {
+        console.error(error);
+        setIsError(true);
+        setIsLoading(false); // Loading complete with error
+      }
+    };
 
-    // Set dummy data to state
-    setPriorityLevels(dummyData);
+    fetchPriorityLevels();
   }, []);
 
   // Function to handle editing a priority level item
@@ -114,7 +110,7 @@ export default function PriorityLevel() {
   // Function to handle deleting a priority level item
   const handleDelete = (conditionId) => {
     console.log(`Deleting priority level item with ID: ${conditionId}`);
-    // Logic to delete priority level item
+    // Logic to delete priority level item from the API
   };
 
   // Function to handle creating a new priority level item
@@ -122,6 +118,14 @@ export default function PriorityLevel() {
     setIsPriorityLevelPageVisible(false); // Hide PriorityLevelPage
     setIsFormOpen(true); // Show CreatePriorityLevelForm
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isError) {
+    return <div>Failed to load data. Please try again later.</div>;
+  }
 
   return (
     <div>
@@ -131,7 +135,7 @@ export default function PriorityLevel() {
             <h1 className="text-2xl font-semibold">Priority Level</h1>
             {/* Conditionally render the Create Priority Level button */}
             <button
-              onClick={handleCreatePriorityLevel} // Call the function to open CreatePriorityLevelForm
+              onClick={handleCreatePriorityLevel}
               className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
             >
               + Add Priority Level
@@ -144,13 +148,12 @@ export default function PriorityLevel() {
           </div>
         </>
       ) : (
-        // Display Create Form or Edit Form based on state
         <>
           {isFormOpen ? (
-            <CreateServicePriorityLevel onClose={() => setIsPriorityLevelPageVisible(true)} /> // Updated component name
+            <CreateServicePriorityLevel onClose={() => setIsPriorityLevelPageVisible(true)} />
           ) : (
             isEditFormOpen && selectedCondition && (
-              <EditServicePriorityLevel condition={selectedCondition} onClose={() => setIsPriorityLevelPageVisible(true)} /> // Updated component name
+              <EditServicePriorityLevel condition={selectedCondition} onClose={() => setIsPriorityLevelPageVisible(true)} />
             )
           )}
         </>
