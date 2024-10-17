@@ -1,39 +1,32 @@
 import { useState } from 'react';
 
-export default function CreateDepartmentForm() {
+export default function CreateServicePriorityLevel() {
   const [activeStatus, setActiveStatus] = useState(true);
-  const [selectedDepartment, setSelectedDepartment] = useState(''); // State for selected department
 
   const toggleActiveStatus = () => {
     setActiveStatus((prevStatus) => !prevStatus);
   };
 
-  const handleDepartmentChange = (e) => {
-    setSelectedDepartment(e.target.value); // Update department selection
-  };
-
   return (
     <div className="min-h-screen">
-      <div className="p-6 max-w-4xl">
-        <h2 className="text-xl font-bold mb-4">Create Department</h2>
+      <div className="p-6 max-w-4xl ">
+        <h2 className="text-xl font-bold mb-4">Create Service Priority Level</h2>
 
-        {/* Department Name and Description Section */}
+        {/* Tax Name and Description Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Left Side - Department Name */}
+          {/* Left Side - Tax Name */}
           <div>
             <div className="mb-4">
-              <label htmlFor="departmentName" className="block text-sm font-medium text-gray-700">
-                Department Name*
+              <label htmlFor="taxName" className="block text-sm font-medium text-gray-700">
+                Service Priority Level*
               </label>
               <input
                 type="text"
-                id="departmentName"
-                placeholder="Enter Department Name"
+                id="taxName"
+                placeholder="Enter Tax Name"
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                onChange={handleDepartmentChange} // Update the department state on change
               />
             </div>
-
             <div>
               <label className="block text-gray-700 font-medium">Description</label>
               <textarea

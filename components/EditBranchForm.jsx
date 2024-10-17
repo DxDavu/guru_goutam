@@ -17,7 +17,7 @@ const branchSchema = z.object({
   address: z.string().optional(),
 });
 
-export default function CreateBranchForm({ onClose, branch }) {
+export default function EditBranchForm({ onClose, branch }) {
   const {
     register,
     handleSubmit,
@@ -27,6 +27,18 @@ export default function CreateBranchForm({ onClose, branch }) {
     resolver: zodResolver(branchSchema),
   });
 
+  // Pre-fill form when branch data changes
+  useEffect(() => {
+    if (branch) {
+      setValue('branchid', branch.branchid);
+      setValue('branch_name', branch.branch_name);
+      setValue('pincode', branch.pincode || '');
+      setValue('country', branch.country || '');
+      setValue('state', branch.state || '');
+      setValue('city', branch.city || '');
+      setValue('address', branch.address || '');
+    }
+  }, [branch, setValue]);
 
   const onSubmit = async (data) => {
     try {
@@ -138,7 +150,7 @@ export default function CreateBranchForm({ onClose, branch }) {
       {/* Save Button */}
       <div className="flex items-center gap-4">
         <button type="submit" className="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600 w-[428px]">
-          Save
+          Update
         </button>
       </div>
     </div>

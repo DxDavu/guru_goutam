@@ -1,23 +1,20 @@
 "use client"
 
-import React from 'react'
-import { useUser  } from '@clerk/nextjs'
+import { useRouter } from 'next/navigation'
+import React, { useEffect } from 'react'
 
 const Settings = () => {
 
-  const { isLoaded, isSignedIn, user } = useUser()
+  const route = useRouter();
 
-
-   // In case the user signs out while on the page.
-   if (!isLoaded || !isSignedIn) {
-    return null
-  }
-
-  console.log(user);
-  
+  useEffect(() => {
+    {route.push("/settings/user")}
+  },[route])
 
   return (
-    <div>Hello, {user?.username} , welcome to Guru Gowtham</div>
+    <div>
+      Settings
+    </div>
   )
 }
 

@@ -1,12 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import CreateDepartmentForm from '@/components/CreateDepartmentForm'; // Updated component name
-import EditDepartmentForm from '@/components/EditDepartmentForm'; // Updated component name
+import CreateServicePriorityLevel from '@/components/CreateServicePriorityLevel'; // Updated component name
+import EditServicePriorityLevel from '@/components/EditServicePriorityLevel'; // Updated component name
 import { DataTable } from '@/components/DataTable'; // Import the generic DataTable component
 import { FaTrashAlt, FaEdit } from 'react-icons/fa';
 
-// Define the columns for the Department table
+// Define the columns for the Priority Level table
 const columns = (handleEdit, handleDelete) => [
   {
     accessorKey: 'si_no',
@@ -23,10 +23,9 @@ const columns = (handleEdit, handleDelete) => [
       </td>
     ),
   },
-  
   {
-    accessorKey: 'department', // Column for department
-    header: 'Department',
+    accessorKey: 'priority_level', // Changed from proirity_level to priority_level
+    header: 'Priority Level', // Updated header to Priority Level
   },
   {
     accessorKey: 'description',
@@ -68,96 +67,90 @@ const columns = (handleEdit, handleDelete) => [
   },
 ];
 
-// Department Page Component
-export default function Department() { 
+// Priority Level Page Component
+export default function PriorityLevel() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isEditFormOpen, setIsEditFormOpen] = useState(false);
-  const [selectedDepartment, setSelectedDepartment] = useState(null); // Renamed to selectedDepartment
-  const [departments, setDepartments] = useState([]); // Renamed to departments
+  const [selectedCondition, setSelectedCondition] = useState(null);
+  const [priorityLevels, setPriorityLevels] = useState([]); // Renamed to priorityLevels
   
-  // State to manage visibility of the main department page
-  const [isDepartmentPageVisible, setIsDepartmentPageVisible] = useState(true);
+  // State to manage visibility of the main priority level page
+  const [isPriorityLevelPageVisible, setIsPriorityLevelPageVisible] = useState(true);
 
-  // Dummy data for the departments
+  // Dummy data for the priority levels
   useEffect(() => {
     const dummyData = [
       {
         si_no: '1',
-        department: 'Operations',
-        description: 'Manages daily operations.',
+        priority_level: 'High', // Changed from proirity_level to priority_level
+        description: 'Urgent tasks that need immediate attention.',
         active_status: true,
       },
       {
         si_no: '2',
-        department: 'Engineering',
-        description: 'Responsible for coding.',
+        priority_level: 'Medium',
+        description: 'Tasks that are important but not urgent.',
         active_status: false,
       },
       {
         si_no: '3',
-        department: 'Human Resources',
-        description: 'Handles employee relations.',
-        active_status: true,
-      },
-      {
-        si_no: '4',
-        department: 'Creative',
-        description: 'Designs UI/UX.',
+        priority_level: 'Low',
+        description: 'Tasks that can be scheduled later.',
         active_status: true,
       },
     ];
 
     // Set dummy data to state
-    setDepartments(dummyData);
+    setPriorityLevels(dummyData);
   }, []);
 
-  // Function to handle editing a department
-  const handleEdit = (department) => {
-    setSelectedDepartment(department);
+  // Function to handle editing a priority level item
+  const handleEdit = (condition) => {
+    setSelectedCondition(condition);
     setIsEditFormOpen(true);
-    setIsDepartmentPageVisible(false); // Hide DepartmentPage when editing
+    setIsPriorityLevelPageVisible(false); // Hide PriorityLevelPage when editing
   };
 
-  // Function to handle deleting a department
-  const handleDelete = (departmentId) => {
-    console.log(`Deleting department with ID: ${departmentId}`);
-    // Logic to delete department
+  // Function to handle deleting a priority level item
+  const handleDelete = (conditionId) => {
+    console.log(`Deleting priority level item with ID: ${conditionId}`);
+    // Logic to delete priority level item
   };
 
-  // Function to handle creating a new department
-  const handleCreateDepartment = () => {
-    setIsDepartmentPageVisible(false); // Hide DepartmentPage
-    setIsFormOpen(true); // Show CreateDepartmentForm
+  // Function to handle creating a new priority level item
+  const handleCreatePriorityLevel = () => {
+    setIsPriorityLevelPageVisible(false); // Hide PriorityLevelPage
+    setIsFormOpen(true); // Show CreatePriorityLevelForm
   };
 
   return (
     <div>
-      {isDepartmentPageVisible ? (
+      {isPriorityLevelPageVisible ? (
         <>
           <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-semibold">Departments</h1>
-            {/* Conditionally render the Create Department button */}
+            <h1 className="text-2xl font-semibold">Priority Level</h1>
+            {/* Conditionally render the Create Priority Level button */}
             <button
-              onClick={handleCreateDepartment} // Call the function to open CreateDepartmentForm
+              onClick={handleCreatePriorityLevel} // Call the function to open CreatePriorityLevelForm
               className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
             >
-              + Add Department
+              + Add Priority Level
             </button>
           </div>
 
-          {/* Departments Table */}
+          {/* Priority Level Table */}
           <div className="mt-6">
-            <DataTable columns={columns(handleEdit, handleDelete)} data={departments} />
+            <DataTable columns={columns(handleEdit, handleDelete)} data={priorityLevels} />
           </div>
         </>
       ) : (
         // Display Create Form or Edit Form based on state
         <>
           {isFormOpen ? (
-            <CreateDepartmentForm onClose={() => setIsDepartmentPageVisible(true)} /> // Updated component name
+            <CreateServicePriorityLevel onClose={() => setIsPriorityLevelPageVisible(true)} /> // Updated component name
           ) : (
-            isEditFormOpen && selectedDepartment && (
-              <EditDepartmentForm department={selectedDepartment} onClose={() => setIsDepartmentPageVisible(true)} /> // Updated prop name
+            isEditFormOpen && selectedCondition && (
+              <EditServicePriorityLevel condition={selectedCondition} onClose={() => setIsPriorityLevelPageVisible(true)} /> // Updated component name
             )
           )}
         </>
