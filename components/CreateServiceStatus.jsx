@@ -1,20 +1,21 @@
 import { useState } from 'react';
 
 export default function CreateServiceStatus() {
-  const [status, setStatus] = useState(''); // Renamed to 'status'
+  const [status, setStatus] = useState('');
   const [description, setDescription] = useState('');
   const [activeStatus, setActiveStatus] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const toggleActiveStatus = () => {
     setActiveStatus((prevStatus) => !prevStatus);
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission
+    e.preventDefault();
 
     // Create an object to hold the form data
     const formData = {
-      status, // Updated field name
+      service_name: status, // Use the correct field name
       description,
       active_status: activeStatus,
     };
@@ -33,15 +34,16 @@ export default function CreateServiceStatus() {
       if (response.ok) {
         alert(data.message); // Show success message
         // Reset form fields
-        setStatus(''); // Reset status field
-        setDescription(''); // Reset description field
-        setActiveStatus(true); // Reset active status
+        setStatus('');
+        setDescription('');
+        setActiveStatus(true);
+        setErrorMessage(''); // Clear any previous error messages
       } else {
-        alert(data.message); // Show error message
+        setErrorMessage(data.message); // Show error message
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('An error occurred while creating the service status.');
+      setErrorMessage('An error occurred while creating the service status.');
     }
   };
 
@@ -50,20 +52,21 @@ export default function CreateServiceStatus() {
       <div className="p-6 max-w-4xl ">
         <h2 className="text-xl font-bold mb-4">Create Service Status</h2>
 
+        {/* Display Error Message */}
+        {errorMessage && <div className="text-red-500 mb-4">{errorMessage}</div>}
+
         <form onSubmit={handleSubmit}>
-          {/* Service Name and Description Section */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Left Side - Service Status */}
             <div>
               <div className="mb-4">
-                <label htmlFor="status" className="block text-sm font-medium text-gray-700">
-                  Service Status*
+                <label htmlFor="service_status" className="block text-sm font-medium text-gray-700">
+                  Service Name*
                 </label>
                 <input
                   type="text"
-                  id="status"
+                  id="service_status"
                   value={status}
-                  onChange={(e) => setStatus(e.target.value)} // Updated onChange to setStatus
+                  onChange={(e) => setStatus(e.target.value)}
                   placeholder="Enter Service Status"
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   required
@@ -81,7 +84,6 @@ export default function CreateServiceStatus() {
               </div>
             </div>
 
-            {/* Right Side - Active Status Control */}
             <div className="p-4">
               <h3 className="font-semibold text-gray-700 mb-4">Control:</h3>
               <div className="flex items-center space-x-4">
@@ -103,7 +105,6 @@ export default function CreateServiceStatus() {
             </div>
           </div>
 
-          {/* Save Button */}
           <div className="mt-6 flex justify-center">
             <button
               type="submit"

@@ -24,7 +24,7 @@ const columns = (handleEdit, handleDelete) => [
     ),
   },
   {
-    accessorKey: 'status',
+    accessorKey: 'service_name',
     header: 'Status',
   },
   {

@@ -17,7 +17,7 @@ export default function EditLeadStatus({ condition, onClose }) {
     setActiveStatus(prevStatus => !prevStatus);
   };
 
-  const handleUpdate = async () => {
+  const handleSave = async () => {
     try {
       // Prepare the data to send
       const updatedLeadStatus = {
