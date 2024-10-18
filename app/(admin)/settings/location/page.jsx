@@ -3,19 +3,19 @@
 import { useState, useEffect } from 'react';
 import CreateLocationForm from '@/components/CreateLocationForm';
 import EditLocationForm from '@/components/EditLocationForm'; 
-import { DataTable } from '@/components/DataTable'; // Import the generic DataTable component
+import { DataTable } from '@/components/DataTable';
 import { FaTrashAlt } from 'react-icons/fa';
 
 // Define the columns for the location table
 const columns = (handleEdit, handleDelete) => [
   {
     accessorKey: 'si_no',
-      header: () => (
-        <div className="flex items-center">
-          <input type="checkbox" className="mr-2" />
-          User ID
-        </div>
-      ),
+    header: () => (
+      <div className="flex items-center">
+        <input type="checkbox" className="mr-2" />
+        Location ID
+      </div>
+    ),
     cell: ({ row }) => (
       <td className="py-2 px-5">
         <input
@@ -59,40 +59,99 @@ const columns = (handleEdit, handleDelete) => [
   },
 ];
 
-// Location Page Component
 export default function Location() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isEditFormOpen, setIsEditFormOpen] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [locations, setLocations] = useState([]);
 
-  // Dummy data for locations
+  // Fetch locations from API
   useEffect(() => {
-    const dummyData = [
-      { si_no: 1, location_id: 1, country: 'India', active_status: true },
-      { si_no: 2, location_id: 2, country: 'USA', active_status: false },
-      { si_no: 3, location_id: 3, country: 'Canada', active_status: true },
-      { si_no: 4, location_id: 4, country: 'Australia', active_status: false },
-    ];
-    
-    setLocations(dummyData);
+    const fetchLocations = async () => {
+      try {
+        const response = await fetch('/api/location', { method: 'GET' });
+        const data = await response.json();
+        setLocations(data);
+      } catch (error) {
+        console.error('Error fetching locations:', error);
+      }
+    };
+
+    fetchLocations();
   }, []);
 
-  // Function to handle editing a location
-  const handleEdit = (location) => {
+  // Handle location creation
+  const handleCreateLocation = async (newLocation) => {
+    try {
+      const response = await fetch('/api/location', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newLocation),
+      });
+
+      if (response.ok) {
+        const createdLocation = await response.json();
+        setLocations([...locations, createdLocation.location]);
+        setIsFormOpen(false);
+      } else {
+        console.error('Error creating location');
+      }
+    } catch (error) {
+      console.error('Error during location creation:', error);
+    }
+  };
+
+  // Handle location update
+  const handleEdit = async (location) => {
     setSelectedLocation(location);
     setIsEditFormOpen(true);
   };
 
-  // Function to handle deleting a location
-  const handleDelete = (locationId) => {
-    console.log(`Deleting location with ID: ${locationId}`);
-    // Logic to delete location
+  const handleUpdateLocation = async (updatedLocation) => {
+    try {
+      const response = await fetch('/api/location', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedLocation),
+      });
+
+      if (response.ok) {
+        const { location } = await response.json();
+        setLocations(
+          locations.map((loc) => (loc.location_id === location.location_id ? location : loc))
+        );
+        setIsEditFormOpen(false);
+      } else {
+        console.error('Error updating location');
+      }
+    } catch (error) {
+      console.error('Error during location update:', error);
+    }
   };
 
-  // Close the Create Location Form and reset the state
-  const handleCreateFormClose = () => {
-    setIsFormOpen(false);
+  // Handle location deletion
+  const handleDelete = async (locationId) => {
+    try {
+      const response = await fetch('/api/location', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: locationId }),
+      });
+
+      if (response.ok) {
+        setLocations(locations.filter((loc) => loc.location_id !== locationId));
+      } else {
+        console.error('Error deleting location');
+      }
+    } catch (error) {
+      console.error('Error during deletion:', error);
+    }
   };
 
   return (
@@ -101,7 +160,6 @@ export default function Location() {
       {!isFormOpen && !isEditFormOpen && (
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-semibold">Locations</h1>
-          {/* Conditionally render the Create Location button */}
           <button
             onClick={() => setIsFormOpen(true)}
             className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
@@ -113,12 +171,16 @@ export default function Location() {
 
       {/* Display Create Form */}
       {isFormOpen && (
-        <CreateLocationForm onClose={handleCreateFormClose} />
+        <CreateLocationForm onCreate={handleCreateLocation} onClose={() => setIsFormOpen(false)} />
       )}
 
       {/* Display Edit Form */}
       {isEditFormOpen && selectedLocation && (
-        <EditLocationForm location={selectedLocation} onClose={() => setIsEditFormOpen(false)} />
+        <EditLocationForm
+          location={selectedLocation}
+          onUpdate={handleUpdateLocation}
+          onClose={() => setIsEditFormOpen(false)}
+        />
       )}
 
       {/* Location Table */}

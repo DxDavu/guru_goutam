@@ -6,7 +6,6 @@ import EditServicePriorityLevel from '@/components/EditServicePriorityLevel';
 import { DataTable } from '@/components/DataTable';
 import { FaTrashAlt, FaEdit } from 'react-icons/fa';
 
-// Define the columns for the Priority Level table
 const columns = (handleEdit, handleDelete) => [
   {
     accessorKey: 'si_no',
@@ -19,7 +18,7 @@ const columns = (handleEdit, handleDelete) => [
     cell: ({ row }) => (
       <td className="py-2 px-5 flex items-center">
         <input type="checkbox" value={row.original.si_no} className="mr-2" />
-        {row.original.si_no}
+        {row.index + 1} {/* This will display the row index + 1 as the serial number */}
       </td>
     ),
   },
@@ -66,6 +65,7 @@ const columns = (handleEdit, handleDelete) => [
     ),
   },
 ];
+
 
 // Priority Level Page Component
 export default function PriorityLevel() {
