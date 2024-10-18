@@ -3,8 +3,6 @@
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect } from 'react';
-import Link from 'next/link';
 
 // Define the validation schema using Zod
 const branchSchema = z.object({
@@ -15,9 +13,10 @@ const branchSchema = z.object({
   state: z.string().optional(),
   city: z.string().optional(),
   address: z.string().optional(),
+  active_status: z.boolean().optional(), // Add active_status to the schema
 });
 
-export default function CreateBranchForm({ onClose, branch }) {
+export default function CreateBranchForm({ onClose }) {
   const {
     register,
     handleSubmit,
@@ -26,7 +25,6 @@ export default function CreateBranchForm({ onClose, branch }) {
   } = useForm({
     resolver: zodResolver(branchSchema),
   });
-
 
   const onSubmit = async (data) => {
     try {
@@ -37,17 +35,19 @@ export default function CreateBranchForm({ onClose, branch }) {
         },
         body: JSON.stringify(data),
       });
-
+  
       if (response.ok) {
-        console.log('Branch updated successfully');
+        console.log('Branch created successfully');
         onClose();
       } else {
-        console.log('Failed to update branch');
+        const errorData = await response.json();
+        console.error('Failed to create branch:', errorData.message);
       }
     } catch (error) {
-      console.error('Error updating branch:', error);
+      console.error('Error creating branch:', error);
     }
   };
+  
 
   return (
     <div className="flex flex-col items-center justify-center p-6 bg-gray-100 min-h-screen">
@@ -129,8 +129,12 @@ export default function CreateBranchForm({ onClose, branch }) {
         <div className="border rounded p-4 bg-white shadow-md">
           <h3 className="font-semibold mb-4">Control:</h3>
           <div className="flex items-center gap-2">
-            <label className="block mb-2">Active Status*</label>
-            <input type="checkbox" className="w-6 h-6" />
+            <label className="block mb-2">Active Status</label>
+            <input
+              type="checkbox"
+              {...register('active_status')} // Register the checkbox
+              className="w-6 h-6"
+            />
           </div>
         </div>
       </form>
