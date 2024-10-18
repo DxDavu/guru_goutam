@@ -1,45 +1,52 @@
-// app/(admin)/settings/user/UserPageClient.jsx
+"use client";
 
-'use client';
+import { useState } from "react";
+import CreateUserForm from "@/components/CreateUserForm";
+import { DataTable } from "@/components/DataTable";
+import { PencilIcon, TrashIcon } from "@heroicons/react/24/solid";
 
-import { useState } from 'react';
-import CreateUserForm from '@/components/CreateUserForm';
-import { DataTable } from '@/components/DataTable';
-import { PencilIcon, TrashIcon } from '@heroicons/react/24/solid';
-
-export default function UserPageClient({ userPermissions, users: initialUsers, departments, roles, branches }) {
+export default function UserPageClient({
+  userPermissions,
+  users: initialUsers,
+  departments: initialDepartments,
+  roles: initialRoles,
+  branches: initialBranches,
+}) {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [users, setUsers] = useState(initialUsers);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [departments, setDepartments] = useState(initialDepartments || []);
+  const [roles, setRoles] = useState(initialRoles || []);
+  const [branches, setBranches] = useState(initialBranches || []);
+  const [loading, setLoading] = useState(true);
 
   // Utility function to check for permission in the 'Users' module
   const checkPermission = (permissionType) => {
     return userPermissions?.Users?.[permissionType] || false;
   };
 
-  // Check if user has permission for specific actions in the 'Users' module
-  const canAdd = checkPermission('can_add');
-  const canEdit = checkPermission('can_edit');
-  const canDelete = checkPermission('can_delete');
+  const canAdd = checkPermission("can_add");
+  const canEdit = checkPermission("can_edit");
+  const canDelete = checkPermission("can_delete");
 
   const handleDelete = async (id) => {
-    if (confirm('Are you sure you want to delete this user?')) {
+    if (confirm("Are you sure you want to delete this user?")) {
       try {
-        const response = await fetch('/api/user', {
-          method: 'DELETE',
+        const response = await fetch("/api/user", {
+          method: "DELETE",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({ id }),
         });
         if (response.ok) {
-          alert('User deleted successfully');
+          alert("User deleted successfully");
           setUsers((prevUsers) => prevUsers.filter((user) => user._id !== id));
         } else {
-          alert('Failed to delete user');
+          alert("Failed to delete user");
         }
       } catch (error) {
-        console.error('Error deleting user:', error);
+        console.error("Error deleting user:", error);
       }
     }
   };
@@ -54,7 +61,7 @@ export default function UserPageClient({ userPermissions, users: initialUsers, d
     setSelectedUser(null);
     if (updatedUser) {
       setUsers((prevUsers) => {
-        const updatedUsers = prevUsers.map((user) => 
+        const updatedUsers = prevUsers.map((user) =>
           user._id === updatedUser._id ? updatedUser : user
         );
         return updatedUsers;
@@ -63,13 +70,13 @@ export default function UserPageClient({ userPermissions, users: initialUsers, d
   };
 
   const columns = [
-    { accessorKey: 'first_name', header: 'First Name' },
-    { accessorKey: 'last_name', header: 'Last Name' },
-    { accessorKey: 'login_id', header: 'Login ID' },
-    { accessorKey: 'emailid', header: 'Email' },
+    { accessorKey: "first_name", header: "First Name" },
+    { accessorKey: "last_name", header: "Last Name" },
+    { accessorKey: "login_id", header: "Login ID" },
+    { accessorKey: "emailid", header: "Email" },
     {
-      accessorKey: 'actions',
-      header: 'Actions',
+      accessorKey: "actions",
+      header: "Actions",
       cell: ({ row }) => (
         <div className="flex space-x-2">
           {canEdit && (
