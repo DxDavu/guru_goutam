@@ -95,22 +95,24 @@ export async function POST(req) {
   }
 }
 
-// PUT (update) a branch
-export async function PUT(req) {
+export async function PUT(req, { params }) {
+  const { id } = params; // Extract the ID from the route parameters
   try {
     await connectToDatabase();
-    const { id, branchid, branch_name, pincode, country, state, city, address, active_status } = await req.json();
+    const { branchid, branch_name, pincode, country, state, city, address, active_status } = await req.json();
 
     const updatedBranch = await Branch.findByIdAndUpdate(
       id,
       {
         branchid,
         branch_name,
-        pincode,
-        country,
-        state,
-        city,
-        address,
+        address: {
+          pincode,
+          country,
+          state,
+          city,
+          address,
+        },
         active_status,
       },
       { new: true }
@@ -126,7 +128,6 @@ export async function PUT(req) {
     return new Response(JSON.stringify({ message: 'Error updating branch', error }), { status: 500 });
   }
 }
-
 // DELETE a branch
 export async function DELETE(req) {
   try {

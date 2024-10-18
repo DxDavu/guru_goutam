@@ -4,10 +4,10 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
-import Link from 'next/link';
 
 // Define the validation schema using Zod
 const branchSchema = z.object({
+  _id: z.string().min(1, 'Branch ID is required'), // _id for MongoDB
   branchid: z.string().min(1, 'Branch ID is required'),
   branch_name: z.string().min(1, 'Branch name is required'),
   pincode: z.string().optional(),
@@ -15,6 +15,7 @@ const branchSchema = z.object({
   state: z.string().optional(),
   city: z.string().optional(),
   address: z.string().optional(),
+  active_status: z.boolean().optional(),
 });
 
 export default function EditBranchForm({ onClose, branch }) {
@@ -30,20 +31,22 @@ export default function EditBranchForm({ onClose, branch }) {
   // Pre-fill form when branch data changes
   useEffect(() => {
     if (branch) {
+      setValue('_id', branch._id);
       setValue('branchid', branch.branchid);
       setValue('branch_name', branch.branch_name);
-      setValue('pincode', branch.pincode || '');
-      setValue('country', branch.country || '');
-      setValue('state', branch.state || '');
-      setValue('city', branch.city || '');
-      setValue('address', branch.address || '');
+      setValue('pincode', branch.address?.pincode || '');
+      setValue('country', branch.address?.country || '');
+      setValue('state', branch.address?.state || '');
+      setValue('city', branch.address?.city || '');
+      setValue('address', branch.address?.address || '');
+      setValue('active_status', branch.active_status);
     }
   }, [branch, setValue]);
 
   const onSubmit = async (data) => {
     try {
-      const response = await fetch('/api/branch', {
-        method: 'POST',
+      const response = await fetch(`/api/branch/${data._id}`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -51,10 +54,12 @@ export default function EditBranchForm({ onClose, branch }) {
       });
 
       if (response.ok) {
-        console.log('Branch updated successfully');
-        onClose();
+        const responseData = await response.json();
+        console.log('Branch updated successfully:', responseData);
+        onClose(); // Close the form/modal on success
       } else {
-        console.log('Failed to update branch');
+        const errorData = await response.json();
+        console.error('Failed to update branch:', errorData);
       }
     } catch (error) {
       console.error('Error updating branch:', error);
@@ -105,8 +110,9 @@ export default function EditBranchForm({ onClose, branch }) {
             <div>
               <label className="block mb-2">Country*</label>
               <select {...register('country')} className="border p-2 rounded w-full">
-                <option>India</option>
-                {/* Populate dynamically */}
+                <option value="">Select Country</option>
+                <option value="India">India</option>
+                {/* Add more countries as needed */}
               </select>
             </div>
           </div>
@@ -114,15 +120,17 @@ export default function EditBranchForm({ onClose, branch }) {
             <div>
               <label className="block mb-2">State*</label>
               <select {...register('state')} className="border p-2 rounded w-full">
-                <option>Karnataka</option>
-                {/* Populate dynamically */}
+                <option value="">Select State</option>
+                <option value="Karnataka">Karnataka</option>
+                {/* Add more states as needed */}
               </select>
             </div>
             <div>
               <label className="block mb-2">City*</label>
               <select {...register('city')} className="border p-2 rounded w-full">
-                <option>Bangalore</option>
-                {/* Populate dynamically */}
+                <option value="">Select City</option>
+                <option value="Bangalore">Bangalore</option>
+                {/* Add more cities as needed */}
               </select>
             </div>
           </div>
@@ -142,17 +150,21 @@ export default function EditBranchForm({ onClose, branch }) {
           <h3 className="font-semibold mb-4">Control:</h3>
           <div className="flex items-center gap-2">
             <label className="block mb-2">Active Status*</label>
-            <input type="checkbox" className="w-6 h-6" />
+            <input
+              type="checkbox"
+              {...register('active_status')}
+              className="w-6 h-6"
+            />
           </div>
         </div>
-      </form>
 
-      {/* Save Button */}
-      <div className="flex items-center gap-4">
-        <button type="submit" className="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600 w-[428px]">
-          Update
-        </button>
-      </div>
+        {/* Save Button */}
+        <div className="flex items-center gap-4 col-span-3">
+          <button type="submit" className="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600 w-full">
+            Update
+          </button>
+        </div>
+      </form>
     </div>
   );
 }
