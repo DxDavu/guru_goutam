@@ -23,9 +23,8 @@ const columns = (handleEdit, handleDelete) => [
       </td>
     ),
   },
-  
   {
-    accessorKey: 'tax_number',
+    accessorKey: 'tax_name',
     header: 'Tax Number',
   },
   {
@@ -36,13 +35,12 @@ const columns = (handleEdit, handleDelete) => [
     accessorKey: 'percentage_sgst',
     header: 'Percentage SGST',
   },
-  
   {
     accessorKey: 'active_status',
     header: 'Active Status',
     cell: ({ row }) => (
       <td className="py-2 px-4">
-        <div className="flex rounded"> {/* Added flex to a div inside td */}
+        <div className="flex rounded">
           {row.original.active_status ? (
             <span className="bg-green-500 text-white px-3 py-2 rounded-[10px]">Active</span>
           ) : (
@@ -52,14 +50,13 @@ const columns = (handleEdit, handleDelete) => [
       </td>
     ),
   },
-  
   {
     header: 'Action',
     cell: ({ row }) => (
       <td className="py-2 px-5 flex">
         <button
           className="px-3 py-2 bg-red-500 text-white rounded-[10px] mr-2"
-          onClick={() => handleDelete(row.original.si_no)} // Adjusted to use si_no
+          onClick={() => handleDelete(row.original._id)} // Adjusted to use si_no
         >
           <FaTrashAlt />
         </button>
@@ -84,27 +81,22 @@ export default function TaxList() {
   // State to manage visibility of the main tax list page
   const [isTaxListPageVisible, setIsTaxListPageVisible] = useState(true);
 
-  // Dummy data
+  // Fetch tax list data from API
   useEffect(() => {
-    const dummyData = [
-      {
-        si_no: '1',
-        tax_number: 'TAX-001',
-        percentage_cgst: '9',
-        percentage_sgst: '9',
-        active_status: true,
-      },
-      {
-        si_no: '2',
-        tax_number: 'TAX-002',
-        percentage_cgst: '5',
-        percentage_sgst: '5',
-        active_status: false,
-      },
-    ];
+    const fetchTaxLists = async () => {
+      try {
+        const response = await fetch('/api/tax_lists'); // Adjust the endpoint as necessary
+        if (!response.ok) {
+          throw new Error('Failed to fetch tax lists');
+        }
+        const data = await response.json();
+        setTaxLists(data); // Set fetched data to state
+      } catch (error) {
+        console.error('Error fetching tax lists:', error);
+      }
+    };
 
-    // Set dummy data to state
-    setTaxLists(dummyData);
+    fetchTaxLists();
   }, []);
 
   // Function to handle editing a tax list item
@@ -115,10 +107,26 @@ export default function TaxList() {
   };
 
   // Function to handle deleting a tax list item
-  const handleDelete = (taxId) => {
-    console.log(`Deleting tax list item with ID: ${taxId}`);
-    // Logic to delete tax list item
-  };
+const handleDelete = async (taxId) => {
+  try {
+    const response = await fetch(`/api/tax_lists`, { // Ensure the correct endpoint is used
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json', // Specify the content type
+      },
+      body: JSON.stringify({ id: taxId }), // Send the ID in the request body
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to delete tax list item');
+    }
+
+    // Optionally, re-fetch the tax lists or update the state to remove the deleted item
+    setTaxLists(taxLists.filter(tax => tax._id !== taxId)); // Update local state
+  } catch (error) {
+    console.error('Error deleting tax list item:', error);
+  }
+};
 
   // Function to handle creating a tax list item
   const handleCreateTaxList = () => {
@@ -132,7 +140,6 @@ export default function TaxList() {
         <>
           <div className="flex justify-between items-center">
             <h1 className="text-2xl font-semibold">Tax Lists</h1>
-            {/* Conditionally render the Create Tax List button */}
             <button
               onClick={handleCreateTaxList} // Call the function to open CreateTaxListForm
               className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
