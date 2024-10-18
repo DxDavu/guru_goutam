@@ -59,18 +59,14 @@ export async function DELETE(req) {
   try {
     await connectToDatabase();
     
-    // Extracting the 'id' from the request body
     const { id } = await req.json();
 
-    // Checking if the ID exists in the request body
     if (!id) {
       return new Response(JSON.stringify({ message: 'ID is required to delete a priority level' }), { status: 400 });
     }
 
-    // Attempting to find and delete the service priority level by ID
     const deletedServicePriorityLevel = await ServicePriorityLevel.findByIdAndDelete(id);
 
-    // Handling the case where the service priority level is not found
     if (!deletedServicePriorityLevel) {
       return new Response(JSON.stringify({ message: 'Service Priority Level not found' }), { status: 404 });
     }
