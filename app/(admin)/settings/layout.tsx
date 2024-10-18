@@ -2,9 +2,13 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { FaUser, FaUserShield, FaMapMarkerAlt, FaCodeBranch, FaAddressBook, FaPercentage, FaBuilding, FaRegListAlt, FaFileAlt, FaClipboardCheck } from 'react-icons/fa'; // Import the required icons
 
 export default function SettingsLayout({ children }: { children: React.ReactNode }) {
   const [activeTab, setActiveTab] = useState('User');
+
+  const linkClasses = "cursor-pointer flex items-center px-4 py-2 text-lg font-medium space-x-2";
+  const activeLinkClasses = "bg-indigo-100";
 
   return (
     <div className="flex h-screen">
@@ -13,123 +17,109 @@ export default function SettingsLayout({ children }: { children: React.ReactNode
         <nav className="flex flex-col py-4 space-y-4">
           <Link href="/settings/user">
             <span
-              className={`cursor-pointer px-4 py-2 text-lg font-medium ${
-                activeTab === 'User' ? 'bg-indigo-100' : 'hover:bg-gray-200'
-              }`}
+              className={`${linkClasses} ${activeTab === 'User' ? activeLinkClasses : 'hover:bg-gray-200'}`}
               onClick={() => setActiveTab('User')}
             >
+              <FaUser className="m-1" />
               User
             </span>
           </Link>
           <Link href="/settings/roles">
             <span
-              className={`cursor-pointer px-4 py-2 text-lg font-medium ${
-                activeTab === 'Roles' ? 'bg-indigo-100' : 'hover:bg-gray-200'
-              }`}
+              className={`${linkClasses} ${activeTab === 'Roles' ? activeLinkClasses : 'hover:bg-gray-200'}`}
               onClick={() => setActiveTab('Roles')}
             >
+              <FaUserShield className="m-1" />
               Roles
-            </span>
-          </Link>
-          <Link href="/settings/department">
-            <span
-              className={`cursor-pointer px-4 py-2 text-lg font-medium ${
-                activeTab === 'Department' ? 'bg-indigo-100' : 'hover:bg-gray-200'
-              }`}
-              onClick={() => setActiveTab('Department')}
-            >
-              Department
             </span>
           </Link>
           <Link href="/settings/location">
             <span
-              className={`cursor-pointer px-4 py-2 text-lg font-medium ${
-                activeTab === 'Location' ? 'bg-indigo-100' : 'hover:bg-gray-200'
-              }`}
+              className={`${linkClasses} ${activeTab === 'Location' ? activeLinkClasses : 'hover:bg-gray-200'}`}
               onClick={() => setActiveTab('Location')}
             >
+              <FaMapMarkerAlt className="m-1" />
               Location
             </span>
           </Link>
-          
           <Link href="/settings/branch">
             <span
-              className={`cursor-pointer px-4 py-2 text-lg font-medium ${
-                activeTab === 'Branch' ? 'bg-indigo-100' : 'hover:bg-gray-200'
-              }`}
+              className={`${linkClasses} ${activeTab === 'Branch' ? activeLinkClasses : 'hover:bg-gray-200'}`}
               onClick={() => setActiveTab('Branch')}
             >
+              <FaCodeBranch className="m-1" />
               Branch
-            </span>
-          </Link>
-          <Link href="/settings/terms_conditions">
-            <span
-              className={`cursor-pointer px-4 py-2 text-lg font-medium ${
-                activeTab === 'Terms_Conditions' ? 'bg-indigo-100' : 'hover:bg-gray-200'
-              }`}
-              onClick={() => setActiveTab('Terms_Conditions')}
-            >
-              Terms & Conditions
-            </span>
-          </Link>
-          
-          <Link href="/settings/tax_lists">
-            <span
-              className={`cursor-pointer px-4 py-2 text-lg font-medium ${
-                activeTab === 'Taxt-List' ? 'bg-indigo-100' : 'hover:bg-gray-200'
-              }`}
-              onClick={() => setActiveTab('Taxt-List')}
-            >
-              Tax Lists
-            </span>
-          </Link>
-          <Link href="/settings/order_chekclist">
-            <span
-              className={`cursor-pointer px-4 py-2 text-lg font-medium ${
-                activeTab === 'Order_CheckList' ? 'bg-indigo-100' : 'hover:bg-gray-200'
-              }`}
-              onClick={() => setActiveTab('Order_CheckList')}
-            >
-              Order Checklist
             </span>
           </Link>
           <Link href="/settings/lead_chekclist">
             <span
-              className={`cursor-pointer px-4 py-2 text-lg font-medium ${
-                activeTab === 'Lead_CheckList' ? 'bg-indigo-100' : 'hover:bg-gray-200'
-              }`}
+              className={`${linkClasses} ${activeTab === 'Lead_CheckList' ? activeLinkClasses : 'hover:bg-gray-200'}`}
               onClick={() => setActiveTab('Lead_CheckList')}
             >
+              <FaAddressBook className="m-1" />
               Lead Checklist
+            </span>
+          </Link>
+          <Link href="/settings/tax_lists">
+            <span
+              className={`${linkClasses} ${activeTab === 'Taxt-List' ? activeLinkClasses : 'hover:bg-gray-200'}`}
+              onClick={() => setActiveTab('Taxt-List')}
+            >
+              <FaPercentage className="m-1" />
+              Tax Lists
+            </span>
+          </Link>
+          <Link href="/settings/department">
+            <span
+              className={`${linkClasses} ${activeTab === 'Department' ? activeLinkClasses : 'hover:bg-gray-200'}`}
+              onClick={() => setActiveTab('Department')}
+            >
+              <FaBuilding className="m-1" />
+              Department
             </span>
           </Link>
           <Link href="/settings/lead_status">
             <span
-              className={`cursor-pointer px-4 py-2 text-lg font-medium ${
-                activeTab === 'Lead_Status' ? 'bg-indigo-100' : 'hover:bg-gray-200'
-              }`}
+              className={`${linkClasses} ${activeTab === 'Lead_Status' ? activeLinkClasses : 'hover:bg-gray-200'}`}
               onClick={() => setActiveTab('Lead_Status')}
             >
+              <FaRegListAlt className="m-1" />
               Lead Status
             </span>
           </Link>
           <Link href="/settings/service_status">
             <span
-              className={`cursor-pointer px-4 py-2 text-lg font-medium ${
-                activeTab === 'Service_Status' ? 'bg-indigo-100' : 'hover:bg-gray-200'
-              }`}
+              className={`${linkClasses} ${activeTab === 'Service_Status' ? activeLinkClasses : 'hover:bg-gray-200'}`}
               onClick={() => setActiveTab('Service_Status')}
             >
+              <FaRegListAlt className="m-1" />
               Service Status
+            </span>
+          </Link>
+          <Link href="/settings/terms_conditions">
+            <span
+              className={`${linkClasses} ${activeTab === 'Terms_Conditions' ? activeLinkClasses : 'hover:bg-gray-200'}`}
+              onClick={() => setActiveTab('Terms_Conditions')}
+            >
+              <FaFileAlt className="m-1" />
+              Terms & Conditions
+            </span>
+          </Link>
+          <Link href="/settings/order_chekclist">
+            <span
+              className={`${linkClasses} ${activeTab === 'Order_CheckList' ? activeLinkClasses : 'hover:bg-gray-200'}`}
+              onClick={() => setActiveTab('Order_CheckList')}
+            >
+              <FaClipboardCheck className="m-1" />
+              Order Checklist
             </span>
           </Link>
           <Link href="/settings/service_prority_level">
             <span
-              className={`cursor-pointer px-4 py-2 text-lg font-medium ${
-                activeTab === 'Service_Priority_Level' ? 'bg-indigo-100' : 'hover:bg-gray-200'
-              }`}
+              className={`${linkClasses} ${activeTab === 'Service_Priority_Level' ? activeLinkClasses : 'hover:bg-gray-200'}`}
               onClick={() => setActiveTab('Service_Priority_Level')}
             >
+              <FaClipboardCheck className="m-1" />
               Service Priority Level
             </span>
           </Link>
