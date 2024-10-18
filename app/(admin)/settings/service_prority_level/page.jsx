@@ -52,7 +52,7 @@ const columns = (handleEdit, handleDelete) => [
       <td className="py-2 px-5 flex">
         <button
           className="px-3 py-2 bg-red-500 text-white rounded-[10px] mr-2"
-          onClick={() => handleDelete(row.original.si_no)}
+          onClick={() => handleDelete(row.original._id)}
         >
           <FaTrashAlt />
         </button>
@@ -108,10 +108,28 @@ export default function PriorityLevel() {
   };
 
   // Function to handle deleting a priority level item
-  const handleDelete = (conditionId) => {
-    console.log(`Deleting priority level item with ID: ${conditionId}`);
-    // Logic to delete priority level item from the API
-  };
+const handleDelete = async (conditionId) => {
+  try {
+    const response = await fetch(`/api/priority_levels`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: conditionId }), // Sending the condition ID
+    });
+
+    if (response.ok) {
+      console.log(`Priority level with ID: ${conditionId} deleted successfully.`);
+      // Optionally, refresh or filter out the deleted item from the list
+      setPriorityLevels(priorityLevels.filter((item) => item._id !== conditionId));
+    } else {
+      console.error('Failed to delete the priority level');
+    }
+  } catch (error) {
+    console.error('Error deleting the priority level:', error);
+  }
+};
+
 
   // Function to handle creating a new priority level item
   const handleCreatePriorityLevel = () => {

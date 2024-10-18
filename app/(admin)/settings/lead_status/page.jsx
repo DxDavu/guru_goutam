@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -5,8 +6,6 @@ import CreateLeadStatus from '@/components/CreateLeadStatus'; // Updated compone
 import EditLeadStatus from '@/components/EditLeadStatus'; // Updated component name
 import { DataTable } from '@/components/DataTable'; // Import the generic DataTable component
 import { FaTrashAlt, FaEdit } from 'react-icons/fa';
-
-// Define the columns for the Lead Status table
 const columns = (handleEdit, handleDelete) => [
   {
     accessorKey: 'si_no',
@@ -24,17 +23,16 @@ const columns = (handleEdit, handleDelete) => [
     ),
   },
   {
-    accessorKey: 'status',
-    header: 'Status',
+    accessorKey: 'lead_status', // Removed the leading space
+    header: 'Lead Status',
   },
   {
     accessorKey: 'description',
     header: 'Description',
   },
-  
   {
-    accessorKey: 'status',
-    header: 'Status',
+    accessorKey: 'active_status',
+    header: 'Active Status',
     cell: ({ row }) => (
       <td className="py-2 px-4">
         <div className="flex rounded">
@@ -53,7 +51,7 @@ const columns = (handleEdit, handleDelete) => [
       <td className="py-2 px-5 flex">
         <button
           className="px-3 py-2 bg-red-500 text-white rounded-[10px] mr-2"
-          onClick={() => handleDelete(row.original.si_no)} // Adjusted to use si_no
+          onClick={() => handleDelete(row.original._id)} // Adjusted to use _id from the API
         >
           <FaTrashAlt />
         </button>
@@ -73,48 +71,32 @@ export default function LeadStatus() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isEditFormOpen, setIsEditFormOpen] = useState(false);
   const [selectedCondition, setSelectedCondition] = useState(null);
-  const [leadStatus, setLeadStatus] = useState([]); // Renamed to leadStatus
+  const [leadStatus, setLeadStatus] = useState([]);
+  const [isLoading, setIsLoading] = useState(true); // Loading state
+  const [isError, setIsError] = useState(false); // Error state
   
   // State to manage visibility of the main lead status page
   const [isLeadStatusPageVisible, setIsLeadStatusPageVisible] = useState(true);
 
-  // Dummy data for the lead status
+  // Fetch lead statuses from the API
   useEffect(() => {
-    const dummyData = [
-      {
-        si_no: '1',
-        status: 'Initial Review',
-        description: 'Checklist for the initial review of the lead.',
-        active_status: true,
-      },
-      {
-        si_no: '2',
-        status: 'Approval Checklist',
-        description: 'Steps required for approval.',
-        active_status: false,
-      },
-      {
-        si_no: '3',
-        status: 'Final Inspection',
-        description: 'Ensure all items are inspected before delivery.',
-        active_status: true,
-      },
-      {
-        si_no: '4',
-        status: 'Packaging Checklist',
-        description: 'Checklist for packaging and labeling.',
-        active_status: true,
-      },
-      {
-        si_no: '5',
-        status: 'Delivery Checklist',
-        description: 'Steps to confirm during delivery.',
-        active_status: false,
-      },
-    ];
+    const fetchLeadStatus = async () => {
+      try {
+        const response = await fetch('/api/lead_statuses'); // Replace with your API endpoint
+        if (!response.ok) {
+          throw new Error('Failed to fetch lead statuses');
+        }
+        const data = await response.json();
+        setLeadStatus(data);
+        setIsLoading(false); // Loading complete
+      } catch (error) {
+        console.error(error);
+        setIsError(true);
+        setIsLoading(false); // Loading complete with error
+      }
+    };
 
-    // Set dummy data to state
-    setLeadStatus(dummyData);
+    fetchLeadStatus();
   }, []);
 
   // Function to handle editing a lead status item
@@ -125,9 +107,26 @@ export default function LeadStatus() {
   };
 
   // Function to handle deleting a lead status item
-  const handleDelete = (conditionId) => {
-    console.log(`Deleting lead status item with ID: ${conditionId}`);
-    // Logic to delete lead status item
+  const handleDelete = async (conditionId) => {
+    try {
+      const response = await fetch(`/api/lead_statuses`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: conditionId }), // Sending the condition ID
+      });
+
+      if (response.ok) {
+        console.log(`Lead status with ID: ${conditionId} deleted successfully.`);
+        // Optionally, refresh or filter out the deleted item from the list
+        setLeadStatus(leadStatus.filter((item) => item._id !== conditionId));
+      } else {
+        console.error('Failed to delete the lead status');
+      }
+    } catch (error) {
+      console.error('Error deleting the lead status:', error);
+    }
   };
 
   // Function to handle creating a new lead status item
@@ -142,7 +141,6 @@ export default function LeadStatus() {
         <>
           <div className="flex justify-between items-center">
             <h1 className="text-2xl font-semibold">Lead Status</h1>
-            {/* Conditionally render the Create Lead Status button */}
             <button
               onClick={handleCreateLeadStatus} // Call the function to open CreateLeadStatusForm
               className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
@@ -153,11 +151,16 @@ export default function LeadStatus() {
 
           {/* Lead Status Table */}
           <div className="mt-6">
-            <DataTable columns={columns(handleEdit, handleDelete)} data={leadStatus} />
+            {isLoading ? (
+              <p>Loading...</p>
+            ) : isError ? (
+              <p>Error fetching data</p>
+            ) : (
+              <DataTable columns={columns(handleEdit, handleDelete)} data={leadStatus} />
+            )}
           </div>
         </>
       ) : (
-        // Display Create Form or Edit Form based on state
         <>
           {isFormOpen ? (
             <CreateLeadStatus onClose={() => setIsLeadStatusPageVisible(true)} /> // Updated component name

@@ -2,13 +2,14 @@ import { useState, useEffect } from 'react';
 
 export default function EditLeadStatus({ condition, onClose }) {
   const [activeStatus, setActiveStatus] = useState(condition.active_status);
-  const [leadStatus, setLeadStatus] = useState(condition.status);
+  const [leadStatus, setLeadStatus] = useState(condition.lead_status); // Fixed to use lead_status
   const [description, setDescription] = useState(condition.description);
+  const [id] = useState(condition._id); // Assuming condition._id is the ID of the lead status
 
   useEffect(() => {
     // Set the initial state based on the selected condition
     setActiveStatus(condition.active_status);
-    setLeadStatus(condition.status);
+    setLeadStatus(condition.lead_status); // Fixed to use lead_status
     setDescription(condition.description);
   }, [condition]);
 
@@ -16,16 +17,40 @@ export default function EditLeadStatus({ condition, onClose }) {
     setActiveStatus(prevStatus => !prevStatus);
   };
 
-  const handleSave = () => {
-    // Logic to save the updated lead status
-    console.log('Saving:', { leadStatus, description, activeStatus });
-    // Call onClose to return to the main page
-    onClose();
+  const handleSave = async () => {
+    try {
+      // Prepare the data to send
+      const updatedLeadStatus = {
+        id, // Use the ID of the lead status being updated
+        lead_status: leadStatus,
+        description,
+        active_status: activeStatus,
+      };
+
+      const response = await fetch('/api/lead_statuses', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedLeadStatus),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update lead status');
+      }
+
+      const result = await response.json();
+      console.log('Update successful:', result);
+      // Call onClose to return to the main page
+      onClose();
+    } catch (error) {
+      console.error('Error updating lead status:', error);
+    }
   };
 
   return (
     <div className="min-h-screen">
-      <div className="p-6 max-w-4xl ">
+      <div className="p-6 max-w-4xl">
         <h2 className="text-xl font-bold mb-4">Edit Status</h2>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

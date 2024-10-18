@@ -8,7 +8,7 @@ export default function EditServicePriorityLevel({ condition, onClose }) {
   useEffect(() => {
     // Set the initial state based on the selected condition
     setActiveStatus(condition.active_status);
-    setLeadStatus(condition.status);
+    setLeadStatus(condition.priority_level);
     setDescription(condition.description);
   }, [condition]);
 
@@ -16,11 +16,35 @@ export default function EditServicePriorityLevel({ condition, onClose }) {
     setActiveStatus(prevStatus => !prevStatus);
   };
 
-  const handleSave = () => {
-    // Logic to save the updated lead status
-    console.log('Saving:', { leadStatus, description, activeStatus });
-    // Call onClose to return to the main page
-    onClose();
+  const handleSave = async () => {
+    try {
+      const updatedData = {
+        id: condition._id,  // assuming `condition` has an `_id` property
+        priority_level: leadStatus,
+        description,
+        active_status: activeStatus,
+      };
+
+      // Send the PUT request to update the service priority level
+      const response = await fetch(`/api/priority_levels`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedData),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log('Updated successfully:', result);
+        // Call onClose to return to the main page
+        onClose();
+      } else {
+        console.error('Failed to update the service priority level');
+      }
+    } catch (error) {
+      console.error('Error while updating:', error);
+    }
   };
 
   return (
