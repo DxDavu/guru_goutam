@@ -1,4 +1,5 @@
 // app/api/role/route.js
+
 import { connectToDatabase } from '@/lib/database';
 import Role from '@/lib/database/models/Role.model';
 

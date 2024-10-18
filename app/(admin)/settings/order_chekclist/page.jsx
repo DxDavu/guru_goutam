@@ -1,181 +1,108 @@
+// app/(admin)/settings/order_checklist/page.jsx
+
 'use client';
 
 import { useState, useEffect } from 'react';
-import CreateOrderChecklist from '@/components/CreateOrderChecklist'; // Updated component name
-import EditOrderChecklist from '@/components/EditOrderChecklist'; // Updated component name
-import { DataTable } from '@/components/DataTable'; // Import the generic DataTable component
-import { FaTrashAlt, FaEdit } from 'react-icons/fa';
+import CreateOrderChecklistForm from '@/components/CreateOrderChecklistForm';
+import EditOrderChecklistForm from '@/components/EditOrderChecklistForm';
+import { DataTable } from '@/components/DataTable';
+import { Button } from '@/components/ui/button'; // Ensure this path is correct
 
-// Define the columns for the Order Checklist table
-const columns = (handleEdit, handleDelete) => [
-  {
-    accessorKey: 'si_no',
-    header: () => (
-      <div className="flex items-center">
-        <input type="checkbox" className="mr-2" />
-        SI No
-      </div>
-    ),
-    cell: ({ row }) => (
-      <td className="py-2 px-5 flex items-center">
-        <input type="checkbox" value={row.original.si_no} className="mr-2" />
-        {row.original.si_no}
-      </td>
-    ),
-  },
-  {
-    accessorKey: 'checklist_name',
-    header: 'Checklist Name',
-  },
-  {
-    accessorKey: 'description',
-    header: 'Description',
-  },
-  {
-    accessorKey: 'checklist_qty',
-    header: 'Checklist QTY',
-  },
-  {
-    accessorKey: 'status',
-    header: 'Status',
-    cell: ({ row }) => (
-      <td className="py-2 px-4">
-        <div className="flex rounded">
-          {row.original.active_status ? (
-            <span className="bg-green-500 text-white px-3 py-2 rounded-[10px]">Active</span>
-          ) : (
-            <span className="bg-red-500 text-white px-3 py-2 rounded-[10px]">Inactive</span>
-          )}
-        </div>
-      </td>
-    ),
-  },
-  {
-    header: 'Action',
-    cell: ({ row }) => (
-      <td className="py-2 px-5 flex">
-        <button
-          className="px-3 py-2 bg-red-500 text-white rounded-[10px] mr-2"
-          onClick={() => handleDelete(row.original.si_no)} // Adjusted to use si_no
-        >
-          <FaTrashAlt />
-        </button>
-        <button
-          className="px-3 py-2 bg-blue-500 text-white rounded-[10px]"
-          onClick={() => handleEdit(row.original)} // Call handleEdit on click
-        >
-          <FaEdit />
-        </button>
-      </td>
-    ),
-  },
-];
-
-// Order Checklist Page Component
-export default function OrderCheckList() {
+export default function OrderChecklistPage() {
+  const [orderChecklist, setOrderChecklist] = useState([]);
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [isEditFormOpen, setIsEditFormOpen] = useState(false);
-  const [selectedCondition, setSelectedCondition] = useState(null);
-  const [orderChecklist, setOrderChecklist] = useState([]); // Renamed to orderChecklist
-  
-  // State to manage visibility of the main order checklist page
-  const [isOrderChecklistPageVisible, setIsOrderChecklistPageVisible] = useState(true);
+  const [currentChecklist, setCurrentChecklist] = useState(null);
+  const [isEditMode, setIsEditMode] = useState(false); // Track if in edit mode
 
-  // Dummy data for the order checklist
   useEffect(() => {
-    const dummyData = [
-      {
-        si_no: '1',
-        checklist_name: 'Initial Review',
-        description: 'Checklist for the initial review of the order.',
-        checklist_qty: '5',
-        active_status: true,
-      },
-      {
-        si_no: '2',
-        checklist_name: 'Approval Checklist',
-        description: 'Steps required for approval.',
-        checklist_qty: '3',
-        active_status: false,
-      },
-      {
-        si_no: '3',
-        checklist_name: 'Final Inspection',
-        description: 'Ensure all items are inspected before delivery.',
-        checklist_qty: '8',
-        active_status: true,
-      },
-      {
-        si_no: '4',
-        checklist_name: 'Packaging Checklist',
-        description: 'Checklist for packaging and labeling.',
-        checklist_qty: '10',
-        active_status: true,
-      },
-      {
-        si_no: '5',
-        checklist_name: 'Delivery Checklist',
-        description: 'Steps to confirm during delivery.',
-        checklist_qty: '6',
-        active_status: false,
-      },
-    ];
-
-    // Set dummy data to state
-    setOrderChecklist(dummyData);
+    const fetchData = async () => {
+      try {
+        const response = await fetch('/api/order_checklist'); // Check the API endpoint here
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        setOrderChecklist(data);
+      } catch (error) {
+        console.error('Error fetching order checklist data:', error);
+      }
+    };
+    fetchData();
   }, []);
 
-  // Function to handle editing an order checklist item
-  const handleEdit = (condition) => {
-    setSelectedCondition(condition);
-    setIsEditFormOpen(true);
-    setIsOrderChecklistPageVisible(false); // Hide OrderChecklistPage when editing
+  const handleEdit = (checklist) => {
+    setCurrentChecklist(checklist);
+    setIsFormOpen(true);
+    setIsEditMode(true); // Set to edit mode
   };
 
-  // Function to handle deleting an order checklist item
-  const handleDelete = (conditionId) => {
-    console.log(`Deleting order checklist item with ID: ${conditionId}`);
-    // Logic to delete order checklist item
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch(`/api/order_checklist`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id }), // Include ID in request body
+      });
+      if (response.ok) {
+        alert('Checklist deleted successfully!');
+        setOrderChecklist(orderChecklist.filter((item) => item._id !== id));
+      } else {
+        const errorData = await response.json();
+        alert(`Error deleting checklist: ${errorData.message}`);
+      }
+    } catch (error) {
+      console.error('Error deleting checklist:', error);
+    }
   };
 
-  // Function to handle creating a new order checklist item
-  const handleCreateOrderChecklist = () => {
-    setIsOrderChecklistPageVisible(false); // Hide OrderChecklistPage
-    setIsFormOpen(true); // Show CreateOrderChecklistForm
+  const handleCloseForm = () => {
+    setIsFormOpen(false);
+    setCurrentChecklist(null);
+    setIsEditMode(false); // Reset edit mode
   };
+
+  const columns = () => [
+    {
+      header: 'Checklist Name',
+      accessorKey: 'checklistName',
+    },
+    {
+      header: 'Description',
+      accessorKey: 'description',
+    },
+    {
+      header: 'Actions',
+      accessorKey: 'actions',
+      cell: ({ row }) => (
+        <>
+          <Button onClick={() => handleEdit(row.original)}>Edit</Button> {/* Pass the whole checklist object */}
+          <Button onClick={() => handleDelete(row.original._id)}>Delete</Button>
+        </>
+      ),
+    },
+  ];
 
   return (
-    <div>
-      {isOrderChecklistPageVisible ? (
-        <>
-          <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-semibold">Order Checklist</h1>
-            {/* Conditionally render the Create Order Checklist button */}
-            <button
-              onClick={handleCreateOrderChecklist} // Call the function to open CreateOrderChecklistForm
-              className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-            >
-              + Add Checklist
-            </button>
-          </div>
+<div>
+  <h1>Order Checklist</h1>
+  {isFormOpen ? (
+    isEditMode ? (
+      <EditOrderChecklistForm checklist={currentChecklist} onClose={handleCloseForm} />
+    ) : (
+      <CreateOrderChecklistForm onClose={handleCloseForm} />
+    )
+  ) : (
+    <>
+      <Button
+        onClick={() => { setIsFormOpen(true); setIsEditMode(false); }}
+        className="bg-blue-500 text-white ml-auto block px-4 py-2 rounded hover:bg-blue-700"
+      >
+        + Add Checklist
+      </Button>
+      <DataTable columns={columns()} data={orderChecklist} />
+    </>
+  )}
+</div>
 
-          {/* Order Checklist Table */}
-          <div className="mt-6">
-            <DataTable columns={columns(handleEdit, handleDelete)} data={orderChecklist} />
-          </div>
-        </>
-      ) : (
-        // Display Create Form or Edit Form based on state
-        <>
-          {isFormOpen ? (
-            <CreateOrderChecklist onClose={() => setIsOrderChecklistPageVisible(true)} /> // Updated component name
-          ) : (
-            isEditFormOpen && selectedCondition && (
-              <EditOrderChecklist condition={selectedCondition} onClose={() => setIsOrderChecklistPageVisible(true)} /> // Updated component name
-            )
-          )}
-        </>
-      )}
-    </div>
   );
 }

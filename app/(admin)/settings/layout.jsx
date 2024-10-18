@@ -1,19 +1,22 @@
 // app/(admin)/settings/layout.jsx
 
-'use client';
+import Sidebar from './components/Sidebar';
 
+<<<<<<< HEAD
 import Link from 'next/link';
 import { useState } from 'react';
 import { FaUser, FaUserShield, FaBuilding, FaMapMarkerAlt, FaCodeBranch, FaFileAlt, FaPercentage, FaClipboardCheck, FaAddressBook, FaRegListAlt } from 'react-icons/fa';
+=======
+>>>>>>> eef1a6a345301d00013ac916cc44d189fe5e4db8
 
-export default function SettingsLayout({ children }) {
-  const [activeTab, setActiveTab] = useState('User');
+export default async function SettingsLayout({ children }) {
 
   const linkClasses = "cursor-pointer px-4 py-2 text-lg font-medium flex items-center space-x-2";
   const activeLinkClasses = "bg-indigo-100";
 
   return (
     <div className="flex h-screen">
+<<<<<<< HEAD
       {/* Left Sidebar */}
       <aside className="w-64 bg-gray-100 border-r">
         <nav className="flex flex-col py-4 space-y-4">
@@ -127,9 +130,15 @@ export default function SettingsLayout({ children }) {
           </Link>
         </nav>
       </aside>
+=======
+      {/* Sidebar with links */}
+      <Sidebar />
+>>>>>>> eef1a6a345301d00013ac916cc44d189fe5e4db8
 
       {/* Main Content Area */}
-      <main className="flex-1 p-8">{children}</main>
+      <main className="flex-1 p-8">
+        {children}
+      </main>
     </div>
   );
 }

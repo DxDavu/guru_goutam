@@ -31,7 +31,6 @@ const columns = (handleEdit, handleDelete) => [
     accessorKey: 'description',
     header: 'Description',
   },
-  
   {
     accessorKey: 'status',
     header: 'Status',
@@ -73,49 +72,42 @@ export default function LeadStatus() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isEditFormOpen, setIsEditFormOpen] = useState(false);
   const [selectedCondition, setSelectedCondition] = useState(null);
-  const [leadStatus, setLeadStatus] = useState([]); // Renamed to leadStatus
-  
-  // State to manage visibility of the main lead status page
+  const [leadStatus, setLeadStatus] = useState([]);
   const [isLeadStatusPageVisible, setIsLeadStatusPageVisible] = useState(true);
 
-  // Dummy data for the lead status
+  // Fetch lead statuses from the API
   useEffect(() => {
-    const dummyData = [
-      {
-        si_no: '1',
-        status: 'Initial Review',
-        description: 'Checklist for the initial review of the lead.',
-        active_status: true,
-      },
-      {
-        si_no: '2',
-        status: 'Approval Checklist',
-        description: 'Steps required for approval.',
-        active_status: false,
-      },
-      {
-        si_no: '3',
-        status: 'Final Inspection',
-        description: 'Ensure all items are inspected before delivery.',
-        active_status: true,
-      },
-      {
-        si_no: '4',
-        status: 'Packaging Checklist',
-        description: 'Checklist for packaging and labeling.',
-        active_status: true,
-      },
-      {
-        si_no: '5',
-        status: 'Delivery Checklist',
-        description: 'Steps to confirm during delivery.',
-        active_status: false,
-      },
-    ];
+    const fetchLeadStatus = async () => {
+      try {
+        const response = await fetch('/api/lead-status'); // Adjust with your API URL
+        const data = await response.json();
+        setLeadStatus(data);
+      } catch (error) {
+        console.error('Error fetching lead statuses:', error);
+      }
+    };
 
-    // Set dummy data to state
-    setLeadStatus(dummyData);
+    fetchLeadStatus();
   }, []);
+
+  // Function to handle creating a new lead status item
+  const handleCreateLeadStatus = async (newStatus) => {
+    try {
+      const response = await fetch('/api/lead-status', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newStatus),
+      });
+
+      const createdStatus = await response.json();
+      setLeadStatus((prevStatuses) => [...prevStatuses, createdStatus]);
+      setIsLeadStatusPageVisible(true);
+    } catch (error) {
+      console.error('Error creating lead status:', error);
+    }
+  };
 
   // Function to handle editing a lead status item
   const handleEdit = (condition) => {
@@ -124,16 +116,42 @@ export default function LeadStatus() {
     setIsLeadStatusPageVisible(false); // Hide LeadStatusPage when editing
   };
 
-  // Function to handle deleting a lead status item
-  const handleDelete = (conditionId) => {
-    console.log(`Deleting lead status item with ID: ${conditionId}`);
-    // Logic to delete lead status item
+  const handleUpdateLeadStatus = async (updatedStatus) => {
+    try {
+      const response = await fetch(`/api/lead-status/${updatedStatus.si_no}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedStatus),
+      });
+
+      if (response.ok) {
+        setLeadStatus((prevStatuses) =>
+          prevStatuses.map((status) =>
+            status.si_no === updatedStatus.si_no ? updatedStatus : status
+          )
+        );
+        setIsLeadStatusPageVisible(true);
+        setIsEditFormOpen(false);
+      }
+    } catch (error) {
+      console.error('Error updating lead status:', error);
+    }
   };
 
-  // Function to handle creating a new lead status item
-  const handleCreateLeadStatus = () => {
-    setIsLeadStatusPageVisible(false); // Hide LeadStatusPage
-    setIsFormOpen(true); // Show CreateLeadStatusForm
+  // Function to handle deleting a lead status item
+  const handleDelete = async (conditionId) => {
+    try {
+      await fetch(`/api/lead-status/${conditionId}`, {
+        method: 'DELETE',
+      });
+      setLeadStatus((prevStatuses) =>
+        prevStatuses.filter((status) => status.si_no !== conditionId)
+      );
+    } catch (error) {
+      console.error('Error deleting lead status:', error);
+    }
   };
 
   return (
@@ -142,28 +160,32 @@ export default function LeadStatus() {
         <>
           <div className="flex justify-between items-center">
             <h1 className="text-2xl font-semibold">Lead Status</h1>
-            {/* Conditionally render the Create Lead Status button */}
             <button
-              onClick={handleCreateLeadStatus} // Call the function to open CreateLeadStatusForm
+              onClick={() => setIsFormOpen(true)}
               className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
             >
               + Add Status
             </button>
           </div>
 
-          {/* Lead Status Table */}
           <div className="mt-6">
             <DataTable columns={columns(handleEdit, handleDelete)} data={leadStatus} />
           </div>
         </>
       ) : (
-        // Display Create Form or Edit Form based on state
         <>
           {isFormOpen ? (
-            <CreateLeadStatus onClose={() => setIsLeadStatusPageVisible(true)} /> // Updated component name
+            <CreateLeadStatus
+              onCreate={handleCreateLeadStatus}
+              onClose={() => setIsLeadStatusPageVisible(true)}
+            />
           ) : (
             isEditFormOpen && selectedCondition && (
-              <EditLeadStatus condition={selectedCondition} onClose={() => setIsLeadStatusPageVisible(true)} /> // Updated component name
+              <EditLeadStatus
+                condition={selectedCondition}
+                onUpdate={handleUpdateLeadStatus}
+                onClose={() => setIsLeadStatusPageVisible(true)}
+              />
             )
           )}
         </>
