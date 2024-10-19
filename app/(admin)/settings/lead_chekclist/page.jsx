@@ -16,13 +16,18 @@ const columns = (handleEdit, handleDelete) => [
         SI No
       </div>
     ),
-    cell: ({ row }) => (
-      <td className="py-2 px-5 flex items-center">
-        <input type="checkbox" value={row.original.si_no} className="mr-2" />
-        {row.original.si_no}
-      </td>
-    ),
+    cell: ({ row, table }) => {
+      // Calculate index based on the row's index in the dataset
+      const index = row.index + 1; // Assuming row.index starts from 0, add 1 to make it start from 1
+      return (
+        <td className="py-2 px-5 flex items-center">
+          <input type="checkbox" value={index} className="mr-2" />
+          {index}
+        </td>
+      );
+    },
   },
+  
   {
     accessorKey: 'checklist_name',
     header: 'Checklist Name',

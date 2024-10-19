@@ -31,27 +31,28 @@ export async function POST(req) {
 }
 // PUT (update) a lead status
 export async function PUT(req) {
-    try {
-      await connectToDatabase();
-      const { id, lead_status, description, active_status } = await req.json();
-  
-      const updatedLeadStatus = await LeadStatus.findByIdAndUpdate(id, {
-          lead_status,
-          description,
-          active_status,
-      }, { new: true });
-  
-      if (!updatedLeadStatus) {
-        return new Response(JSON.stringify({ message: 'Lead Status not found' }), { status: 404 });
-      }
-  
-      return new Response(JSON.stringify({ message: 'Lead Status updated successfully!', leadStatus: updatedLeadStatus }), { status: 200 });
-    } catch (error) {
-      console.error('Error updating lead status:', error);
-      return new Response(JSON.stringify({ message: 'Error updating lead status', error }), { status: 500 });
+  try {
+    await connectToDatabase();
+    const { id, lead_status, description, active_status, checklist_qty } = await req.json(); // Include checklist_qty
+
+    const updatedLeadStatus = await LeadStatus.findByIdAndUpdate(id, {
+      lead_status,
+      description,
+      active_status,
+      checklist_qty, // Add checklist_qty to the update
+    }, { new: true });
+
+    if (!updatedLeadStatus) {
+      return new Response(JSON.stringify({ message: 'Lead Status not found' }), { status: 404 });
     }
+
+    return new Response(JSON.stringify({ message: 'Lead Status updated successfully!', leadStatus: updatedLeadStatus }), { status: 200 });
+  } catch (error) {
+    console.error('Error updating lead status:', error);
+    return new Response(JSON.stringify({ message: 'Error updating lead status', error }), { status: 500 });
   }
-  
+}
+
 
 // DELETE a lead status
 export async function DELETE(req) {
