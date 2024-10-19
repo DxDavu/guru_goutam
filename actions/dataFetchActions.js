@@ -28,3 +28,5 @@ export const getBranches = async () => {
   await connectToDatabase();
   return await Branch.find();
 };
+
+
