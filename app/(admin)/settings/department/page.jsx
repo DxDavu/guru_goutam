@@ -1,9 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import CreateDepartmentForm from '@/components/CreateDepartmentForm'; // Updated component name
-import EditDepartmentForm from '@/components/EditDepartmentForm'; // Updated component name
-import { DataTable } from '@/components/DataTable'; // Import the generic DataTable component
+import CreateDepartmentForm from '@/components/CreateDepartmentForm';
+import EditDepartmentForm from '@/components/EditDepartmentForm';
+import { DataTable } from '@/components/DataTable';
 import { FaTrashAlt, FaEdit } from 'react-icons/fa';
 
 // Define the columns for the Department table
@@ -16,16 +16,19 @@ const columns = (handleEdit, handleDelete) => [
         SI No
       </div>
     ),
-    cell: ({ row }) => (
-      <td className="py-2 px-5 flex items-center">
-        <input type="checkbox" value={row.original.si_no} className="mr-2" />
-        {row.original.si_no}
-      </td>
-    ),
+    cell: ({ row, table }) => {
+      // Calculate index based on the row's index in the dataset
+      const index = row.index + 1; // Assuming row.index starts from 0, add 1 to make it start from 1
+      return (
+        <td className="py-2 px-5 flex items-center">
+          <input type="checkbox" value={index} className="mr-2" />
+          {index}
+        </td>
+      );
+    },
   },
-  
   {
-    accessorKey: 'department', // Column for department
+    accessorKey: 'department_name', // Column for department
     header: 'Department',
   },
   {
@@ -53,7 +56,7 @@ const columns = (handleEdit, handleDelete) => [
       <td className="py-2 px-5 flex">
         <button
           className="px-3 py-2 bg-red-500 text-white rounded-[10px] mr-2"
-          onClick={() => handleDelete(row.original.si_no)} // Adjusted to use si_no
+          onClick={() => handleDelete(row.original._id)} // Adjusted to use si_no
         >
           <FaTrashAlt />
         </button>
@@ -72,56 +75,60 @@ const columns = (handleEdit, handleDelete) => [
 export default function Department() { 
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isEditFormOpen, setIsEditFormOpen] = useState(false);
-  const [selectedDepartment, setSelectedDepartment] = useState(null); // Renamed to selectedDepartment
-  const [departments, setDepartments] = useState([]); // Renamed to departments
-  
-  // State to manage visibility of the main department page
+  const [selectedDepartment, setSelectedDepartment] = useState(null);
+  const [departments, setDepartments] = useState([]);
   const [isDepartmentPageVisible, setIsDepartmentPageVisible] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
 
-  // Dummy data for the departments
+  // Fetch departments from the API
   useEffect(() => {
-    const dummyData = [
-      {
-        si_no: '1',
-        department: 'Operations',
-        description: 'Manages daily operations.',
-        active_status: true,
-      },
-      {
-        si_no: '2',
-        department: 'Engineering',
-        description: 'Responsible for coding.',
-        active_status: false,
-      },
-      {
-        si_no: '3',
-        department: 'Human Resources',
-        description: 'Handles employee relations.',
-        active_status: true,
-      },
-      {
-        si_no: '4',
-        department: 'Creative',
-        description: 'Designs UI/UX.',
-        active_status: true,
-      },
-    ];
+    const fetchDepartments = async () => {
+      try {
+        const response = await fetch('/api/department'); // Replace with your API endpoint
+        if (!response.ok) {
+          throw new Error('Failed to fetch departments');
+        }
+        const data = await response.json();
+        setDepartments(data);
+        setIsLoading(false);
+      } catch (error) {
+        console.error(error);
+        setIsError(true);
+        setIsLoading(false);
+      }
+    };
 
-    // Set dummy data to state
-    setDepartments(dummyData);
+    fetchDepartments();
   }, []);
 
   // Function to handle editing a department
   const handleEdit = (department) => {
     setSelectedDepartment(department);
     setIsEditFormOpen(true);
-    setIsDepartmentPageVisible(false); // Hide DepartmentPage when editing
+    setIsDepartmentPageVisible(false);
   };
 
   // Function to handle deleting a department
-  const handleDelete = (departmentId) => {
-    console.log(`Deleting department with ID: ${departmentId}`);
-    // Logic to delete department
+  const handleDelete = async (departmentId) => {
+    try {
+      const response = await fetch(`/api/department`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: departmentId }), // Sending the department ID
+      });
+
+      if (response.ok) {
+        console.log(`Department with ID: ${departmentId} deleted successfully.`);
+        setDepartments(departments.filter((item) => item._id !== departmentId));
+      } else {
+        console.error('Failed to delete the department');
+      }
+    } catch (error) {
+      console.error('Error deleting the department:', error);
+    }
   };
 
   // Function to handle creating a new department
@@ -136,7 +143,6 @@ export default function Department() {
         <>
           <div className="flex justify-between items-center">
             <h1 className="text-2xl font-semibold">Departments</h1>
-            {/* Conditionally render the Create Department button */}
             <button
               onClick={handleCreateDepartment} // Call the function to open CreateDepartmentForm
               className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
@@ -151,13 +157,15 @@ export default function Department() {
           </div>
         </>
       ) : (
-        // Display Create Form or Edit Form based on state
         <>
           {isFormOpen ? (
-            <CreateDepartmentForm onClose={() => setIsDepartmentPageVisible(true)} /> // Updated component name
+            <CreateDepartmentForm onClose={() => setIsDepartmentPageVisible(true)} />
           ) : (
             isEditFormOpen && selectedDepartment && (
-              <EditDepartmentForm department={selectedDepartment} onClose={() => setIsDepartmentPageVisible(true)} /> // Updated prop name
+              <EditDepartmentForm
+                department={selectedDepartment}
+                onClose={() => setIsDepartmentPageVisible(true)}
+              />
             )
           )}
         </>
