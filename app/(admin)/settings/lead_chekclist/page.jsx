@@ -56,7 +56,7 @@ const columns = (handleEdit, handleDelete) => [
       <td className="py-2 px-5 flex">
         <button
           className="px-3 py-2 bg-red-500 text-white rounded-[10px] mr-2"
-          onClick={() => handleDelete(row.original._id)} // Adjusted to use si_no
+          onClick={() => handleDelete(row.original.si_no)} // Adjusted to use si_no
         >
           <FaTrashAlt />
         </button>
@@ -77,28 +77,52 @@ export default function LeadChecklist() {
   const [isEditFormOpen, setIsEditFormOpen] = useState(false);
   const [selectedCondition, setSelectedCondition] = useState(null);
   const [leadChecklist, setLeadChecklist] = useState([]); // Renamed to leadChecklist
+  
+  // State to manage visibility of the main lead checklist page
   const [isLeadChecklistPageVisible, setIsLeadChecklistPageVisible] = useState(true);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
-  // Fetch lead checklist data from API
+  // Dummy data for the lead checklist
   useEffect(() => {
-    const fetchLeadChecklist = async () => {
-      try {
-        const response = await fetch('/api/lead_checklist'); // Replace with your actual API endpoint
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        setLeadChecklist(data);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+    const dummyData = [
+      {
+        si_no: '1',
+        checklist_name: 'Initial Review',
+        description: 'Checklist for the initial review of the lead.',
+        checklist_qty: '5',
+        active_status: true,
+      },
+      {
+        si_no: '2',
+        checklist_name: 'Approval Checklist',
+        description: 'Steps required for approval.',
+        checklist_qty: '3',
+        active_status: false,
+      },
+      {
+        si_no: '3',
+        checklist_name: 'Final Inspection',
+        description: 'Ensure all items are inspected before delivery.',
+        checklist_qty: '8',
+        active_status: true,
+      },
+      {
+        si_no: '4',
+        checklist_name: 'Packaging Checklist',
+        description: 'Checklist for packaging and labeling.',
+        checklist_qty: '10',
+        active_status: true,
+      },
+      {
+        si_no: '5',
+        checklist_name: 'Delivery Checklist',
+        description: 'Steps to confirm during delivery.',
+        checklist_qty: '6',
+        active_status: false,
+      },
+    ];
 
-    fetchLeadChecklist();
+    // Set dummy data to state
+    setLeadChecklist(dummyData);
   }, []);
 
   // Function to handle editing a lead checklist item
@@ -107,46 +131,18 @@ export default function LeadChecklist() {
     setIsEditFormOpen(true);
     setIsLeadChecklistPageVisible(false); // Hide LeadChecklistPage when editing
   };
-  const handleDelete = async (conditionId) => {
-    const confirmed = window.confirm('Are you sure you want to delete this checklist?');
-    if (confirmed) {
-      try {
-        const response = await fetch(`/api/lead_checklist/${conditionId}`, { // Ensure the ID is in the URL
-          method: 'DELETE',
-        });
-  
-        if (!response.ok) {
-          const errorData = await response.json(); // Get error message from response
-          throw new Error(errorData.message || 'Failed to delete the checklist item');
-        }
-  
-        const result = await response.json();
-        console.log(result.message); // Log success message
-  
-        // Remove the deleted item from the state
-        setLeadChecklist((prevChecklist) => 
-          prevChecklist.filter(item => item._id !== conditionId)
-        );
-      } catch (error) {
-        console.error('Error deleting checklist:', error);
-        // Optionally show an error message to the user
-      }
-    }
+
+  // Function to handle deleting a lead checklist item
+  const handleDelete = (conditionId) => {
+    console.log(`Deleting lead checklist item with ID: ${conditionId}`);
+    // Logic to delete lead checklist item
   };
-  
+
   // Function to handle creating a new lead checklist item
   const handleCreateLeadChecklist = () => {
     setIsLeadChecklistPageVisible(false); // Hide LeadChecklistPage
     setIsFormOpen(true); // Show CreateLeadChecklistForm
   };
-
-  if (loading) {
-    return <div>Loading...</div>; // Show a loading state while fetching data
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>; // Show error message if fetching fails
-  }
 
   return (
     <div>

@@ -1,73 +1,72 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { connectToDatabase } from '@/lib/database';
-import LeadChecklist from '@/lib/database/models/LeadChecklist.model'; // Ensure you have a model for LeadChecklist
+import LeadStatus from '@/lib/database/models/LeadStatus.model'; // Ensure you have a model for LeadStatus
 
-// GET all lead checklists
+// GET all lead statuses
 export async function GET() {
   try {
     await connectToDatabase();
-    const leadChecklists = await LeadChecklist.find();
+    const leadStatuses = await LeadStatus.find();
 
-    return new Response(JSON.stringify(leadChecklists), { status: 200 });
+    return new Response(JSON.stringify(leadStatuses), { status: 200 });
   } catch (error) {
-    return new Response(JSON.stringify({ message: 'Error fetching lead checklists', error }), { status: 500 });
+    return new Response(JSON.stringify({ message: 'Error fetching lead statuses', error }), { status: 500 });
   }
 }
 
-// POST (create) a new lead checklist
+// POST (create) a new lead status
 export async function POST(req) {
   try {
     await connectToDatabase();
-    const checklistData = await req.json();
+    const leadStatusData = await req.json();
 
-    const newLeadChecklist = new LeadChecklist(checklistData);
-    await newLeadChecklist.save();
+    const newLeadStatus = new LeadStatus(leadStatusData);
+    await newLeadStatus.save();
 
-    return new Response(JSON.stringify({ message: 'Lead Checklist created successfully!', leadChecklist: newLeadChecklist }), { status: 201 });
+    return new Response(JSON.stringify({ message: 'Lead Status created successfully!', leadStatus: newLeadStatus }), { status: 201 });
   } catch (error) {
-    console.error('Error creating lead checklist:', error);
-    return new Response(JSON.stringify({ message: 'Error creating lead checklist', error }), { status: 500 });
+    console.error('Error creating lead status:', error);
+    return new Response(JSON.stringify({ message: 'Error creating lead status', error }), { status: 500 });
   }
 }
-
-// PUT (update) a lead checklist
+// PUT (update) a lead status
 export async function PUT(req) {
-  try {
-    await connectToDatabase();
-    const { id, checklist_name, description, checklist_qty, active_status } = await req.json();
-
-    const updatedLeadChecklist = await LeadChecklist.findByIdAndUpdate(id, {
-      checklist_name,
-      description,
-      checklist_qty,
-      active_status,
-    }, { new: true });
-
-    if (!updatedLeadChecklist) {
-      return new Response(JSON.stringify({ message: 'Lead Checklist not found' }), { status: 404 });
+    try {
+      await connectToDatabase();
+      const { id, lead_status, description, active_status } = await req.json();
+  
+      const updatedLeadStatus = await LeadStatus.findByIdAndUpdate(id, {
+          lead_status,
+          description,
+          active_status,
+      }, { new: true });
+  
+      if (!updatedLeadStatus) {
+        return new Response(JSON.stringify({ message: 'Lead Status not found' }), { status: 404 });
+      }
+  
+      return new Response(JSON.stringify({ message: 'Lead Status updated successfully!', leadStatus: updatedLeadStatus }), { status: 200 });
+    } catch (error) {
+      console.error('Error updating lead status:', error);
+      return new Response(JSON.stringify({ message: 'Error updating lead status', error }), { status: 500 });
     }
-
-    return new Response(JSON.stringify({ message: 'Lead Checklist updated successfully!', leadChecklist: updatedLeadChecklist }), { status: 200 });
-  } catch (error) {
-    console.error('Error updating lead checklist:', error);
-    return new Response(JSON.stringify({ message: 'Error updating lead checklist', error }), { status: 500 });
   }
-}
+  
 
-// DELETE a lead checklist
+// DELETE a lead status
 export async function DELETE(req) {
   try {
     await connectToDatabase();
-    const { id } = await req.json(); // Ensure you're extracting the ID correctly
+    const { id } = await req.json();
 
-    const deletedLeadChecklist = await LeadChecklist.findByIdAndDelete(id);
-    if (!deletedLeadChecklist) {
-      return new Response(JSON.stringify({ message: 'Lead Checklist not found' }), { status: 404 });
+    const deletedLeadStatus = await LeadStatus.findByIdAndDelete(id);
+    if (!deletedLeadStatus) {
+      return new Response(JSON.stringify({ message: 'Lead Status not found' }), { status: 404 });
     }
 
-    return new Response(JSON.stringify({ message: 'Lead Checklist deleted successfully!' }), { status: 200 });
+    return new Response(JSON.stringify({ message: 'Lead Status deleted successfully!' }), { status: 200 });
   } catch (error) {
     console.error('Error during deletion:', error);
-    return new Response(JSON.stringify({ message: 'Error deleting lead checklist', error }), { status: 500 });
+    return new Response(JSON.stringify({ message: 'Error deleting lead status', error }), { status: 500 });
   }
 }

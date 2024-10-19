@@ -1,72 +1,52 @@
-'use client'; // This ensures it's a client component
+"use client";
 
-import { useState, useEffect } from 'react';
-import CreateUserForm from '@/components/CreateUserForm';
-import { DataTable } from '@/components/DataTable';
-import { PencilIcon, TrashIcon } from '@heroicons/react/24/solid';
+import { useState } from "react";
+import CreateUserForm from "@/components/CreateUserForm";
+import { DataTable } from "@/components/DataTable";
+import { PencilIcon, TrashIcon } from "@heroicons/react/24/solid";
 
-export default function UserPageClient({ userPermissions }) {
+export default function UserPageClient({
+  userPermissions,
+  users: initialUsers,
+  departments: initialDepartments,
+  roles: initialRoles,
+  branches: initialBranches,
+}) {
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [users, setUsers] = useState([]);
-  const [departments, setDepartments] = useState([]);
-  const [roles, setRoles] = useState([]);
-  const [branches, setBranches] = useState([]);
+  const [users, setUsers] = useState(initialUsers);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [departments, setDepartments] = useState(initialDepartments || []);
+  const [roles, setRoles] = useState(initialRoles || []);
+  const [branches, setBranches] = useState(initialBranches || []);
   const [loading, setLoading] = useState(true);
-  const [selectedUser, setSelectedUser] = useState(null); // State for selected user
 
-  // Utility function to check for permission
-  const checkPermission = (moduleName, permissionType) => {
-    return userPermissions?.[moduleName]?.[permissionType] || false;
+  // Utility function to check for permission in the 'Users' module
+  const checkPermission = (permissionType) => {
+    return userPermissions?.Users?.[permissionType] || false;
   };
 
-  // Check if user has permission for specific actions in the 'Users' module
-  const canAdd = checkPermission('Users', 'can_add');
-  const canEdit = checkPermission('Users', 'can_edit');
-  const canDelete = checkPermission('Users', 'can_delete');
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true); // Set loading to true before fetching data
-
-      try {
-        const userRes = await fetch('/api/user');
-        setUsers(await userRes.json());
-
-        const departmentRes = await fetch('/api/department');
-        setDepartments(await departmentRes.json());
-
-        const roleRes = await fetch('/api/role');
-        setRoles(await roleRes.json());
-
-        const branchRes = await fetch('/api/branch');
-        setBranches(await branchRes.json());
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-        setLoading(false); // Set loading to false once data is fetched
-      }
-    };
-    fetchData();
-  }, []);
+  const canAdd = checkPermission("can_add");
+  const canEdit = checkPermission("can_edit");
+  const canDelete = checkPermission("can_delete");
 
   const handleDelete = async (id) => {
-    if (confirm('Are you sure you want to delete this user?')) {
+    if (confirm("Are you sure you want to delete this user?")) {
       try {
-        const response = await fetch('/api/user', {
-          method: 'DELETE',
+        const response = await fetch("/api/user", {
+          method: "DELETE",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({ id }),
         });
         if (response.ok) {
-          alert('User deleted successfully');
+          alert("User deleted successfully");
           setUsers((prevUsers) => prevUsers.filter((user) => user._id !== id));
         } else {
-          alert('Failed to delete user');
+          alert("Failed to delete user");
         }
       } catch (error) {
-        console.error('Error deleting user:', error);
+        console.error("Error deleting user:", error);
       }
     }
   };
@@ -76,23 +56,27 @@ export default function UserPageClient({ userPermissions }) {
     setIsFormOpen(true);
   };
 
-  const handleFormClose = async (updatedUser) => {
+  const handleFormClose = (updatedUser) => {
     setIsFormOpen(false);
     setSelectedUser(null);
     if (updatedUser) {
-      const userRes = await fetch('/api/user');
-      setUsers(await userRes.json());
+      setUsers((prevUsers) => {
+        const updatedUsers = prevUsers.map((user) =>
+          user._id === updatedUser._id ? updatedUser : user
+        );
+        return updatedUsers;
+      });
     }
   };
 
   const columns = [
-    { accessorKey: 'first_name', header: 'First Name' },
-    { accessorKey: 'last_name', header: 'Last Name' },
-    { accessorKey: 'login_id', header: 'Login ID' },
-    { accessorKey: 'emailid', header: 'Email' },
+    { accessorKey: "first_name", header: "First Name" },
+    { accessorKey: "last_name", header: "Last Name" },
+    { accessorKey: "login_id", header: "Login ID" },
+    { accessorKey: "emailid", header: "Email" },
     {
-      accessorKey: 'actions',
-      header: 'Actions',
+      accessorKey: "actions",
+      header: "Actions",
       cell: ({ row }) => (
         <div className="flex space-x-2">
           {canEdit && (
@@ -116,10 +100,6 @@ export default function UserPageClient({ userPermissions }) {
     },
   ];
 
-  if (loading) {
-    return <div>Loading, please wait...</div>;
-  }
-
   return (
     <div>
       <div className="flex justify-between items-center">
@@ -140,7 +120,7 @@ export default function UserPageClient({ userPermissions }) {
           departments={departments}
           roles={roles}
           branches={branches}
-          user={selectedUser} // Pass the selected user to the form
+          user={selectedUser}
         />
       )}
 
