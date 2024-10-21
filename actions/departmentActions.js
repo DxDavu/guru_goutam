@@ -6,7 +6,7 @@ import Department from '@/lib/database/models/Department.model';
 // Create a new department
 export const createDepartment = async (departmentData) => {
   await connectToDatabase();
-
+// The function takes one parameter, departmentData, which is expected to be an object containing the information needed to create a new branch.
   const newDepartment = new Department({
     ...departmentData,
   });
