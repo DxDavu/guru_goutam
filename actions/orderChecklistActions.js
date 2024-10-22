@@ -3,48 +3,24 @@
 import { connectToDatabase } from '@/lib/database';
 import OrderChecklist from '@/lib/database/models/OrderChecklist.model';
 
-// Create a new checklist item
+// Create a new order checklist
 export const createOrderChecklist = async (checklistData) => {
   await connectToDatabase();
-
-  const newChecklist = new OrderChecklist(checklistData);
+  const newChecklist = new OrderChecklist({ ...checklistData });
   return await newChecklist.save();
 };
 
-// Retrieve a checklist item by ID
-export const getOrderChecklistById = async (id) => {
+// Retrieve all order checklists with optional pagination
+export const getAllOrderChecklists = async ({ skip = 0, limit = 10 } = {}) => {
   await connectToDatabase();
-  const checklist = await OrderChecklist.findById(id);
-  if (!checklist) {
-    throw new Error('Checklist item not found');
-  }
-  return checklist;
+  return await OrderChecklist.find({})
+    .skip(skip) // Skip for pagination
+    .limit(limit) // Limit for pagination
+    .lean(); // Convert to plain JavaScript objects
 };
 
-// Retrieve all checklist items
-export const getAllOrderChecklists = async () => {
+// Get the total number of order checklists
+export const getOrderChecklistCount = async () => {
   await connectToDatabase();
-  return await OrderChecklist.find({});
-};
-
-// Update a checklist item
-export const updateOrderChecklist = async (id, updateData) => {
-  await connectToDatabase();
-
-  const updatedChecklist = await OrderChecklist.findByIdAndUpdate(id, updateData, { new: true });
-  if (!updatedChecklist) {
-    throw new Error('Checklist item not found');
-  }
-  return updatedChecklist;
-};
-
-// Delete a checklist item
-export const deleteOrderChecklist = async (id) => {
-  await connectToDatabase();
-
-  const deletedChecklist = await OrderChecklist.findByIdAndDelete(id);
-  if (!deletedChecklist) {
-    throw new Error('Checklist item not found');
-  }
-  return deletedChecklist;
+  return await OrderChecklist.countDocuments(); // Get count of all order checklists
 };

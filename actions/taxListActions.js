@@ -21,10 +21,19 @@ export const getTaxById = async (id) => {
   return tax;
 };
 
-// Retrieve all tax entries
-export const getAllTaxes = async () => {
+// Retrieve all tax entries with optional pagination
+export const getAllTaxes = async ({ skip = 0, limit = 10 } = {}) => {
   await connectToDatabase();
-  return await TaxList.find({});
+  return await TaxList.find({})
+    .skip(skip) // Skip for pagination
+    .limit(limit) // Limit for pagination
+    .lean(); // Convert to plain JavaScript objects
+};
+
+// Get the total number of tax entries
+export const getTaxCount = async () => {
+  await connectToDatabase();
+  return await TaxList.countDocuments(); // Get count of all tax entries
 };
 
 // Update a tax entry

@@ -6,7 +6,7 @@ import Department from '@/lib/database/models/Department.model';
 // Create a new department
 export const createDepartment = async (departmentData) => {
   await connectToDatabase();
-// The function takes one parameter, departmentData, which is expected to be an object containing the information needed to create a new branch.
+
   const newDepartment = new Department({
     ...departmentData,
   });
@@ -16,24 +16,33 @@ export const createDepartment = async (departmentData) => {
 // Retrieve a department by ID
 export const getDepartmentById = async (id) => {
   await connectToDatabase();
-  const department = await Department.findById(id);
+  const department = await Department.findById(id).lean(); // Convert to plain JavaScript object
   if (!department) {
     throw new Error('Department not found');
   }
   return department;
 };
 
-// Retrieve all departments
-export const getAllDepartments = async () => {
+// Retrieve all departments with optional pagination
+export const getAllDepartments = async ({ skip = 0, limit = 10 } = {}) => {
   await connectToDatabase();
-  return await Department.find({});
+  return await Department.find({})
+    .skip(skip) // Skip for pagination
+    .limit(limit) // Limit for pagination
+    .lean(); // Convert to plain JavaScript objects
+};
+
+// Fetch the total number of departments
+export const getDepartmentsCount = async () => {
+  await connectToDatabase();
+  return await Department.countDocuments(); // Return total count of departments
 };
 
 // Update an existing department
 export const updateDepartment = async (id, updateData) => {
   await connectToDatabase();
 
-  const updatedDepartment = await Department.findByIdAndUpdate(id, updateData, { new: true });
+  const updatedDepartment = await Department.findByIdAndUpdate(id, updateData, { new: true }).lean(); // Convert to plain JavaScript object
   if (!updatedDepartment) {
     throw new Error('Department not found');
   }
@@ -43,7 +52,7 @@ export const updateDepartment = async (id, updateData) => {
 // Delete a department
 export const deleteDepartment = async (id) => {
   await connectToDatabase();
-  const deletedDepartment = await Department.findByIdAndDelete(id);
+  const deletedDepartment = await Department.findByIdAndDelete(id).lean(); // Convert to plain JavaScript object
   if (!deletedDepartment) {
     throw new Error('Department not found');
   }

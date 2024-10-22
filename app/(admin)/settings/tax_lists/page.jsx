@@ -1,170 +1,87 @@
-'use client';
+// @/app/(admin)/settings/taxlist/page.jsx
 
-import { useState, useEffect } from 'react';
-import CreateTaxListForm from '@/components/CreateTaxListForm'; // Updated component name
-import EditTaxListForm from '@/components/EditTaxListForm'; // Updated component name
-import { DataTable } from '@/components/DataTable'; // Import the generic DataTable component
-import { FaTrashAlt, FaEdit } from 'react-icons/fa';
+import Image from 'next/image';
+import Link from 'next/link';
+import TableSearch from '@/components/TableSearch';
+import { getAllTaxes, getTaxCount } from "@/actions/taxListActions";
+import Table from '@/components/Table';
+import Pagination from '@/components/Pagination';
+
+const ITEM_PER_PAGE = 10; // Set the items per page
 
 // Define the columns for the tax list table
-const columns = (handleEdit, handleDelete) => [
-  {
-    accessorKey: 'si_no',
-    header: () => (
-      <div className="flex items-center">
-        <input type="checkbox" className="mr-2" />
-        SI No
-      </div>
-    ),
-    cell: ({ row }) => (
-      <td className="py-2 px-5 flex items-center">
-        <input type="checkbox" value={row.original.si_no} className="mr-2" />
-        {row.index + 1} {/* This will display the row index + 1 as the serial number */}
-      </td>
-    ),
-  },
-  {
-    accessorKey: 'tax_name',
-    header: 'Tax Number',
-  },
-  {
-    accessorKey: 'percentage_cgst',
-    header: 'Percentage CGST',
-  },
-  {
-    accessorKey: 'percentage_sgst',
-    header: 'Percentage SGST',
-  },
-  {
-    accessorKey: 'active_status',
-    header: 'Active Status',
-    cell: ({ row }) => (
-      <td className="py-2 px-4">
-        <div className="flex rounded">
-          {row.original.active_status ? (
-            <span className="bg-green-500 text-white px-3 py-2 rounded-[10px]">Active</span>
-          ) : (
-            <span className="bg-red-500 text-white px-3 py-2 rounded-[10px]">Inactive</span>
-          )}
-        </div>
-      </td>
-    ),
-  },
-  {
-    header: 'Action',
-    cell: ({ row }) => (
-      <td className="py-2 px-5 flex">
-        <button
-          className="px-3 py-2 bg-red-500 text-white rounded-[10px] mr-2"
-          onClick={() => handleDelete(row.original._id)} // Adjusted to use si_no
-        >
-          <FaTrashAlt />
-        </button>
-        <button
-          className="px-3 py-2 bg-blue-500 text-white rounded-[10px]"
-          onClick={() => handleEdit(row.original)} // Call handleEdit on click
-        >
-          <FaEdit />
-        </button>
-      </td>
-    ),
-  },
+const columns = [
+  { header: 'Tax Name', accessor: 'tax_name' },
+  { header: 'CGST (%)', accessor: 'percentage_cgst' },
+  { header: 'SGST (%)', accessor: 'percentage_sgst' },
+  { header: 'Active Status', accessor: 'active_status' },
+  { header: 'Actions', accessor: 'action' },
 ];
 
-// Tax List Page Component
-export default function TaxList() {
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [isEditFormOpen, setIsEditFormOpen] = useState(false);
-  const [selectedTax, setSelectedTax] = useState(null);
-  const [taxLists, setTaxLists] = useState([]); // Changed from branches to taxLists
-  
-  // State to manage visibility of the main tax list page
-  const [isTaxListPageVisible, setIsTaxListPageVisible] = useState(true);
+// Marking the component as a server component
+export default async function TaxListPage({ searchParams }) {
+  // Extract the 'page' query parameter
+  const { page } = searchParams;
+  const currentPage = page ? parseInt(page) : 1;
 
-  // Fetch tax list data from API
-  useEffect(() => {
-    const fetchTaxLists = async () => {
-      try {
-        const response = await fetch('/api/tax_lists'); // Adjust the endpoint as necessary
-        if (!response.ok) {
-          throw new Error('Failed to fetch tax lists');
-        }
-        const data = await response.json();
-        setTaxLists(data); // Set fetched data to state
-      } catch (error) {
-        console.error('Error fetching tax lists:', error);
-      }
-    };
+  // Fetch the tax list data with pagination
+  const [taxLists, totalTaxCount] = await Promise.all([
+    getAllTaxes({ skip: (currentPage - 1) * ITEM_PER_PAGE, limit: ITEM_PER_PAGE }),
+    getTaxCount(),
+  ]);
 
-    fetchTaxLists();
-  }, []);
-
-  // Function to handle editing a tax list item
-  const handleEdit = (tax) => {
-    setSelectedTax(tax);
-    setIsEditFormOpen(true);
-    setIsTaxListPageVisible(false); // Hide TaxListPage when editing
-  };
-
-  // Function to handle deleting a tax list item
-const handleDelete = async (taxId) => {
-  try {
-    const response = await fetch(`/api/tax_lists`, { // Ensure the correct endpoint is used
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json', // Specify the content type
-      },
-      body: JSON.stringify({ id: taxId }), // Send the ID in the request body
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to delete tax list item');
-    }
-
-    // Optionally, re-fetch the tax lists or update the state to remove the deleted item
-    setTaxLists(taxLists.filter(tax => tax._id !== taxId)); // Update local state
-  } catch (error) {
-    console.error('Error deleting tax list item:', error);
-  }
-};
-
-  // Function to handle creating a tax list item
-  const handleCreateTaxList = () => {
-    setIsTaxListPageVisible(false); // Hide TaxListPage
-    setIsFormOpen(true); // Show CreateTaxListForm
-  };
+  // Prepare data for the table
+  const mappedTaxLists = taxLists.map(item => ({
+    tax_name: item.tax_name,
+    percentage_cgst: item.percentage_cgst,
+    percentage_sgst: item.percentage_sgst,
+    active_status: item.active_status ? 'Active' : 'Inactive',
+    action: (
+      <div className='flex items-center gap-2'>
+        <Link href={`/tax_lists/${item._id}`}>
+          <button className='w-7 h-7 flex items-center justify-center rounded-full bg-lamaSky'>
+            <Image src={'/update.png'} alt='Update' width={16} height={16} />
+          </button>
+        </Link>
+        <button className='w-7 h-7 flex items-center justify-center rounded-full bg-lamaPurple'>
+          <Image src={'/delete.png'} alt='Delete' width={16} height={16}/>
+        </button>
+      </div>
+    ),
+  }));
 
   return (
-    <div>
-      {isTaxListPageVisible ? (
-        <>
-          <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-semibold">Tax Lists</h1>
-            <button
-              onClick={handleCreateTaxList} // Call the function to open CreateTaxListForm
-              className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-            >
-              + Add Tax List
+    <div className='bg-white p-4 rounded-md m-4 mt-0 flex-1'>
+      {/* Top */}
+      <div className='flex items-center justify-between mb-4'>
+        <h1 className='hidden md:block text-lg font-semibold'>All Tax Lists</h1>
+        <div className='flex flex-col md:flex-row items-center gap-4 w-full md:w-auto'>
+          <TableSearch />
+          <div className='flex items-center gap-4 self-end'>
+            <button className='w-8 h-8 flex items-center justify-center rounded-full bg-gray'>
+              <Image src={'/filter.png'} alt='Filter' width={14} height={14} />
+            </button>
+            <button className='w-8 h-8 flex items-center justify-center rounded-full bg-lamaYellow'>
+              <Image src={'/sort.png'} alt='Sort' width={14} height={14} />
+            </button>
+            <button className='w-8 h-8 flex items-center justify-center rounded-full bg-lamaYellow'>
+              <Image src={'/create.png'} alt='Create' width={14} height={14} />
             </button>
           </div>
-
-          {/* Tax List Table */}
-          <div className="mt-6">
-            <DataTable columns={columns(handleEdit, handleDelete)} data={taxLists} />
-          </div>
-        </>
-      ) : (
-        // Display Create Form or Edit Form based on state
-        <>
-          {isFormOpen ? (
-            <CreateTaxListForm onClose={() => setIsTaxListPageVisible(true)} /> // Updated component name
-          ) : (
-            isEditFormOpen && selectedTax && (
-              <EditTaxListForm tax={selectedTax} onClose={() => setIsTaxListPageVisible(true)} /> // Updated component name
-            )
-          )}
-        </>
-      )}
+        </div>
+      </div>
+      {/* List */}
+      <Table columns={columns} renderRow={(item) => (
+        <tr key={item._id} className='border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight'>
+          <td>{item.tax_name}</td>
+          <td>{item.percentage_cgst}</td>
+          <td>{item.percentage_sgst}</td>
+          <td>{item.active_status}</td>
+          <td>{item.action}</td>
+        </tr>
+      )} data={mappedTaxLists} />
+      {/* Pagination */}
+      <Pagination page={currentPage} count={totalTaxCount} itemsPerPage={ITEM_PER_PAGE} />
     </div>
   );
 }

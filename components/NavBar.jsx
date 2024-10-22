@@ -1,11 +1,12 @@
-'use client';
+// @/components/NavBar.jsx
+
+"use client"
 
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import Menu from './Menu';
-import { SignInButton, SignedIn, SignedOut, UserButton, useUser } from '@clerk/nextjs'
-
+import { SignInButton, SignedIn, SignedOut, UserButton, useUser } from '@clerk/nextjs';
 
 export default function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,16 +23,12 @@ export default function NavBar() {
           {/* Left Side: Logo + Company Name */}
           <div className="flex items-center space-x-4">
             <Link href="/dashboard">
-            <Image src="/logo.png" alt="Guru Goutam Logo" width={200} height={60} />
-              {/* <span className="text-2xl font-semibold text-orange-600">
-                Guru Goutam
-              </span> */}
-            </Link>          
-          
-          <div className="hidden md:flex space-x-6">
-            <Menu isOpen={isOpen} />
-          </div>
+              <Image src="/logo.png" alt="Guru Goutam Logo" width={200} height={60} />
+            </Link>
 
+            <div className="hidden md:flex space-x-6">
+              <Menu isOpen={isOpen} />
+            </div>
           </div>
 
           {/* Right Side: Settings and Profile */}
@@ -46,13 +43,13 @@ export default function NavBar() {
               />
             </Link>
             <div className="flex items-center space-x-2">
-            <SignedOut>
-              <SignInButton />
-            </SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
-              <span className="text-sm font-medium text-gray-800">{user?.username || user?.firstName || 'User'}</span>
+              <SignedOut>
+                <SignInButton />
+              </SignedOut>
+              <SignedIn>
+                <UserButton />
+              </SignedIn>
+              <span className="text-sm font-medium text-gray-800">{user?.username}</span>
             </div>
           </div>
 

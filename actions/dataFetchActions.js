@@ -5,10 +5,21 @@ import Department from '@/lib/database/models/Department.model';
 import Role from '@/lib/database/models/Role.model';
 import Branch from '@/lib/database/models/Branch.model';
 
-export const getUsers = async () => {
-  "use server"; // Server action
+// Fetch users with optional pagination
+export const getUsers = async ({ skip = 0, limit = 10 } = {}) => {
   await connectToDatabase();
-  return await User.find().populate('roles departments branches');
+  return await User.find({})
+    .skip(skip)
+    .limit(limit)
+    .populate('roles')
+    .populate('departments')
+    .populate('branches');
+};
+
+// Fetch the total number of users
+export const getUsersCount = async () => {
+  await connectToDatabase();
+  return await User.countDocuments();
 };
 
 export const getDepartments = async () => {
@@ -28,5 +39,3 @@ export const getBranches = async () => {
   await connectToDatabase();
   return await Branch.find();
 };
-
-

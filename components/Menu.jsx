@@ -18,10 +18,6 @@ const menuItems = [
     label: 'CRM',
     href: '/crm',
   },
-  {
-    label: 'Operations',
-    href: '/operations',
-  },
 ];
 
 export default function Menu({ isOpen }) {

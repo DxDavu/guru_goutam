@@ -1,65 +1,114 @@
 // app/(admin)/settings/user/page.jsx (Server Component)
 import { getUserPermissions } from '@/actions/getUserPermissions';
-import { getUsers, getDepartments, getRoles, getBranches } from '@/actions/dataFetchActions';
-import UserPageClient from './UserPageClient'; // Import the client component
+import { getUsers } from '@/actions/dataFetchActions';
+import { getAllRoles } from '@/actions/roleActions';
+import { getAllDepartments } from '@/actions/departmentActions';
+import { getAllBranches } from '@/actions/branchActions';
+import Table from '@/components/Table';
+import Image from 'next/image';
+import TableSearch from '@/components/TableSearch';
+import Pagination from '@/components/Pagination';
+import FormModal from '@/components/settingsForms/FormModal';
 
-export default async function UserPage() {
+const ITEM_PER_PAGE = 3; // Number of items per page+
+
+// Function to get the total user count
+const getUsersCount = async () => {
+  const allUsers = await getUsers(); // Fetch all users
+  return allUsers.length; // Return the total number of users
+};
+
+export default async function UserPage({ searchParams }) {
+  // Extract the 'page' query parameter
+  const { page } = searchParams;
+  const currentPage = page ? parseInt(page) : 1;
+
   // Fetch user permissions on the server
   const userPermissions = await getUserPermissions();
 
-  // Fetch the data
-  const [users, departments, roles, branches] = await Promise.all([
-    getUsers(),
-    getDepartments(),
-    getRoles(),
-    getBranches()
+  // Fetch roles, departments, and branches using server actions
+  const [rolesOptions, departmentsOptions, branchesOptions] = await Promise.all([
+    getAllRoles(),
+    getAllDepartments(),
+    getAllBranches(),
+  ]);
+ 
+  // Fetch the users data with pagination
+  const [users, totalUsers] = await Promise.all([
+    getUsers({ skip: (currentPage - 1) * ITEM_PER_PAGE, limit: ITEM_PER_PAGE }),
+    getUsersCount(),
   ]);
 
-  // Simplify the data to avoid warnings
-  const simplifiedUsers = users.map(user => ({
-    _id: user._id.toString(), // Convert ObjectId to string
-    first_name: user.first_name,
-    last_name: user.last_name,
-    login_id: user.login_id,
-    emailid: user.emailid,
-    phone_number: user.phone_number,
-    active_status: user.active_status,
-    roles: user.roles.map(role => role.role_name), // Extract role names only
-    departments: user.departments.map(dept => dept.department_name), // Extract department names only
-    branches: user.branches.map(branch => branch.branch_name), // Extract branch names only
-    address: user.address ? {
-      pincode: user.address.pincode,
-      country: user.address.country,
-      state: user.address.state,
-      city: user.address.city
-    } : {}
-  }));
+  // Define the columns for the table
+  const columns = [
+    { header: 'Login ID', accessor: 'login_id', className: 'hidden md:table-cell' },
+    { header: 'First Name', accessor: 'first_name' },
+    { header: 'Email', accessor: 'emailid', className: 'hidden md:table-cell' },
+    { header: 'Roles', accessor: 'roles', className: 'hidden md:table-cell' },
+    { header: 'Departments', accessor: 'departments', className: 'hidden lg:table-cell' },
+    { header: 'Status', accessor: 'active_status', className: 'hidden lg:table-cell' },
+    { header: 'Actions', accessor: 'action' },
+  ];
 
-  const simplifiedDepartments = departments.map(dept => ({
-    _id: dept._id.toString(), // Convert ObjectId to string
-    department_name: dept.department_name
-  }));
-
-  const simplifiedRoles = roles.map(role => ({
-    _id: role._id.toString(), // Convert ObjectId to string
-    role_name: role.role_name
-  }));
-
-  const simplifiedBranches = branches.map(branch => ({
-    _id: branch._id.toString(), // Convert ObjectId to string
-    branch_name: branch.branch_name
-  }));
+  // Render each row of the table
+  const renderRow = (item) => (
+    <tr key={item._id} className='border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight'>
+      <td className='flex items-center p-1 gap-3'>
+        <h3 className='font-semibold'>{item.login_id}</h3>
+      </td>
+      <td className='hidden md:table-cell'>{item.first_name}</td>
+      <td className='hidden lg:table-cell'>{item.emailid}</td>
+      <td className='hidden md:table-cell'>
+        {item.roles.map((role) => role.role_name).join(', ') || 'No Roles'}
+      </td>
+      <td className='hidden md:table-cell'>
+        {item.departments.map((dept) => dept.department_name).join(', ') || 'No Departments'}
+      </td>
+      <td className='hidden lg:table-cell'>{item.active_status ? 'Active' : 'Inactive'}</td>
+      <td>
+        <div className='flex items-center gap-2'>
+          <FormModal 
+            table="Users" 
+            type="update" 
+            data={JSON.stringify(item)} 
+            rolesOptions={rolesOptions} 
+            departmentsOptions={departmentsOptions} 
+            branchesOptions={branchesOptions} 
+          />
+          <FormModal table="Users" type="delete" id={item._id} />
+        </div>
+      </td>
+    </tr>
+  );
 
   return (
-    <div>
-      {/* Pass the simplified data to the client component */}
-      <UserPageClient
-        userPermissions={userPermissions}
-        users={simplifiedUsers}
-        departments={simplifiedDepartments}
-        roles={simplifiedRoles}
-        branches={simplifiedBranches}
-      />
+    <div className='bg-white p-4 rounded-md m-4 mt-0 flex-1'>
+      {/* Top */}
+      <div className='flex items-center justify-between'>
+        <h1 className='hidden md:block text-lg font-semibold'>All Users</h1>
+        <div className='flex flex-col md:flex-row items-center gap-4 w-full md:w-auto'>
+          <TableSearch />
+          <div className='flex items-center gap-4 self-end'>
+            <button className='w-8 h-8 flex items-center justify-center rounded-full bg-lamaYellow'>
+              <Image src={'/filter.png'} alt='Filter' width={14} height={14} />
+            </button>
+            <button className='w-8 h-8 flex items-center justify-center rounded-full bg-lamaYellow'>
+              <Image src={'/sort.png'} alt='Sort' width={14} height={14} />
+            </button>            
+            <FormModal 
+              table="Users" 
+              type="create" 
+              rolesOptions={rolesOptions} 
+              departmentsOptions={departmentsOptions} 
+              branchesOptions={branchesOptions} 
+            />
+          </div>
+        </div>
+      </div>
+      {/* List */}
+      <Table columns={columns} renderRow={renderRow} data={users} userPermissions={userPermissions} />
+      {/* Pagination */}
+      <Pagination page={currentPage} count={totalUsers} />
     </div>
   );
 }
