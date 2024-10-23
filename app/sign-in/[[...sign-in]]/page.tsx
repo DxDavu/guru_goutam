@@ -19,7 +19,7 @@ export default function SignInPage() {
   },[user, isSignedIn, router])
 
   return (
-    <div className="grid w-full flex-grow items-center bg-white px-4 sm:justify-center">
+    <div className="grid w-full flex-grow items-center bg-white px-4 sm:justify-center mt-5">
       <SignIn.Root>
         <SignIn.Step
           name="start"

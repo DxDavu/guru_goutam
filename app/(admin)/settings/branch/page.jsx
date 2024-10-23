@@ -37,7 +37,7 @@ export default async function BranchPage() {
       <td>{item.address.city}</td>
       <td>
         <div className='flex items-center gap-2'>
-          <Link href={`/branches/${item._id}`}>
+          <Link href={`/settings/branch/${item._id}`}>
             <button className='w-7 h-7 flex items-center justify-center rounded-full bg-lamaSky'>
               <Image src={'/update.png'} alt='Update' width={16} height={16} />
             </button>
