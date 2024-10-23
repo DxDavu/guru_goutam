@@ -1,12 +1,13 @@
 // @/components/settingsForms/UsersForm.jsx
- 
-"use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import InputField from "./InputField";
-import Image from "next/image";
+import { createUser, updateUser } from "@/actions/userActions"; // Import updateUser
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 // Define the schema for form validation
 const schema = z.object({
@@ -34,29 +35,62 @@ const schema = z.object({
   team_head: z.string().optional(),
 });
 
-const UsersForm = ({ type,
-    data,
-    rolesOptions = [],
-    departmentsOptions = [],
-    branchesOptions = [],
-    teamHeadOptions = [], }) => {
+const UsersForm = ({
+  type,
+  data,
+  rolesOptions = [],
+  departmentsOptions = [],
+  branchesOptions = [],
+  teamHeadOptions = [],
+  setOpen,
+}) => {
+  const [loading, setLoading] = useState(false); // State for tracking loading
+  const [error, setError] = useState(null); // State for tracking errors
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
-    defaultValues: data ? {
-      ...data,
-      joining_date: data.joining_date ? new Date(data.joining_date).toISOString().split("T")[0] : "",
-      roles: data.roles?.map(role => role._id) || [],
-      departments: data.departments?.map(dept => dept._id) || [],
-      branches: data.branches?.map(branch => branch._id) || [],
-    } : {},
+    defaultValues: data
+      ? {
+          ...data,
+          joining_date: data.joining_date ? new Date(data.joining_date).toISOString().split("T")[0] : "",
+          roles: data.roles?.map((role) => role._id) || [],
+          departments: data.departments?.map((dept) => dept._id) || [],
+          branches: data.branches?.map((branch) => branch._id) || [],
+        }
+      : {},
   });
 
-  const onSubmit = handleSubmit((formData) => {
-    console.log("Submitted Data: ", formData);
+  const router = useRouter();
+
+  const onSubmit = handleSubmit(async (formData) => {
+    setLoading(true); // Start loading
+    setError(null); // Clear previous errors
+
+    try {
+      console.log("Form Data:", formData); // Log the form data
+
+      // Determine whether to create or update
+      const result =
+        type === "create"
+          ? await createUser(formData) // Call createUser if type is "create"
+          : await updateUser(data._id, formData); // Call updateUser if type is "update"
+
+      if (result.success) {
+        toast(`User ${type === "create" ? "created" : "updated"} successfully!`);
+        setOpen(false); // Close the modal
+        router.refresh(); // Refresh the page or data
+      } else {
+        setError(result.message || "Failed to process the request. Please try again.");
+      }
+    } catch (err) {
+      setError(err.message || "An unexpected error occurred.");
+    } finally {
+      setLoading(false); // Stop loading
+    }
   });
 
   return (
@@ -107,7 +141,7 @@ const UsersForm = ({ type,
           defaultValue={data?.phone_number}
           register={register}
           error={errors.phone_number}
-        />      
+        />
         <InputField
           label="Joining Date"
           name="joining_date"
@@ -121,66 +155,26 @@ const UsersForm = ({ type,
           name="user_code"
           defaultValue={data?.user_code}
           register={register}
-          error={errors.user_code}          
+          error={errors.user_code}
         />
       </div>
 
       {/* Address Section */}
       <span className="text-xs text-gray-400 font-medium">Address</span>
       <div className="flex justify-between flex-wrap gap-4">
-        <InputField
-          label="Pincode"
-          name="address.pincode"
-          defaultValue={data?.address?.pincode}
-          register={register}
-          error={errors?.address?.pincode}
-        />
-        <InputField
-          label="Country"
-          name="address.country"
-          defaultValue={data?.address?.country}
-          register={register}
-          error={errors?.address?.country}
-        />
-        <InputField
-          label="State"
-          name="address.state"
-          defaultValue={data?.address?.state}
-          register={register}
-          error={errors?.address?.state}
-        />
-        <InputField
-          label="City"
-          name="address.city"
-          defaultValue={data?.address?.city}
-          register={register}
-          error={errors?.address?.city}
-        />
-        <InputField
-          label="Landmark"
-          name="address.landmark"
-          defaultValue={data?.address?.landmark}
-          register={register}
-          error={errors?.address?.landmark}
-        />
-        <InputField
-          label="Street"
-          name="address.street"
-          defaultValue={data?.address?.street}
-          register={register}
-          error={errors?.address?.street}
-        />
+        <InputField label="Pincode" name="address.pincode" defaultValue={data?.address?.pincode} register={register} error={errors?.address?.pincode} />
+        <InputField label="Country" name="address.country" defaultValue={data?.address?.country} register={register} error={errors?.address?.country} />
+        <InputField label="State" name="address.state" defaultValue={data?.address?.state} register={register} error={errors?.address?.state} />
+        <InputField label="City" name="address.city" defaultValue={data?.address?.city} register={register} error={errors?.address?.city} />
+        <InputField label="Landmark" name="address.landmark" defaultValue={data?.address?.landmark} register={register} error={errors?.address?.landmark} />
+        <InputField label="Street" name="address.street" defaultValue={data?.address?.street} register={register} error={errors?.address?.street} />
       </div>
 
       {/* Roles, Departments, Branches */}
       <div className="flex justify-between flex-wrap gap-4">
         <div className="flex flex-col gap-2 w-full md:w-1/4">
           <label className="text-xs text-gray-500">Roles</label>
-          <select
-            className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
-            {...register("roles")}
-            multiple
-          >
+          <select className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full" {...register("roles")} multiple>
             {rolesOptions.map((role) => (
               <option key={role._id} value={role._id}>
                 {role.role_name}
@@ -189,14 +183,9 @@ const UsersForm = ({ type,
           </select>
           {errors.roles?.message && <p className="text-xs text-red-400">{errors.roles.message}</p>}
         </div>
-
         <div className="flex flex-col gap-2 w-full md:w-1/4">
           <label className="text-xs text-gray-500">Departments</label>
-          <select
-            className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
-            {...register("departments")}
-            multiple
-          >
+          <select className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full" {...register("departments")} multiple>
             {departmentsOptions.map((dept) => (
               <option key={dept._id} value={dept._id}>
                 {dept.department_name}
@@ -205,14 +194,9 @@ const UsersForm = ({ type,
           </select>
           {errors.departments?.message && <p className="text-xs text-red-400">{errors.departments.message}</p>}
         </div>
-
         <div className="flex flex-col gap-2 w-full md:w-1/4">
           <label className="text-xs text-gray-500">Branches</label>
-          <select
-            className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
-            {...register("branches")}
-            multiple
-          >
+          <select className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full" {...register("branches")} multiple>
             {branchesOptions.map((branch) => (
               <option key={branch._id} value={branch._id}>
                 {branch.branch_name}
@@ -223,25 +207,11 @@ const UsersForm = ({ type,
         </div>
       </div>
 
-      {/* Team Head Selection */}
-      <div className="flex flex-col gap-2 w-full md:w-1/4">
-        <label className="text-xs text-gray-500">Team Head</label>
-        <select
-          className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
-          {...register("team_head")}
-        >
-          <option value="">Select a Team Head</option>
-          {teamHeadOptions.map((user) => (
-            <option key={user._id} value={user._id}>
-              {`${user.first_name} ${user.last_name}`}
-            </option>
-          ))}
-        </select>
-        {errors.team_head?.message && <p className="text-xs text-red-400">{errors.team_head.message}</p>}
-      </div>
+      {/* Error Message */}
+      {error && <span className="text-red-500">{error}</span>}
 
-      <button className="bg-blue-400 text-white p-2 rounded-md">
-        {type === "create" ? "Create" : "Update"}
+      <button className="bg-blue-400 text-white p-2 rounded-md" disabled={loading}>
+        {loading ? "Submitting..." : type === "create" ? "Create" : "Update"}
       </button>
     </form>
   );
