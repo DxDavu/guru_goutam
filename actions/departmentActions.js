@@ -35,7 +35,7 @@ export const getAllDepartments = async ({ skip = 0, limit = 10 } = {}) => {
 // Fetch the total number of departments
 export const getDepartmentsCount = async () => {
   await connectToDatabase();
-  return await Department.countDocuments(); // Return total count of departments
+  return await Department.find({});
 };
 
 // Update an existing department

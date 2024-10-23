@@ -3,24 +3,49 @@
 import { connectToDatabase } from '@/lib/database';
 import Branch from '@/lib/database/models/Branch.model';
 
-// Fetch all branches with pagination
-export const getAllBranches = async ({ skip = 0, limit = 10 } = {}) => {
-  await connectToDatabase(); // Ensure the database connection is established
+// Create a new branch
+export const createBranch = async (branchData) => {
+  await connectToDatabase();
 
-  // Fetch branches from the database with skip and limit for pagination
-  const branches = await Branch.find({})
-    .skip(skip)
-    .limit(limit)
-    .lean(); // .lean() gives plain JavaScript objects for better performance
-
-  return branches;
+  const newBranch = new Branch({
+    ...branchData,
+  });
+  return await newBranch.save();
 };
 
-// Fetch the total count of branches
-export const getBranchCount = async () => {
-  await connectToDatabase(); // Ensure the database connection is established
+// Retrieve a branch by ID
+export const getBranchById = async (id) => {
+  await connectToDatabase();
+  const branch = await Branch.findById(id);
+  if (!branch) {
+    throw new Error('Branch not found');
+  }
+  return branch;
+};
 
-  // Get the total number of branches
-  const count = await Branch.countDocuments({});
-  return count;
+// Retrieve all branches
+export const getAllBranches = async () => {
+  await connectToDatabase();
+  return await Branch.find({});
+};
+
+// Update an existing branch
+export const updateBranch = async (id, updateData) => {
+  await connectToDatabase();
+
+  const updatedBranch = await Branch.findByIdAndUpdate(id, updateData, { new: true });
+  if (!updatedBranch) {
+    throw new Error('Branch not found');
+  }
+  return updatedBranch;
+};
+
+// Delete a branch
+export const deleteBranch = async (id) => {
+  await connectToDatabase();
+  const deletedBranch = await Branch.findByIdAndDelete(id);
+  if (!deletedBranch) {
+    throw new Error('Branch not found');
+  }
+  return deletedBranch;
 };

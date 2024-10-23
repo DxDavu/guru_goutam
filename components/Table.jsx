@@ -1,7 +1,14 @@
+<<<<<<< HEAD
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 
 const Table = ({columns, renderRow, data}) => {
+=======
+
+
+
+const TableS = ({columns, renderRow, data}) => {
+>>>>>>> 59aa312c98f7c082898a73dca15f14f644f985f7
     
     
   return (
@@ -18,4 +25,8 @@ const Table = ({columns, renderRow, data}) => {
   )
 }
 
+<<<<<<< HEAD
 export default Table
+=======
+export default TableS
+>>>>>>> 59aa312c98f7c082898a73dca15f14f644f985f7

@@ -1,12 +1,10 @@
 // @/app/(admin)/settings/department/page.jsx
-import { getAllDepartments, getDepartmentsCount } from '@/actions/departmentActions';
-import Table from '@/components/Table';
-import Image from 'next/image';
-import Link from 'next/link';
-import TableSearch from '@/components/TableSearch';
-import Pagination from '@/components/Pagination';
 
-const ITEM_PER_PAGE = 3; // Number of items per page
+'use client';
+
+import { useState, useEffect } from 'react';
+import CreateDepartmentForm from '@/components/CreateDepartmentForm';
+import { DataTable } from '@/components/DataTable'; // Import the generic DataTable component
 
 // Define the columns for the department table
 const columns = [
@@ -16,43 +14,19 @@ const columns = [
   { header: 'Actions', accessor: 'action' },
 ];
 
-export default async function DepartmentPage({ searchParams }) {
-  // Extract the 'page' query parameter
-  const { page } = searchParams;
-  const currentPage = page ? parseInt(page) : 1;
+export default function DepartmentPage() {
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [departments, setDepartments] = useState([]);
 
-  // Fetch the departments data with pagination
-  const [departments, totalDepartments] = await Promise.all([
-    getAllDepartments({ skip: (currentPage - 1) * ITEM_PER_PAGE, limit: ITEM_PER_PAGE }),
-    getDepartmentsCount(),
-  ]);
+  useEffect(() => {
+    async function fetchDepartments() {
+      const res = await fetch('/api/department');
+      const data = await res.json();
+      setDepartments(data);
+    }
 
-  // Map departments to include active status as a readable value
-  const mappedDepartments = departments.map((department) => ({
-    ...department,
-    active_status: department.active_status ? 'Active' : 'Inactive',
-  }));
-
-  // Render each row of the table
-  const renderRow = (item) => (
-    <tr key={item._id} className='border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight'>
-      <td>{item.department_name}</td>
-      <td>{item.description || 'No Description'}</td>
-      <td>{item.active_status}</td>
-      <td>
-        <div className='flex items-center gap-2'>
-          <Link href={`/departments/${item._id}`}>
-            <button className='w-7 h-7 flex items-center justify-center rounded-full bg-lamaSky'>
-              <Image src={'/update.png'} alt='Update' width={16} height={16} className='bg-blue-500'/>
-            </button>
-          </Link>
-          <button className='w-7 h-7 flex items-center justify-center rounded-full bg-lamaPurple'>
-            <Image src={'/delete.png'} alt='Delete' width={16} height={16}/>
-          </button>
-        </div>
-      </td>
-    </tr>
-  );
+    fetchDepartments();
+  }, []);
 
   return (
     <div className='bg-white p-4 rounded-md m-4 mt-0 flex-1'>
@@ -74,10 +48,6 @@ export default async function DepartmentPage({ searchParams }) {
           </div>
         </div>
       </div>
-      {/* List */}
-      <Table columns={columns} renderRow={renderRow} data={mappedDepartments} />
-      {/* Pagination */}
-      <Pagination page={currentPage} count={totalDepartments}  />
     </div>
   );
 }
