@@ -28,6 +28,10 @@ export default async function BranchPage({ searchParams }) {
     getAllBranches({ skip: (currentPage - 1) * ITEM_PER_PAGE, limit: ITEM_PER_PAGE }),
     getBranchCount(),
   ]);
+//   Why use Promise.all here?
+// It allows you to fetch both the branch data and the total count simultaneously, which makes your code faster than waiting for one to finish before starting the next.
+
+  
 
   // Render each row of the table
   const renderRow = (item) => (
