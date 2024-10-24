@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Doughnut, Line } from 'react-chartjs-2';
-import 'chart.js/auto'; // Import Chart.js components automatically
+import 'chart.js/auto'; 
 import { useUser } from '@clerk/nextjs';
 
 const Dashboard = () => {
