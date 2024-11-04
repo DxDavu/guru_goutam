@@ -1,92 +1,97 @@
-// @/components/columns/leadColumns.js
+// components/leadsColumn.js
+"use client";
 
-"use client"
-import { MoreHorizontal } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { MoreHorizontal } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { ArrowUpDown } from "lucide-react"
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import LeadForm from "@/components/settingsForms/LeadForm"
-import { deleteLead } from "@/actions/leadActions"
-import { toast } from "react-toastify"
+} from "@/components/ui/dropdown-menu";
+import { ArrowUpDown } from "lucide-react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import LeadsForm from "@/components/settingsForms/LeadsForm";
+import { deleteLead } from "@/actions/leadsAction"; // Ensure this is correctly defined
+import { toast } from "react-toastify";
 
 export const columns = [
   {
-    accessorKey: "lead_name",
+    accessorKey: "lead_code",
     header: ({ column }) => (
       <Button
         variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-        Lead Name
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Lead Code
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
   },
   {
-    accessorKey: "lead_qty",
-    header: "Quantity",
+    accessorKey: "lead_type",
+    header: "Lead Type",
   },
   {
-    accessorKey: "active_status",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-        Active Status
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
-    cell: ({ row }) => (
-      <span>
-        {row.original.active_status ? "Active" : "Inactive"}
-      </span>
-    ),
+    accessorKey: "customer_company",
+    header: "Customer Company",
+  },
+  {
+    accessorKey: "contact_customer",
+    header: "Contact Customer",
+  },
+  {
+    accessorKey: "ph_number",
+    header: "Phone Number",
+  },
+  {
+    accessorKey: "lead_date",
+    header: "Lead Date",
+  },
+  {
+    accessorKey: "executed_by",
+    header: "Executed By",
   },
   {
     id: "actions",
     cell: ({ row }) => {
-      const [isFormOpen, setIsFormOpen] = useState(false)
-      const [formType, setFormType] = useState("")
-      const [formData, setFormData] = useState(null)
-      const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false)
-      const router = useRouter()
+      const [isFormOpen, setIsFormOpen] = useState(false);
+      const [formType, setFormType] = useState("");
+      const [formData, setFormData] = useState(null);
+      const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+      const router = useRouter();
 
       const onEdit = () => {
-        setFormType("edit")
-        setFormData(row.original)
-        setIsFormOpen(true)
-      }
+        setFormType("edit");
+        setFormData(row.original);
+        setIsFormOpen(true);
+      };
 
       const closeForm = () => {
-        setIsFormOpen(false)
-        setFormData(null)
-      }
+        setIsFormOpen(false);
+        setFormData(null);
+      };
 
       const onDelete = () => {
-        setIsDeleteConfirmOpen(true)
-      }
+        setIsDeleteConfirmOpen(true);
+      };
 
       const confirmDelete = async () => {
         try {
-          await deleteLead(row.original._id)
-          toast.success("Lead deleted successfully!")
-          setIsDeleteConfirmOpen(false)
-          router.refresh()
+          await deleteLead(row.original._id);
+          toast.success("Lead deleted successfully!");
+          setIsDeleteConfirmOpen(false);
+          router.refresh();
         } catch (error) {
-          toast.error("Failed to delete lead. Please try again.")
+          toast.error("Failed to delete lead. Please try again.");
         }
-      }
+      };
 
       const closeDeleteConfirm = () => {
-        setIsDeleteConfirmOpen(false)
-      }
+        setIsDeleteConfirmOpen(false);
+      };
 
       return (
         <>
@@ -99,9 +104,7 @@ export const columns = [
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={onEdit}>
-                Edit
-              </DropdownMenuItem>
+              <DropdownMenuItem onClick={onEdit}>Edit</DropdownMenuItem>
               <DropdownMenuItem onClick={onDelete}>Delete</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -109,7 +112,7 @@ export const columns = [
           {isFormOpen && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
               <div className="bg-white p-6 rounded-md max-w-2xl mx-auto">
-                <LeadForm
+                <LeadsForm
                   type={formType}
                   data={formData}
                   setOpen={closeForm}
@@ -135,26 +138,26 @@ export const columns = [
             </div>
           )}
         </>
-      )
+      );
     },
   },
-]
+];
 
 export const CreateNewLeadButton = () => {
-  const [isFormOpen, setIsFormOpen] = useState(false)
-  const [formType, setFormType] = useState("create")
-  const [formData, setFormData] = useState(null)
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [formType, setFormType] = useState("create");
+  const [formData, setFormData] = useState(null);
 
   const openForm = () => {
-    setFormType("create")
-    setFormData(null)
-    setIsFormOpen(true)
-  }
+    setFormType("create");
+    setFormData(null);
+    setIsFormOpen(true);
+  };
 
   const closeForm = () => {
-    setIsFormOpen(false)
-    setFormData(null)
-  }
+    setIsFormOpen(false);
+    setFormData(null);
+  };
 
   return (
     <>
@@ -167,7 +170,7 @@ export const CreateNewLeadButton = () => {
       {isFormOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded-md max-w-2xl mx-auto">
-            <LeadForm
+            <LeadsForm
               type={formType}
               data={formData}
               setOpen={closeForm}
@@ -176,5 +179,5 @@ export const CreateNewLeadButton = () => {
         </div>
       )}
     </>
-  )
-}
+  );
+};

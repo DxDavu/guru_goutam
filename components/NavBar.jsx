@@ -30,6 +30,7 @@ export default function NavBar() {
               <Menu isOpen={isOpen} />
             </div>
           </div>
+     
 
           {/* Right Side: Settings and Profile */}
           <div className="hidden md:flex items-center space-x-4">
