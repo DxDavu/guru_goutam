@@ -1,0 +1,29 @@
+{
+    "version": 2,
+    "builds": [
+      { "src": "package.json", "use": "@vercel/next" }
+    ],
+    "routes": [
+      { "src": "/api/(.*)", "dest": "/api/index.js" },
+      { "src": "/(.*)", "dest": "/" }
+    ],
+    "env": {
+      "NEXT_PUBLIC_API_URL": "https://api.example.com"
+    },
+    "rewrites": [
+      { "source": "/blog/:slug", "destination": "/blog/post?slug=:slug" }
+    ],
+    "redirects": [
+      { "source": "/old-path", "destination": "/new-path", "permanent": true }
+    ],
+    "headers": [
+      {
+        "source": "/(.*)",
+        "headers": [
+          { "key": "X-Content-Type-Options", "value": "nosniff" },
+          { "key": "X-Frame-Options", "value": "DENY" }
+        ]
+      }
+    ]
+  }
+  

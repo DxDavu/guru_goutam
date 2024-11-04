@@ -18,6 +18,10 @@ const menuItems = [
     label: 'CRM',
     href: '/crm',
   },
+  {
+label: 'Procurement',
+href:'procurement',
+  },
 ];
 
 export default function Menu({ isOpen }) {

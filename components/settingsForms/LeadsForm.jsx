@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
-import { createLead, updateLead } from "@/actions/leadsAction"; 
+import { createLead, updateLead } from "@/actions/leadsAction";
 
 const LeadsForm = ({ type, data, setOpen }) => {
   const [formData, setFormData] = useState({
@@ -23,7 +23,7 @@ const LeadsForm = ({ type, data, setOpen }) => {
     if (type === "edit" && data) {
       setFormData({
         ...data,
-        lead_date: new Date(data.lead_date).toISOString().substring(0, 10),
+        lead_date: data.lead_date ? new Date(data.lead_date).toISOString().substring(0, 10) : "",
       });
     }
   }, [type, data]);
@@ -36,23 +36,21 @@ const LeadsForm = ({ type, data, setOpen }) => {
     }));
   };
 
-const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-        if (type === "create") {
-            await createLead(formData);
-            toast.success("Lead created successfully!");
-        } else {
-            await updateLead(data._id, formData);
-            toast.success("Lead updated successfully!");
-        }
-        // Optionally refresh leads data or close form
-        setOpen(); 
+      if (type === "create") {
+        await createLead(formData);
+        toast.success("Lead created successfully!");
+      } else {
+        await updateLead(data._id, formData);
+        toast.success("Lead updated successfully!");
+      }
+      setOpen(false); // Close the form
     } catch (error) {
-        toast.error(error.message || "An error occurred.");
+      toast.error(error.message || "An error occurred.");
     }
-};
-
+  };
 
   return (
     <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md">
@@ -167,7 +165,7 @@ const handleSubmit = async (e) => {
         <label className="text-sm font-medium">Active Status</label>
       </div>
       <div className="flex justify-end mt-4">
-        <Button type="button" onClick={setOpen} className="bg-gray-200 text-gray-800 hover:bg-gray-300 rounded-lg p-2">
+        <Button type="button" onClick={() => setOpen(false)} className="bg-gray-200 text-gray-800 hover:bg-gray-300 rounded-lg p-2">
           Cancel
         </Button>
         <Button type="submit" className="ml-2 bg-blue-600 text-white hover:bg-blue-700 rounded-lg p-2">

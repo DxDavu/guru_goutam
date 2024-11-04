@@ -25,6 +25,7 @@ import { Input } from "@/components/ui/input"
 export function DataTable ({
   columns,
   data,
+  
 }) {
   const [sorting, setSorting] = React.useState([])
   const [globalFilter, setGlobalFilter] = React.useState("")

@@ -7,7 +7,6 @@ import { columns, CreateNewContactButton } from "@/components/columns/contactsCo
 export default async function ContactsPage() {
   const user = await currentUser();
 
-  // Check if the user is authenticated
   if (!user) return null;
 
   // Fetch contacts from the database
@@ -16,9 +15,7 @@ export default async function ContactsPage() {
 
   return (
     <div className='bg-white p-1 rounded-md mt-0 flex-1'>
-      {/* Button to create a new contact */}
       <CreateNewContactButton />
-      {/* DataTable component to display contacts */}
       <DataTable columns={columns} data={contacts} />
     </div>
   );

@@ -24,6 +24,8 @@ import {
 const sidebarLinks = [
   { name: 'Contacts', href: '/crm/contacts'  },
   { name: 'Leads', href: '/crm/leads'  },
+  {name:'Quotation', href:'quotation'},
+  {name:'Orders', href:'orders'},
 
 ];
 

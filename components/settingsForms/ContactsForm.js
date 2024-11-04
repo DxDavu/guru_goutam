@@ -1,4 +1,4 @@
-"use client"; // Use "use client" if you need state management or effects
+"use client"; 
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
