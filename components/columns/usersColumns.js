@@ -1,21 +1,32 @@
 // @/components/columns/usersColumns.js
-"use client"
-import { MoreHorizontal } from "lucide-react"
-import { Button } from "@/components/ui/button"
+"use client";
+import { MoreHorizontal, ArrowUpDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { ArrowUpDown } from "lucide-react"
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import UsersForm from "@/components/settingsForms/UsersForm"
-import { deleteUser } from "@/actions/userActions"
-import { toast } from "react-toastify"
+} from "@/components/ui/dropdown-menu";
+import { useRouter } from "next/navigation";
+import { deleteUser } from "@/actions/userActions";
+import { toast } from "react-toastify";
+import { useState } from "react";
+import { useUserPermissions } from "@/context/UserPermissionsContext";
+
+// Function to check module access permissions
+const checkPermissions = (roles, moduleName, permissionKey) => {
+  for (const role of roles) {
+    const module = role.module_access?.find(
+      (mod) => mod.module_name === moduleName
+    );
+    if (module && module.permissions[permissionKey]) {
+      return true; // Return true immediately if any role has the permission
+    }
+  }
+  return false; // Return false only if no role has the permission
+};
 
 export const columns = [
   {
@@ -84,46 +95,28 @@ export const columns = [
   {
     id: "actions",
     cell: ({ row }) => {
-      const [isFormOpen, setIsFormOpen] = useState(false)
-      const [formType, setFormType] = useState("")
-      const [formData, setFormData] = useState(null)
-      const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false)
-      const router = useRouter()
+      const router = useRouter();
+      const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+      const userPermissions = useUserPermissions();
+      const canEdit = checkPermissions(userPermissions, "Users", "can_edit");
+      const canDelete = checkPermissions(userPermissions, "Users", "can_delete");
 
-      // Function to open the UsersForm for editing
+      // Navigate to the edit page for the selected user
       const onEdit = () => {
-        setFormType("edit")
-        setFormData(row.original)
-        setIsFormOpen(true)
-      }
-
-      // Function to close the UsersForm
-      const closeForm = () => {
-        setIsFormOpen(false)
-        setFormData(null)
-      }
-
-      // Function to open delete confirmation popup
-      const onDelete = () => {
-        setIsDeleteConfirmOpen(true)
-      }
+        router.push(`/settings/user/${row.original._id}`);
+      };
 
       // Function to delete the user
       const confirmDelete = async () => {
         try {
-          await deleteUser(row.original._id)
-          toast.success("User deleted successfully!")
-          setIsDeleteConfirmOpen(false)
-          router.refresh()
+          await deleteUser(row.original._id);
+          toast.success("User deleted successfully!");
+          setIsDeleteConfirmOpen(false);
+          router.refresh();
         } catch (error) {
-          toast.error("Failed to delete user. Please try again.")
+          toast.error("Failed to delete user. Please try again.");
         }
-      }
-
-      // Function to close delete confirmation popup
-      const closeDeleteConfirm = () => {
-        setIsDeleteConfirmOpen(false)
-      }
+      };
 
       return (
         <>
@@ -136,25 +129,18 @@ export const columns = [
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={onEdit}>
-                Edit
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={onDelete}>Delete</DropdownMenuItem>
+              {canEdit && (
+                  <DropdownMenuItem onClick={onEdit}>
+                    Edit
+                  </DropdownMenuItem>
+                )}
+                {canDelete && (
+                  <DropdownMenuItem onClick={() => setIsDeleteConfirmOpen(true)}>
+                    Delete
+                  </DropdownMenuItem>
+                )}
             </DropdownMenuContent>
           </DropdownMenu>
-
-          {/* Render UsersForm as a popup or modal */}
-          {isFormOpen && (
-            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-              <div className="bg-white p-6 rounded-md max-w-2xl mx-auto">
-                <UsersForm
-                  type={formType}
-                  data={formData}
-                  setOpen={closeForm}
-                />
-              </div>
-            </div>
-          )}
 
           {/* Render Delete Confirmation Popup */}
           {isDeleteConfirmOpen && (
@@ -163,7 +149,7 @@ export const columns = [
                 <h3 className="text-lg font-medium">Delete Confirmation</h3>
                 <p className="mt-2 text-sm">Are you sure you want to delete this record?</p>
                 <div className="flex justify-end gap-4 mt-4">
-                  <Button variant="outline" onClick={closeDeleteConfirm}>
+                  <Button variant="outline" onClick={() => setIsDeleteConfirmOpen(false)}>
                     Cancel
                   </Button>
                   <Button className="bg-red-500 text-white" onClick={confirmDelete}>
@@ -174,48 +160,33 @@ export const columns = [
             </div>
           )}
         </>
-      )
+      );
     },
   },
-]
+];
 
-// CreateNewUserButton component
+// CreateNewUserButton component with permission check
 export const CreateNewUserButton = () => {
-  const [isFormOpen, setIsFormOpen] = useState(false)
-  const [formType, setFormType] = useState("create")
-  const [formData, setFormData] = useState(null)
+  const userPermissions = useUserPermissions();
+  const canAdd = checkPermissions(userPermissions, "Users", "can_add");
 
-  const openForm = () => {
-    setFormType("create")
-    setFormData(null)
-    setIsFormOpen(true)
-  }
+  console.log('===userPermissions=====');
+  console.log(userPermissions);
+  console.log('=====canAdd==============');
+  console.log(canAdd);
+  console.log('====================================');
 
-  const closeForm = () => {
-    setIsFormOpen(false)
-    setFormData(null)
+  const router = useRouter();
+
+  if (!canAdd) {
+    return null; // Hide button if user lacks canAdd permission
   }
 
   return (
-    <>
-      <div className="flex justify-end mb-1">
-        <Button className="bg-blue-500 text-white" onClick={openForm}>
-          Create New User
-        </Button>
-      </div>
-
-      {/* Render UsersForm as a popup or modal */}
-      {isFormOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded-md max-w-2xl mx-auto">
-            <UsersForm
-              type={formType}
-              data={formData}
-              setOpen={closeForm}
-            />
-          </div>
-        </div>
-      )}
-    </>
-  )
-}
+    <div className="flex justify-end mb-1">
+      <Button className="bg-blue-500 text-white" onClick={() => router.push("/settings/user/new")}>
+        Create New User
+      </Button>
+    </div>
+  );
+};
