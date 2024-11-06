@@ -16,7 +16,6 @@ import {
   FaFlag,
   FaDollarSign,
   FaGavel,
-  FaCogs,
   FaMapSigns,
   FaCity,
   FaGlobe,
@@ -37,23 +36,25 @@ export default function Sidebar() {
   const [activeTab, setActiveTab] = useState('');
 
   return (
-    <aside className="w-64 bg-gray-100 border-r h-full">
-      <div className="bg-orange-700 text-white text-center p-4">
-        <h1 className="text-lg font-bold">Product Library</h1>
-      </div>
-      <nav className="flex flex-col py-4 space-y-2">
-        {/* Loop through the sidebarLinks array to render each link */}
+    <aside className="w-20 bg-gray-100 border-r ml-2 h-full flex flex-col justify-start"> {/* Reduced width */}  
+      <nav className="flex flex-col items-center py-1 space-y-2"> {/* Adjusted spacing */}  
         {sidebarLinks.map((link) => (
           <Link key={link.name} href={link.href}>
-            <span
-              className={`flex items-center gap-2 cursor-pointer px-4 py-2 text-lg font-medium ${
-                activeTab === link.name ? 'bg-indigo-100' : 'hover:bg-gray-200'
-              }`}
+            <div
+              className={`flex flex-col h-15 w-8 items-center cursor-pointer transition-all duration-400 ${
+                activeTab === link.name ? 'bg-black text-white' : 'hover:bg-gray-200'
+              } rounded-md p-1 min-w-[90px]`}
               onClick={() => setActiveTab(link.name)}
             >
-              {link.icon}
-              {link.name}
-            </span>
+              <div className="text-lg" style={{ fontSize: '1.1rem', marginTop: '0.2rem' }}>
+                {link.icon}
+              </div>
+              <span className={`text-xs text-center ${activeTab === link.name ? 'font-bold' : ''}`} style={{ marginTop: '0.2rem' }}>
+                {link.name.split(' ').map((word, index) => (
+                  <span key={index} className={`${index > 0 ? 'block' : ''}`}>{word}</span>
+                ))}
+              </span>
+            </div>
           </Link>
         ))}
       </nav>

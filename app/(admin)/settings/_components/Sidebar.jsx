@@ -16,7 +16,6 @@ import {
   FaFlag,
   FaDollarSign,
   FaGavel,
-  FaCogs,
   FaMapSigns,
   FaCity,
   FaGlobe,
@@ -33,7 +32,7 @@ const sidebarLinks = [
   { name: 'Lead Statuses', href: '/settings/lead-statuses', icon: <FaListAlt /> },
   { name: 'Locations', href: '/settings/locations', icon: <FaMapMarkerAlt /> },
   { name: 'Order Checklists', href: '/settings/order-checklists', icon: <FaClipboardList /> },
-  { name: 'Service Priority Levels', href: '/settings/service-priority-levels', icon: <FaTasks /> },
+  { name: 'Service Priority', href: '/settings/service-priority-levels', icon: <FaTasks /> },
   { name: 'Service Status', href: '/settings/service-status', icon: <FaFlag /> },
   { name: 'State', href: '/settings/state', icon: <FaMapSigns /> },
   { name: 'Taxes', href: '/settings/taxes', icon: <FaDollarSign /> },
@@ -44,32 +43,28 @@ export default function Sidebar() {
   const [activeTab, setActiveTab] = useState('');
 
   return (
-// Sidebar Component Code
-<aside className="w-64 bg-gray-100 border-r h-full">
-  <div className="bg-orange-700 text-white text-center p-4">
-    <h1 className="text-lg font-bold">Admin Settings</h1>
-  </div>
-  <nav className="flex flex-col items-center py-4 space-y-2 -ml-28"> {/* Added -ml-8 to move everything slightly left */}
-    {sidebarLinks.map((link) => (
-      <Link key={link.name} href={link.href}>
-        <div
-          className={`flex flex-col items-center cursor-pointer transition-all duration-300 ${
-            activeTab === link.name ? 'bg-black text-white' : 'hover:bg-gray-200'
-          } rounded-md p-2 min-w-[110px]`}
-          onClick={() => setActiveTab(link.name)}
-        >
-          <div className="text-2xl">{link.icon}</div>
-          <span className={`text-base md:text-lg text-center ${activeTab === link.name ? 'font-bold' : ''}`}>
-            {link.name.split(' ').map((word, index) => (
-              <span key={index} className={`${index > 0 ? 'block' : ''}`}>{word}</span>
-            ))}
-          </span>
-        </div>
-      </Link>
-    ))}
-  </nav>
-</aside>
-
-
+    <aside className="w-20 bg-gray-100 border-r ml-2 h-full flex flex-col justify-start"> {/* Reduced width */}
+      <nav className="flex flex-col items-center py-1 space-y-2"> {/* Adjusted spacing */}
+        {sidebarLinks.map((link) => (
+          <Link key={link.name} href={link.href}>
+            <div
+              className={`flex flex-col h-15 w-8 items-center cursor-pointer transition-all duration-400 ${
+                activeTab === link.name ? 'bg-black text-white' : 'hover:bg-gray-200'
+              } rounded-md p-1 min-w-[90px]`}
+              onClick={() => setActiveTab(link.name)}
+            >
+              <div className="text-lg" style={{ fontSize: '1.0 rem', marginTop: '0.2rem' }}> {/* Added margin-top */}
+                {link.icon}
+              </div>
+              <span className={`text-xs text-center ${activeTab === link.name ? 'font-bold' : ''}`} style={{ marginTop: '0.2rem' }}> {/* Added margin-top */}
+                {link.name.split(' ').map((word, index) => (
+                  <span key={index} className={`${index > 0 ? 'block' : ''}`}>{word}</span>
+                ))}
+              </span>
+            </div>
+          </Link>
+        ))}
+      </nav>
+    </aside>
   );
-}
+}    
