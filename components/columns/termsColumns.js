@@ -1,21 +1,32 @@
 // @/components/columns/termsColumns.js
-
-"use client"
-import { MoreHorizontal } from "lucide-react"
-import { Button } from "@/components/ui/button"
+"use client";
+import { MoreHorizontal, ArrowUpDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { ArrowUpDown } from "lucide-react"
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import TermsAndConditionsForm from "@/components/settingsForms/TermsAndConditionsForm"
-import { deleteTermsAndConditions } from "@/actions/termsandConditionsActions"
-import { toast } from "react-toastify"
+} from "@/components/ui/dropdown-menu";
+import { useRouter } from "next/navigation";
+import { deleteTerm } from "@/actions/termsandConditionsActions";
+import { toast } from "react-toastify";
+import { useState } from "react";
+import { useUserPermissions } from "@/context/UserPermissionsContext";
+
+// Function to check module access permissions
+const checkPermissions = (roles, moduleName, permissionKey) => {
+  for (const role of roles) {
+    const module = role.module_access?.find(
+      (mod) => mod.module_name === moduleName
+    );
+    if (module && module.permissions[permissionKey]) {
+      return true; // Return true immediately if any role has the permission
+    }
+  }
+  return false; // Return false only if no role has the permission
+};
 
 export const columns = [
   {
@@ -54,31 +65,28 @@ export const columns = [
   {
     id: "actions",
     cell: ({ row }) => {
-      const [isFormOpen, setIsFormOpen] = useState(false)
-      const [formType, setFormType] = useState("")
-      const [formData, setFormData] = useState(null)
-      const router = useRouter()
+      const router = useRouter();
+      const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+      const termPermissions = useUserPermissions();
+      const canEdit = checkPermissions(termPermissions, "Terms", "can_edit");
+      const canDelete = checkPermissions(termPermissions, "Terms", "can_delete");
 
+      // Navigate to the edit page for the selected term
       const onEdit = () => {
-        setFormType("edit")
-        setFormData(row.original)
-        setIsFormOpen(true)
-      }
+        router.push(`/settings/terms/${row.original._id}`);
+      };
 
-      const closeForm = () => {
-        setIsFormOpen(false)
-        setFormData(null)
-      }
-
-      const onDelete = async () => {
+      // Function to delete the term
+      const confirmDelete = async () => {
         try {
-          await deleteTermsAndConditions(row.original._id)
-          toast.success("Terms and conditions deleted successfully!")
-          router.refresh()
+          await deleteTerm(row.original._id);
+          toast.success("Term deleted successfully!");
+          setIsDeleteConfirmOpen(false);
+          router.refresh();
         } catch (error) {
-          toast.error("Failed to delete terms and conditions.")
+          toast.error("Failed to delete term. Please try again.");
         }
-      }
+      };
 
       return (
         <>
@@ -91,65 +99,59 @@ export const columns = [
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={onEdit}>
-                Edit
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={onDelete}>Delete</DropdownMenuItem>
+              {canEdit && (
+                <DropdownMenuItem onClick={onEdit}>
+                  Edit
+                </DropdownMenuItem>
+              )}
+              {canDelete && (
+                <DropdownMenuItem onClick={() => setIsDeleteConfirmOpen(true)}>
+                  Delete
+                </DropdownMenuItem>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {isFormOpen && (
+          {/* Render Delete Confirmation Popup */}
+          {isDeleteConfirmOpen && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-              <div className="bg-white p-6 rounded-md max-w-2xl mx-auto">
-                <TermsAndConditionsForm
-                  type={formType}
-                  data={formData}
-                  setOpen={closeForm}
-                />
+              <div className="bg-white p-6 rounded-md max-w-sm mx-auto">
+                <h3 className="text-lg font-medium">Delete Confirmation</h3>
+                <p className="mt-2 text-sm">Are you sure you want to delete this record?</p>
+                <div className="flex justify-end gap-4 mt-4">
+                  <Button variant="outline" onClick={() => setIsDeleteConfirmOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button className="bg-red-500 text-white" onClick={confirmDelete}>
+                    Yes, Delete
+                  </Button>
+                </div>
               </div>
+
             </div>
           )}
         </>
-      )
+      );
     },
   },
-]
+];
 
+// CreateNewTermsButton component with permission check
 export const CreateNewTermsButton = () => {
-  const [isFormOpen, setIsFormOpen] = useState(false)
-  const [formType, setFormType] = useState("create")
-  const [formData, setFormData] = useState(null)
+  const termPermissions = useUserPermissions();
+  const canAdd = checkPermissions(termPermissions, "Terms", "can_add");
 
-  const openForm = () => {
-    setFormType("create")
-    setFormData(null)
-    setIsFormOpen(true)
-  }
+  const router = useRouter();
 
-  const closeForm = () => {
-    setIsFormOpen(false)
-    setFormData(null)
+  if (!canAdd) {
+    return null; // Hide button if user lacks canAdd permission
   }
 
   return (
-    <>
-      <div className="flex justify-end mb-1">
-        <Button className="bg-blue-500 text-white" onClick={openForm}>
-          Create New Terms
-        </Button>
-      </div>
-
-      {isFormOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded-md max-w-2xl mx-auto">
-            <TermsAndConditionsForm
-              type={formType}
-              data={formData}
-              setOpen={closeForm}
-            />
-          </div>
-        </div>
-      )}
-    </>
-  )
-}
+    <div className="flex justify-end mb-1">
+      <Button className="bg-blue-500 text-white" onClick={() => router.push("/settings/terms/new")}>
+        Create New Term
+      </Button>
+    </div>
+  );
+};

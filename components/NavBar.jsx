@@ -23,7 +23,7 @@ export default function NavBar() {
           {/* Left Side: Logo + Company Name */}
           <div className="flex items-center space-x-4">
             <Link href="/dashboard">
-              <Image src="/logo.png" alt="Guru Goutam Logo" width={200} height={60} />
+              <Image src="/logo.png" alt="Guru Goutam Logo" width={150} height={45} />
             </Link>
 
             <div className="hidden md:flex space-x-6">
