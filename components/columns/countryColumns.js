@@ -1,90 +1,52 @@
 // @/components/columns/countryColumns.js
 
-"use client"
-import { MoreHorizontal } from "lucide-react"
-import { Button } from "@/components/ui/button"
+"use client";
+
+import { MoreHorizontal } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { deleteCountry } from "@/actions/settings/countryActions";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { ArrowUpDown } from "lucide-react"
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import CountryForm from "@/components/settingsForms/CountryForm"
-import { deleteCountry } from "@/actions/countryActions"
-import { toast } from "react-toastify"
+} from "@/components/ui/dropdown-menu";
 
 export const columns = [
   {
     accessorKey: "name",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Country Name
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
+    header: "Country Name",
   },
   {
     accessorKey: "active_status",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Status
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
+    header: "Status",
     cell: ({ row }) => (
-      <span>
-        {row.original.active_status ? "Active" : "Inactive"}
-      </span>
+      <span>{row.original.active_status ? "Active" : "Inactive"}</span>
     ),
   },
   {
     id: "actions",
     cell: ({ row }) => {
-      const [isFormOpen, setIsFormOpen] = useState(false)
-      const [formType, setFormType] = useState("")
-      const [formData, setFormData] = useState(null)
-      const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false)
-      const router = useRouter()
+      const router = useRouter();
+      const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
 
       const onEdit = () => {
-        setFormType("edit")
-        setFormData(row.original)
-        setIsFormOpen(true)
-      }
+        router.push(`/settings/countries/${row.original._id}`);
+      };
 
-      const closeForm = () => {
-        setIsFormOpen(false)
-        setFormData(null)
-      }
-
-      const onDelete = () => {
-        setIsDeleteConfirmOpen(true)
-      }
-
-      const confirmDelete = async () => {
+      const onDelete = async () => {
         try {
-          await deleteCountry(row.original._id)
-          toast.success("Country deleted successfully!")
-          setIsDeleteConfirmOpen(false)
-          router.refresh()
-        } catch (error) {
-          toast.error("Failed to delete country. Please try again.")
+          await deleteCountry(row.original._id);
+          toast.success("Country deleted successfully!");
+          router.refresh();
+        } catch {
+          toast.error("Failed to delete country.");
         }
-      }
-
-      const closeDeleteConfirm = () => {
-        setIsDeleteConfirmOpen(false)
-      }
+      };
 
       return (
         <>
@@ -100,32 +62,23 @@ export const columns = [
               <DropdownMenuItem onClick={onEdit}>
                 Edit
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={onDelete}>Delete</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setIsDeleteConfirmOpen(true)}>
+                Delete
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {isFormOpen && (
-            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-              <div className="bg-white p-6 rounded-md max-w-2xl mx-auto">
-                <CountryForm
-                  type={formType}
-                  data={formData}
-                  setOpen={closeForm}
-                />
-              </div>
-            </div>
-          )}
-
+          {/* Render Delete Confirmation Popup */}
           {isDeleteConfirmOpen && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
               <div className="bg-white p-6 rounded-md max-w-sm mx-auto">
                 <h3 className="text-lg font-medium">Delete Confirmation</h3>
                 <p className="mt-2 text-sm">Are you sure you want to delete this country?</p>
                 <div className="flex justify-end gap-4 mt-4">
-                  <Button variant="outline" onClick={closeDeleteConfirm}>
+                  <Button variant="outline" onClick={() => setIsDeleteConfirmOpen(false)}>
                     Cancel
                   </Button>
-                  <Button className="bg-red-500 text-white" onClick={confirmDelete}>
+                  <Button className="bg-red-500 text-white" onClick={onDelete}>
                     Yes, Delete
                   </Button>
                 </div>
@@ -133,46 +86,20 @@ export const columns = [
             </div>
           )}
         </>
-      )
+      );
     },
   },
-]
+];
 
+// CreateNewCountryButton component
 export const CreateNewCountryButton = () => {
-  const [isFormOpen, setIsFormOpen] = useState(false)
-  const [formType, setFormType] = useState("create")
-  const [formData, setFormData] = useState(null)
-
-  const openForm = () => {
-    setFormType("create")
-    setFormData(null)
-    setIsFormOpen(true)
-  }
-
-  const closeForm = () => {
-    setIsFormOpen(false)
-    setFormData(null)
-  }
+  const router = useRouter();
 
   return (
-    <>
-      <div className="flex justify-end mb-1">
-        <Button className="bg-blue-500 text-white" onClick={openForm}>
-          Create New Country
-        </Button>
-      </div>
-
-      {isFormOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded-md max-w-2xl mx-auto">
-            <CountryForm
-              type={formType}
-              data={formData}
-              setOpen={closeForm}
-            />
-          </div>
-        </div>
-      )}
-    </>
-  )
-}
+    <div className="flex justify-end mb-1">
+      <Button className="bg-blue-500 text-white" onClick={() => router.push("/settings/countries/new")}>
+        Create New Country
+      </Button>
+    </div>
+  );
+};

@@ -1,108 +1,63 @@
 // @/components/columns/cityColumns.js
 
-"use client"
-import { MoreHorizontal } from "lucide-react"
-import { Button } from "@/components/ui/button"
+"use client";
+
+import { MoreHorizontal } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { deleteCity } from "@/actions/settings/cityActions";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { ArrowUpDown } from "lucide-react"
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import CityForm from "@/components/settingsForms/CityForm"
-import { deleteCity } from "@/actions/cityActions"
-import { toast } from "react-toastify"
+} from "@/components/ui/dropdown-menu";
 
 export const columns = [
   {
     accessorKey: "name",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        City Name
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
+    header: "City Name",
   },
   {
     accessorKey: "state",
     header: "State",
-    cell: ({ row }) => (
-      <span>
-        {row.original?.state || "No State"}
-      </span>
-    ),
+    cell: ({ row }) => row.original.state ? row.original.state.name : "N/A",
   },
   {
     accessorKey: "country",
     header: "Country",
-    cell: ({ row }) => (
-      <span>
-        {row.original?.country || "No Country"}
-      </span>
-    ),
+    cell: ({ row }) => row.original.country ? row.original.country.name : "N/A",
   },
   {
     accessorKey: "active_status",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Status
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
+    header: "Status",
     cell: ({ row }) => (
-      <span>
-        {row.original.active_status ? "Active" : "Inactive"}
-      </span>
+      <span>{row.original.active_status ? "Active" : "Inactive"}</span>
     ),
   },
   {
     id: "actions",
     cell: ({ row }) => {
-      const [isFormOpen, setIsFormOpen] = useState(false)
-      const [formType, setFormType] = useState("")
-      const [formData, setFormData] = useState(null)
-      const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false)
-      const router = useRouter()
+      const router = useRouter();
+      const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
 
       const onEdit = () => {
-        setFormType("edit")
-        setFormData(row.original)
-        setIsFormOpen(true)
-      }
+        router.push(`/settings/cities/${row.original._id}`);
+      };
 
-      const closeForm = () => {
-        setIsFormOpen(false)
-        setFormData(null)
-      }
-
-      const onDelete = () => {
-        setIsDeleteConfirmOpen(true)
-      }
-
-      const confirmDelete = async () => {
+      const onDelete = async () => {
         try {
-          await deleteCity(row.original._id)
-          toast.success("City deleted successfully!")
+          await deleteCity(row.original._id);
+          toast.success("City deleted successfully!");
           setIsDeleteConfirmOpen(false)
-          router.refresh()
-        } catch (error) {
-          toast.error("Failed to delete city. Please try again.")
+          router.refresh();
+        } catch {
+          toast.error("Failed to delete city.");
         }
-      }
-
-      const closeDeleteConfirm = () => {
-        setIsDeleteConfirmOpen(false)
-      }
+      };
 
       return (
         <>
@@ -118,21 +73,11 @@ export const columns = [
               <DropdownMenuItem onClick={onEdit}>
                 Edit
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={onDelete}>Delete</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setIsDeleteConfirmOpen(true)}>
+                Delete
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-
-          {isFormOpen && (
-            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-              <div className="bg-white p-6 rounded-md max-w-2xl mx-auto">
-                <CityForm
-                  type={formType}
-                  data={formData}
-                  setOpen={closeForm}
-                />
-              </div>
-            </div>
-          )}
 
           {isDeleteConfirmOpen && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -140,10 +85,10 @@ export const columns = [
                 <h3 className="text-lg font-medium">Delete Confirmation</h3>
                 <p className="mt-2 text-sm">Are you sure you want to delete this city?</p>
                 <div className="flex justify-end gap-4 mt-4">
-                  <Button variant="outline" onClick={closeDeleteConfirm}>
+                  <Button variant="outline" onClick={() => setIsDeleteConfirmOpen(false)}>
                     Cancel
                   </Button>
-                  <Button className="bg-red-500 text-white" onClick={confirmDelete}>
+                  <Button className="bg-red-500 text-white" onClick={onDelete}>
                     Yes, Delete
                   </Button>
                 </div>
@@ -151,46 +96,20 @@ export const columns = [
             </div>
           )}
         </>
-      )
+      );
     },
   },
-]
+];
 
+// CreateNewCityButton component
 export const CreateNewCityButton = () => {
-  const [isFormOpen, setIsFormOpen] = useState(false)
-  const [formType, setFormType] = useState("create")
-  const [formData, setFormData] = useState(null)
-
-  const openForm = () => {
-    setFormType("create")
-    setFormData(null)
-    setIsFormOpen(true)
-  }
-
-  const closeForm = () => {
-    setIsFormOpen(false)
-    setFormData(null)
-  }
+  const router = useRouter();
 
   return (
-    <>
-      <div className="flex justify-end mb-1">
-        <Button className="bg-blue-500 text-white" onClick={openForm}>
-          Create New City
-        </Button>
-      </div>
-
-      {isFormOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded-md max-w-2xl mx-auto">
-            <CityForm
-              type={formType}
-              data={formData}
-              setOpen={closeForm}
-            />
-          </div>
-        </div>
-      )}
-    </>
-  )
-}
+    <div className="flex justify-end mb-1">
+      <Button className="bg-blue-500 text-white" onClick={() => router.push("/settings/cities/new")}>
+        Create New City
+      </Button>
+    </div>
+  );
+};

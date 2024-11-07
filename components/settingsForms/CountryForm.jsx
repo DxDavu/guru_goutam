@@ -1,44 +1,33 @@
 // @/components/settingsForms/CountryForm.jsx
 
-"use client"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { Input } from "@/components/ui/input"
-import { createCountry, updateCountry } from "@/actions/countryActions"
-import { useEffect, useState } from "react"
-import { toast } from "react-toastify"
-import { Button } from "@/components/ui/button"
-import { useFormState } from "react-dom"
-import { useRouter } from "next/navigation"
+"use client";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { createCountry, updateCountry } from "@/actions/settings/countryActions";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import { useFormState } from "react-dom";
+import { useEffect } from "react";
 
 const schema = z.object({
   name: z.string().min(1, { message: "Country name is required!" }),
   active_status: z.boolean().default(true),
-})
+});
 
-const CountryForm = ({ type, data, setOpen }) => {
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm({
+export default function CountryForm({ type, data }) {
+  const { register, handleSubmit, formState: { errors }, reset } = useForm({
     resolver: zodResolver(schema),
-    defaultValues: data || {},
-  })
+    defaultValues: data || { name: "", active_status: true },
+  });
 
-  const router = useRouter()
+  const router = useRouter();
 
-  useEffect(() => {
-    if (data) {
-      reset(data)
-    }
-  }, [data, reset])
-
+  // Initialize form state using useFormState hook
   const [state, formAction] = useFormState(
     type === "create" ? createCountry : updateCountry,
     {
@@ -46,63 +35,55 @@ const CountryForm = ({ type, data, setOpen }) => {
       error: false,
       message: "",
     }
-  )
+  );
+
+  // Ensure reset only runs once when data changes
+  useEffect(() => {
+    if (type === "edit" && data) {
+      reset(data);
+    }
+  }, [type, data, reset]);
 
   const onSubmit = handleSubmit(async (formData) => {
-    setLoading(true)
     try {
-      formAction({ ...formData, id: data?._id })
+      formAction({ ...formData, id: data?._id });
     } catch (err) {
-      setError(err.message || "An unexpected error occurred.")
+      state.message = err.message || "An unexpected error occurred.";
     }
-  })
+  });
 
+  // Check for success or error after formAction completes
   useEffect(() => {
     if (state.success) {
-      toast(`Country ${type === "create" ? "created" : "updated"} successfully!`)
-      setOpen(false)
-      router.refresh()
+      toast.success(`Country ${type === "create" ? "created" : "updated"} successfully!`);
+      router.push("/settings/countries");
+      router.refresh();
     } else if (state.error) {
-      setError(state.message)
-      setLoading(false)
+      toast.error(state.message);
     }
-  }, [state, router, type, setOpen])
-
-  const handleClose = () => {
-    setOpen(false)
-  }
+  }, [state, router, type]);
 
   return (
-    <form className="flex flex-col gap-8 p-4 w-96" onSubmit={onSubmit}>
-      <h1 className="text-xl font-semibold">{type === "create" ? "Create a new country" : "Edit Country"}</h1>
-
-      <div className="flex flex-col gap-4">
-        <div className="flex flex-col gap-2 w-full">
-          <label className="text-xs text-gray-500">Country Name</label>
-          <Input
-            type="text"
-            {...register("name")}
-            className="w-full"
-            placeholder="Enter country name"
-          />
-          {errors.name && (
-            <p className="text-xs text-red-400">{errors.name.message}</p>
-          )}
-        </div>
+    <form onSubmit={onSubmit} className="space-y-4">
+      <div>
+        <label className="text-sm font-medium">Country Name</label>
+        <Input {...register("name")} placeholder="Enter country name" />
+        {errors.name && <p className="text-red-500 text-xs">{errors.name.message}</p>}
+      </div>
+      
+      <div className="flex items-center gap-2">
+        <Checkbox {...register("active_status")} />
+        <label className="text-sm">Active Status</label>
       </div>
 
-      {error && <span className="text-red-500">{error}</span>}
-
       <div className="flex justify-end gap-4">
-        <Button variant="outline" onClick={handleClose}>
+        <Button variant="outline" onClick={() => router.push("/settings/countries")}>
           Cancel
         </Button>
-        <Button className="bg-blue-400 text-white p-2 rounded-md" type="submit" disabled={loading}>
-          {loading ? "Submitting..." : type === "create" ? "Create" : "Update"}
+        <Button type="submit" className="bg-blue-500 text-white">
+          {state.loading ? "Submitting..." : type === "create" ? "Create" : "Update"}
         </Button>
       </div>
     </form>
-  )
+  );
 }
-
-export default CountryForm

@@ -1,68 +1,89 @@
 // @/components/settingsForms/RolesForm.jsx
-"use client"
+
+"use client";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Input } from "@/components/ui/input"; // Shadcn UI Input component
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 import { createRole, updateRole } from "@/actions/roleActions";
+import { getDepartments } from "@/actions/departmentActions";
+import { Button } from "@/components/ui/button";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { Button } from "@/components/ui/button";
-import { getAllDepartments } from "@/actions/dataFetchActions";
 import { useFormState } from "react-dom";
 import { useRouter } from "next/navigation";
 
+const permissionKeys = [
+  "can_add", "can_edit", "can_delete", "can_activate", "can_deactivate",
+  "can_search", "can_import", "can_export", "can_print",
+  "can_generate_pdf", "can_logout"
+];
+
 const schema = z.object({
-  role_name: z.string().min(1, { message: "Role name is required!" }),
-  department: z.string().optional(),
-  active_status: z.boolean().default(true),
+  role_name: z.string().min(1, { message: "Role Name is required!" }),
+  department: z.string().min(1, { message: "Department is required!" }),
+  module_access: z.array(z.object({
+    module_name: z.string().min(1, { message: "Module name is required!" }),
+    permissions: z.object(
+      permissionKeys.reduce((acc, key) => {
+        acc[key] = z.boolean().default(false);
+        return acc;
+      }, {})
+    ),
+  })),
 });
 
-const RolesForm = ({ type, data, setOpen }) => {
-  const [departmentsOptions, setDepartmentsOptions] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm({
+const RolesForm = ({ type, data }) => {
+  const { register, handleSubmit, setValue, watch, formState: { errors }, reset } = useForm({
     resolver: zodResolver(schema),
-    defaultValues: data || {},
+    defaultValues: data || {
+      role_name: "",
+      department: "",
+      module_access: [
+        { module_name: "Users", permissions: permissionKeys.reduce((acc, key) => ({ ...acc, [key]: false }), {}) },
+        { module_name: "Roles", permissions: permissionKeys.reduce((acc, key) => ({ ...acc, [key]: false }), {}) },
+        { module_name: "Inventory", permissions: permissionKeys.reduce((acc, key) => ({ ...acc, [key]: false }), {}) },
+        { module_name: "Stock Location", permissions: permissionKeys.reduce((acc, key) => ({ ...acc, [key]: false }), {}) },
+        { module_name: "Grade", permissions: permissionKeys.reduce((acc, key) => ({ ...acc, [key]: false }), {}) },
+        { module_name: "Asset", permissions: permissionKeys.reduce((acc, key) => ({ ...acc, [key]: false }), {}) },
+        { module_name: "Item Variant", permissions: permissionKeys.reduce((acc, key) => ({ ...acc, [key]: false }), {}) },
+        { module_name: "Item Master", permissions: permissionKeys.reduce((acc, key) => ({ ...acc, [key]: false }), {}) },
+        { module_name: "Product Category", permissions: permissionKeys.reduce((acc, key) => ({ ...acc, [key]: false }), {}) },
+        { module_name: "Brands", permissions: permissionKeys.reduce((acc, key) => ({ ...acc, [key]: false }), {}) },
+        { module_name: "Product Template", permissions: permissionKeys.reduce((acc, key) => ({ ...acc, [key]: false }), {}) },
+      ],
+    },
   });
 
   const router = useRouter();
+  const [departments, setDepartments] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  // Fetch departments data
+  // Fetch departments
   useEffect(() => {
-    const fetchData = async () => {
+    async function fetchDepartments() {
       try {
-        const departments = await getAllDepartments();
-        setDepartmentsOptions(departments);
-
-        if (data) {
-          const matchedDepartment = departments.find(
-            (dept) => dept.department_name === data.department
-          );
-
-          reset({
-            ...data,
-            department: matchedDepartment ? matchedDepartment._id : "",
-          });
-        }
-        setLoading(false);
+        const fetchedDepartments = await getDepartments();
+        setDepartments(fetchedDepartments);
       } catch (err) {
-        console.error("Failed to fetch departments:", err);
-        setError("Failed to load form data.");
-        setLoading(false);
+        console.error("Failed to load departments:", err);
+        setError("Failed to load departments.");
       }
-    };
-    fetchData();
-  }, [data, reset]);
+    }
+    fetchDepartments();
+  }, []);
 
-  // Using useFormState for form action handling
+  // Set initial form values for editing
+  useEffect(() => {
+    if (type === "edit" && data) {
+      reset(data);
+    }
+  }, [type, data, reset]);
+
   const [state, formAction] = useFormState(
     type === "create" ? createRole : updateRole,
     {
@@ -78,71 +99,80 @@ const RolesForm = ({ type, data, setOpen }) => {
       formAction({ ...formData, id: data?._id });
     } catch (err) {
       setError(err.message || "An unexpected error occurred.");
+      setLoading(false);
     }
   });
 
-  // Handle success or error after submission
   useEffect(() => {
-    if (state.success) {
-      toast(`Role ${type === "create" ? "created" : "updated"} successfully!`);
-      setOpen(false);
+    if (state?.success) {
+      toast.success(`Role ${type === "create" ? "created" : "updated"} successfully!`);
+      router.push("/settings/roles");
       router.refresh();
-    } else if (state.error) {
+    } else if (state?.error) {
       setError(state.message);
       setLoading(false);
     }
-  }, [state, router, type, setOpen]);
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  if (loading) {
-    return <div className="text-center p-6">Loading...</div>;
-  }
+  }, [state, router, type]);
 
   return (
-    <form className="flex flex-col gap-8 p-4 w-96" onSubmit={onSubmit}>
-      <h1 className="text-xl font-semibold">{type === "create" ? "Create a new role" : "Edit Role"}</h1>
+    <form className="flex flex-col gap-4" onSubmit={onSubmit}>
+      <h1 className="text-xl font-semibold">{type === "create" ? "Create New Role" : "Edit Role"}</h1>
 
-      <div className="flex flex-col gap-4">
-        <div className="flex flex-col gap-2 w-full">
-          <label className="text-xs text-gray-500">Role Name</label>
-          <Input
-            type="text"
-            {...register("role_name")}
-            className="w-full"
-            placeholder="Enter role name"
-          />
-          {errors.role_name && (
-            <p className="text-xs text-red-400">{errors.role_name.message}</p>
-          )}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="text-sm font-medium">Role Name</label>
+          <Input {...register("role_name")} placeholder="Enter Role Name" />
+          {errors.role_name && <p className="text-red-500 text-xs">{errors.role_name.message}</p>}
         </div>
 
-        <div className="flex flex-col gap-2">
-          <label className="text-xs text-gray-500">Department</label>
-          <select
-            className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
-            {...register("department")}
-          >
-            <option value="">Select Department</option>
-            {departmentsOptions.map((dept) => (
-              <option key={dept._id} value={dept._id}>
-                {dept.department_name}
-              </option>
-            ))}
-          </select>
-          {errors.department?.message && <p className="text-xs text-red-400">{errors.department.message}</p>}
+        <div>
+          <label className="text-sm font-medium">Department</label>
+          <Select onValueChange={(value) => setValue("department", value)} defaultValue={data?.department || ""}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select Department" />
+            </SelectTrigger>
+            <SelectContent>
+              {departments.map((department) => (
+                <SelectItem key={department._id} value={department._id}>
+                  {department.department_name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {errors.department && <p className="text-red-500 text-xs">{errors.department.message}</p>}
         </div>
       </div>
 
-      {error && <span className="text-red-500">{error}</span>}
+      <div className="mt-4">
+        <label className="text-sm font-medium">Module Access Permissions</label>
+        <div className="border p-4 rounded-md space-y-4">
+          {watch("module_access").map((module, index) => (
+            <div key={module.module_name} className="flex flex-col border-b pb-4">
+              <label className="font-medium">{module.module_name}</label>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-2">
+                {Object.keys(module.permissions).map((permission) => (
+                  <div key={permission} className="flex items-center gap-2">
+                    <Checkbox
+                      {...register(`module_access.${index}.permissions.${permission}`)}
+                      checked={watch(`module_access.${index}.permissions.${permission}`)}
+                      onCheckedChange={(checked) => setValue(`module_access.${index}.permissions.${permission}`, checked)}
+                    />
+                    <label className="text-sm">{permission.replace(/_/g, ' ')}</label>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
 
-      <div className="flex justify-end gap-4">
-        <Button variant="outline" onClick={handleClose}>
+      {error && <p className="text-red-500">{error}</p>}
+
+      <div className="flex justify-end gap-4 mt-6">
+        <Button variant="outline" onClick={() => router.push("/settings/roles")}>
           Cancel
         </Button>
-        <Button className="bg-blue-400 text-white p-2 rounded-md" type="submit" disabled={loading}>
+        <Button type="submit" className="bg-blue-500 text-white" disabled={loading}>
           {loading ? "Submitting..." : type === "create" ? "Create" : "Update"}
         </Button>
       </div>

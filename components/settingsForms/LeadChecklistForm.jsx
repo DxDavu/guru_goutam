@@ -1,45 +1,46 @@
 // @/components/settingsForms/LeadChecklistForm.jsx
 
-"use client"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { Input } from "@/components/ui/input"
-import { createLeadChecklist, updateLeadChecklist } from "@/actions/leadChecklistActions"
-import { useEffect, useState } from "react"
-import { toast } from "react-toastify"
-import { Button } from "@/components/ui/button"
-import { useFormState } from "react-dom"
-import { useRouter } from "next/navigation"
+"use client";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import { createLeadChecklist, updateLeadChecklist } from "@/actions/settings/leadChecklistActions";
+import { useRouter } from "next/navigation";
+import { useFormState } from "react-dom";
+import { useEffect } from "react";
+import { toast } from "react-toastify";
 
 const schema = z.object({
-  checklist_name: z.string().min(1, { message: "Checklist name is required!" }),
+  checklist_name: z.string().min(1, { message: "Checklist Name is required!" }),
   description: z.string().optional(),
-  checklist_qty: z.string({ message: "Quantity should be a positive number!" }),
+  checklist_qty: z.number().positive().int().min(1, { message: "Checklist Quantity must be a positive integer" }),
   active_status: z.boolean().default(true),
-})
+});
 
-const LeadChecklistForm = ({ type, data, setOpen }) => {
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
+export default function LeadChecklistForm({ type, data }) {
+  const router = useRouter();
 
   const {
     register,
     handleSubmit,
+    setValue,
+    watch,
     formState: { errors },
     reset,
   } = useForm({
     resolver: zodResolver(schema),
-    defaultValues: data || {},
-  })
-
-  const router = useRouter()
-
-  useEffect(() => {
-    if (data) {
-      reset(data)
-    }
-  }, [data, reset])
+    defaultValues: data || {
+      checklist_name: "",
+      description: "",
+      checklist_qty: 1,
+      active_status: true,
+    },
+  });
 
   const [state, formAction] = useFormState(
     type === "create" ? createLeadChecklist : updateLeadChecklist,
@@ -48,86 +49,79 @@ const LeadChecklistForm = ({ type, data, setOpen }) => {
       error: false,
       message: "",
     }
-  )
+  );
+
+  useEffect(() => {
+    if (type === "edit" && data) {
+      reset(data);
+    }
+  }, [type, data, reset]);
 
   const onSubmit = handleSubmit(async (formData) => {
-    setLoading(true)
-    try {
-      formAction({ ...formData, id: data?._id })
-    } catch (err) {
-      setError(err.message || "An unexpected error occurred.")
+    const response = await formAction({ ...formData, id: data?._id });
+    if (response && !response.success) {
+      state.message = response.message;
     }
-  })
+  });
 
   useEffect(() => {
     if (state.success) {
-      toast(`Lead Checklist ${type === "create" ? "created" : "updated"} successfully!`)
-      setOpen(false)
-      router.refresh()
+      toast.success(`Lead Checklist ${type === "create" ? "created" : "updated"} successfully!`);
+      router.push("/settings/lead-checklist");
+      router.refresh();
     } else if (state.error) {
-      setError(state.message)
-      setLoading(false)
+      toast.error(state.message);
     }
-  }, [state, router, type, setOpen])
-
-  const handleClose = () => {
-    setOpen(false)
-  }
+  }, [state, router, type]);
 
   return (
-    <form className="flex flex-col gap-8 p-4 w-96" onSubmit={onSubmit}>
-      <h1 className="text-xl font-semibold">{type === "create" ? "Create a new lead checklist" : "Edit Lead Checklist"}</h1>
+    <form onSubmit={onSubmit} className="space-y-4">
+      <h1 className="text-xl font-semibold">
+        {type === "create" ? "Create Lead Checklist" : "Edit Lead Checklist"}
+      </h1>
 
-      <div className="flex flex-col gap-4">
-        <div className="flex flex-col gap-2 w-full">
-          <label className="text-xs text-gray-500">Checklist Name</label>
-          <Input
-            type="text"
-            {...register("checklist_name")}
-            className="w-full"
-            placeholder="Enter checklist name"
-          />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="text-sm font-medium">Checklist Name</label>
+          <Input {...register("checklist_name")} placeholder="Enter Checklist Name" />
           {errors.checklist_name && (
-            <p className="text-xs text-red-400">{errors.checklist_name.message}</p>
+            <p className="text-red-500 text-xs">{errors.checklist_name.message}</p>
           )}
         </div>
 
-        <div className="flex flex-col gap-2 w-full">
-          <label className="text-xs text-gray-500">Description</label>
-          <Input
-            type="text"
-            {...register("description")}
-            className="w-full"
-            placeholder="Enter description"
-          />
+        <div>
+          <label className="text-sm font-medium">Description</label>
+          <Textarea {...register("description")} placeholder="Enter Description" />
+          {errors.description && (
+            <p className="text-red-500 text-xs">{errors.description.message}</p>
+          )}
         </div>
 
-        <div className="flex flex-col gap-2 w-full">
-          <label className="text-xs text-gray-500">Quantity</label>
-          <Input
-            type="Number"
-            {...register("checklist_qty")}
-            className="w-full"
-            placeholder="Enter quantity"
-          />
+        <div>
+          <label className="text-sm font-medium">Checklist Quantity</label>
+          <Input type="number" {...register("checklist_qty")} placeholder="Enter Checklist Quantity" />
           {errors.checklist_qty && (
-            <p className="text-xs text-red-400">{errors.checklist_qty.message}</p>
+            <p className="text-red-500 text-xs">{errors.checklist_qty.message}</p>
           )}
         </div>
       </div>
 
-      {error && <span className="text-red-500">{error}</span>}
+      <div className="flex items-center gap-2 mt-4">
+        <Checkbox
+          checked={watch("active_status")}
+          onCheckedChange={(checked) => setValue("active_status", checked)}
+        />
+        <label className="text-sm font-medium">Active Status</label>
+      </div>
 
-      <div className="flex justify-end gap-4">
-        <Button variant="outline" onClick={handleClose}>
+      <div className="flex justify-end gap-4 mt-6">
+        <Button variant="outline" onClick={() => router.push("/settings/lead-checklist")}>
           Cancel
         </Button>
-        <Button className="bg-blue-400 text-white p-2 rounded-md" type="submit" disabled={loading}>
-          {loading ? "Submitting..." : type === "create" ? "Create" : "Update"}
+        <Button type="submit" className="bg-blue-500 text-white">
+          {state.loading ? "Submitting..." : type === "create" ? "Create" : "Update"}
         </Button>
       </div>
     </form>
-  )
+  );
 }
-
-export default LeadChecklistForm

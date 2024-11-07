@@ -1,82 +1,40 @@
 // @/components/settingsForms/CityForm.jsx
 
-"use client"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { Input } from "@/components/ui/input"
-import { createCity, updateCity } from "@/actions/cityActions"
-import { useEffect, useState } from "react"
-import { toast } from "react-toastify"
-import { Button } from "@/components/ui/button"
-import { getStates } from "@/actions/stateActions"
-import { getCountries } from "@/actions/countryActions"
-import { useFormState } from "react-dom"
-import { useRouter } from "next/navigation"
+"use client";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { createCity, updateCity } from "@/actions/settings/cityActions";
+import { getStates } from "@/actions/settings/stateActions";
+import { getCountries } from "@/actions/settings/countryActions";
+import { Button } from "@/components/ui/button";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import { useFormState } from "react-dom";
+import { useEffect, useState } from "react";
 
 const schema = z.object({
   name: z.string().min(1, { message: "City name is required!" }),
   state: z.string().min(1, { message: "State is required!" }),
   country: z.string().min(1, { message: "Country is required!" }),
   active_status: z.boolean().default(true),
-})
+});
 
-const CityForm = ({ type, data, setOpen }) => {
-  const [statesOptions, setStatesOptions] = useState([])
-  const [countriesOptions, setCountriesOptions] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm({
+export default function CityForm({ type, data }) {
+  const { register, handleSubmit, setValue, watch, formState: { errors }, reset } = useForm({
     resolver: zodResolver(schema),
-    defaultValues: data || {},
-  })
+    defaultValues: data || { name: "", state: "", country: "", active_status: true },
+  });
 
-  const router = useRouter()
+  const router = useRouter();
+  const [states, setStates] = useState([]);
+  const [countries, setCountries] = useState([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [states, countries] = await Promise.all([
-          getStates(),
-          getCountries(),
-        ])
-
-        console.log('====================================');
-        console.log(states);        
-        console.log(countries);
-        console.log(data);
-        console.log('====================================');
-
-        setStatesOptions(states)
-        setCountriesOptions(countries)
-
-      
-        if (data) {
-          const matchedState = states.find((state) => state.name === data.state)
-          const matchedCountry = countries.find((country) => country.name === data.country)
-
-          reset({
-            ...data,
-            state: matchedState ? matchedState._id : "",
-            country: matchedCountry ? matchedCountry._id : "",
-          })
-        }
-        setLoading(false)
-      } catch (err) {
-        console.error("Failed to fetch states or countries:", err)
-        setError("Failed to load form data.")
-        setLoading(false)
-      }
-    }
-    fetchData()
-  }, [data, reset])
-
+  // Initialize form state using useFormState hook
   const [state, formAction] = useFormState(
     type === "create" ? createCity : updateCity,
     {
@@ -84,99 +42,108 @@ const CityForm = ({ type, data, setOpen }) => {
       error: false,
       message: "",
     }
-  )
+  );
+
+  // Fetch all countries and states on component mount
+  useEffect(() => {
+    async function fetchData() {
+      const fetchedCountries = await getCountries();
+      const fetchedStates = await getStates();
+      setCountries(fetchedCountries);
+      setStates(fetchedStates);
+    }
+    fetchData();
+  }, []);
+
+  // Set initial form values for editing
+  useEffect(() => {
+    if (type === "edit" && data) {
+      reset(data);
+    }
+  }, [type, data, reset]);
 
   const onSubmit = handleSubmit(async (formData) => {
-    setLoading(true)
     try {
-      formAction({ ...formData, id: data?._id })
+      formAction({ ...formData, id: data?._id });
     } catch (err) {
-      setError(err.message || "An unexpected error occurred.")
+      state.message = err.message || "An unexpected error occurred.";
     }
-  })
+  });
 
   useEffect(() => {
     if (state.success) {
-      toast(`City ${type === "create" ? "created" : "updated"} successfully!`)
-      setOpen(false)
-      router.refresh()
+      toast.success(`City ${type === "create" ? "created" : "updated"} successfully!`);
+      router.push("/settings/cities");
+      router.refresh();
     } else if (state.error) {
-      setError(state.message)
-      setLoading(false)
+      toast.error(state.message);
     }
-  }, [state, router, type, setOpen])
+  }, [state, router, type]);
 
-  const handleClose = () => {
-    setOpen(false)
-  }
-
-  if (loading) {
-    return <div className="text-center p-6">Loading...</div>
-  }
+  // Filter states based on selected country
+  const selectedCountry = watch("country");
+  const filteredStates = selectedCountry
+    ? states.filter((state) => state.country === selectedCountry)
+    : [];
 
   return (
-    <form className="flex flex-col gap-8 p-4 w-96" onSubmit={onSubmit}>
-      <h1 className="text-xl font-semibold">{type === "create" ? "Create a new city" : "Edit City"}</h1>
-
-      <div className="flex flex-col gap-4">
-        <div className="flex flex-col gap-2 w-full">
-          <label className="text-xs text-gray-500">City Name</label>
-          <Input
-            type="text"
-            {...register("name")}
-            className="w-full"
-            placeholder="Enter city name"
-          />
-          {errors.name && (
-            <p className="text-xs text-red-400">{errors.name.message}</p>
-          )}
-        </div>
-
-        <div className="flex flex-col gap-2 w-full">
-          <label className="text-xs text-gray-500">State</label>
-          <select
-            className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
-            {...register("state")}
-          >
-            <option value="">Select State</option>
-            {statesOptions.map((state) => (
-              <option key={state._id} value={state._id}>
-                {state.name}
-              </option>
-            ))}
-          </select>
-          {errors.state && <p className="text-xs text-red-400">{errors.state.message}</p>}
-        </div>
-
-        <div className="flex flex-col gap-2 w-full">
-          <label className="text-xs text-gray-500">Country</label>
-          <select
-            className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
-            {...register("country")}
-          >
-            <option value="">Select Country</option>
-            {countriesOptions.map((country) => (
-              <option key={country._id} value={country._id}>
-                {country.name}
-              </option>
-            ))}
-          </select>
-          {errors.country && <p className="text-xs text-red-400">{errors.country.message}</p>}
-        </div>
+    <form onSubmit={onSubmit} className="space-y-4">
+      <div>
+        <label className="text-sm font-medium">City Name</label>
+        <Input {...register("name")} placeholder="Enter city name" />
+        {errors.name && <p className="text-red-500 text-xs">{errors.name.message}</p>}
       </div>
 
-      {error && <span className="text-red-500">{error}</span>}
+      <div>
+        <label className="text-sm font-medium">Country</label>
+        <Select
+          onValueChange={(value) => setValue("country", value)}
+          defaultValue={data?.country || ""}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Select Country" />
+          </SelectTrigger>
+          <SelectContent>
+            {countries.map((country) => (
+              <SelectItem key={country._id} value={country._id}>
+                {country.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        {errors.country && <p className="text-red-500 text-xs">{errors.country.message}</p>}
+      </div>
+
+      <div>
+        <label className="text-sm font-medium">State</label>
+        <Select onValueChange={(value) => setValue("state", value)} defaultValue={data?.state || ""}>
+          <SelectTrigger>
+            <SelectValue placeholder="Select State" />
+          </SelectTrigger>
+          <SelectContent>
+            {filteredStates.map((state) => (
+              <SelectItem key={state._id} value={state._id}>
+                {state.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        {errors.state && <p className="text-red-500 text-xs">{errors.state.message}</p>}
+      </div>
+
+      <div className="flex items-center gap-2">
+        <Checkbox {...register("active_status")} />
+        <label className="text-sm">Active Status</label>
+      </div>
 
       <div className="flex justify-end gap-4">
-        <Button variant="outline" onClick={handleClose}>
+        <Button variant="outline" onClick={() => router.push("/settings/cities")}>
           Cancel
         </Button>
-        <Button className="bg-blue-400 text-white p-2 rounded-md" type="submit" disabled={loading}>
-          {loading ? "Submitting..." : type === "create" ? "Create" : "Update"}
+        <Button type="submit" className="bg-blue-500 text-white">
+          {state.loading ? "Submitting..." : type === "create" ? "Create" : "Update"}
         </Button>
       </div>
     </form>
-  )
+  );
 }
-
-export default CityForm

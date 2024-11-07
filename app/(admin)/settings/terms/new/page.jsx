@@ -1,11 +1,13 @@
-// @/app/(admin)/settings/user/new/page.jsx
-"use client";
-import TermsAndConditionsForm from "@/components/settingsForms/TermsAndConditionsForm";
+// @/app/(admin)/settings/terms/new/page.jsx
 
-export default function NewTermPage() {
+"use client";
+
+import TermsForm from "@/components/settingsForms/TermsForm";
+
+export default function NewTermsPage() {
   return (
     <div className="bg-white p-6 rounded-md max-w-2xl mx-auto mt-8">
-      <TermsAndConditionsForm type="create" />
+      <TermsForm type="create" />
     </div>
   );
 }

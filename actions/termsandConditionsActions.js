@@ -1,133 +1,68 @@
-// @/actions/termActions.js
+// @/actions/termsAndConditionsActions.js
+
 "use server";
 
-import mongoose from 'mongoose';
 import { connectToDatabase } from '@/lib/database';
 import TermsandConditions from '@/lib/database/models/TermsandConditions.model';
 
-// Get term by ID
-export const getTermById = async (id) => {
+// Create a new terms and conditions
+export const createTermsAndConditions = async (currentStatus, termsData) => {
   await connectToDatabase();
   try {
-    const term = await TermsandConditions.findById(id);
-    if (!term) return null;
-    
-    return {
-      ...term.toObject(),
-      _id: term._id.toString(),
-    };
-  } catch (error) {
-    console.error("Failed to fetch term:", error);
-    return null;
-  }
-};
-
-// Get term by term name
-export const getTermByTermname = async (termname) => {
-  await connectToDatabase();
-  try {
-    const term = await TermsandConditions.findOne({ term_name: termname }).lean();
-    
-    if (!term) return null;
+    const newTerms = new TermsandConditions(termsData);
+    const savedTerms = await newTerms.save();
 
     return {
-      ...term,
-      _id: term._id?.toString(),
-    };
-  } catch (error) {
-    console.error("Failed to fetch term by term name:", error);
-    return null;
-  }
-};
-
-// Create a new term
-export const createTerm = async (currentState, termData) => {
-  await connectToDatabase();
-
-  try {
-    // You can use currentState here to check permissions or apply any logic based on the current session state
-    const newTerm = new TermsandConditions(termData);
-    const savedTerm = await newTerm.save();
-
-    return {
-      ...savedTerm.toObject(),
-      _id: savedTerm._id.toString(),
+      _id: savedTerms._id.toString(),
+      termsType: savedTerms.type,
       success: true,
       error: false,
     };
   } catch (error) {
-    console.error("Failed to create term:", error);
-    return {
-      success: false,
-      error: true,
-      message: error.message || 'Failed to create term. Please try again.',
-    };
+    return { success: false, error: true, message: error.message || 'Failed to create terms and conditions.' };
   }
 };
 
-// Update an existing term
-export const updateTerm = async (currentState, updateData) => {
+// Update an existing terms and conditions
+export const updateTermsAndConditions = async (currentStatus, updateData) => {
   await connectToDatabase();
 
+  const id = updateData.id;
+
   try {
-    // currentState can be used here if permissions or validations are needed based on the current user’s role or state
-    const updatedTerm = await TermsandConditions.findByIdAndUpdate(updateData.id, updateData, { new: true });
-
-    if (!updatedTerm) {
-      return { success: false, error: true, message: 'Term not found' };
-    }
-
+    const updatedTerms = await TermsandConditions.findByIdAndUpdate(id, updateData, { new: true });
     return {
-      ...updatedTerm.toObject(),
-      _id: updatedTerm._id.toString(),
+      _id: updatedTerms._id.toString(),
+      termsType: updatedTerms.type,
       success: true,
       error: false,
     };
   } catch (error) {
-    console.error("Failed to update term:", error);
-    return {
-      success: false,
-      error: true,
-      message: error.message || 'Failed to update term. Please try again.',
-    };
+    return { success: false, error: true, message: error.message || 'Failed to update terms and conditions.' };
   }
 };
 
-// Delete a term
-export const deleteTerm = async (currentState, id) => {
+// Delete terms and conditions
+export const deleteTermsAndConditions = async (id) => {
   await connectToDatabase();
-
   try {
-    // currentState could be used here to validate delete permissions
-    const deletedTerm = await TermsandConditions.findByIdAndDelete(id);
-    if (!deletedTerm) {
-      return { success: false, error: true, message: 'Term not found' };
+    const deletedTerms = await TermsandConditions.findByIdAndDelete(id);
+    if (!deletedTerms) {
+      return { success: false, error: true, message: 'Terms and conditions not found' };
     }
-
-    return { success: true, error: false, message: 'Term deleted successfully' };
+    return { success: true, error: false, message: 'Terms and conditions deleted successfully' };
   } catch (error) {
-    console.error("Failed to delete term:", error);
-    return {
-      success: false,
-      error: true,
-      message: error.message || 'Failed to delete term. Please try again.',
-    };
+    return { success: false, error: true, message: error.message || 'Failed to delete terms and conditions.' };
   }
 };
 
-// Get all terms
-export const getTerms = async (currentState) => {
+// Get all terms and conditions
+export const getAllTermsAndConditions = async () => {
   await connectToDatabase();
-
-  try {
-    // currentState could be used here if you need to filter terms based on user access
-    const terms = await TermsandConditions.find({}).lean();
-    return terms.map(term => ({
-      ...term,
-      _id: term._id.toString(),
-    }));
-  } catch (error) {
-    console.error("Failed to fetch terms:", error);
-    return [];
-  }
+  const terms = await TermsandConditions.find({})
+    .lean();
+  return terms.map(term => ({
+    ...term,
+    _id: term._id.toString(),
+  }));
 };
