@@ -46,8 +46,10 @@ export function DataTable ({
   });
 
   return (
-    <div>
-      <div className="flex items-center py-1">
+    <div className="bg-[#F2F4F0]">
+      {" "}
+      {/* Overall background color */}
+      <div className="flex items-center py-2 px-4">
         <Input
           placeholder="Filter key fields"
           value={globalFilter ?? ""}
@@ -55,9 +57,13 @@ export function DataTable ({
           className="max-w-sm"
         />
       </div>
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader className="bg-blue">
+      <div className="rounded-md border border-gray-300 overflow-hidden">
+        <Table className="min-w-full bg-white">
+          <TableHeader
+            className="border-b border-gray-300 bg-[#EAEAEA]"
+          >
+            {" "}
+            {/* Header background color with border */}
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
