@@ -80,7 +80,10 @@ export default function LeadChecklistForm({ type, data }) {
         {type === "create" ? "Create Lead Checklist" : "Edit Lead Checklist"}
       </h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="flex  gap-40">
+    {/* Department Form Section */}
+    <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 max-w-md">
+      <div className="grid grid-cols-1 gap-4">
         <div>
           <label className="text-sm font-medium">Checklist Name</label>
           <Input {...register("checklist_name")} placeholder="Enter Checklist Name" />
@@ -103,25 +106,37 @@ export default function LeadChecklistForm({ type, data }) {
           {errors.checklist_qty && (
             <p className="text-red-500 text-xs">{errors.checklist_qty.message}</p>
           )}
-        </div>
       </div>
+      </div>
+    </div>
 
-      <div className="flex items-center gap-2 mt-4">
+    {/* Control Section */}
+    <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 w-84 mr-40">
+      <h2 className="text-lg font-medium mb-4">Control:</h2>
+      <div className="flex items-center justify-end">
+        <label className="mr-2 text-sm font-medium">Active Status*</label>
         <Checkbox
           checked={watch("active_status")}
           onCheckedChange={(checked) => setValue("active_status", checked)}
         />
-        <label className="text-sm font-medium">Active Status</label>
       </div>
+    </div>
+  </div>
 
-      <div className="flex justify-end gap-4 mt-6">
-        <Button variant="outline" onClick={() => router.push("/settings/lead-checklist")}>
-          Cancel
-        </Button>
-        <Button type="submit" className="bg-blue-500 text-white">
-          {state.loading ? "Submitting..." : type === "create" ? "Create" : "Update"}
-        </Button>
-      </div>
-    </form>
+  {/* Buttons */}
+  <div className="flex justify-end gap-4 mt-6">
+    <Button variant="outline" onClick={() => router.push("/settings/departments")}>
+      Cancel
+    </Button>
+    <Button type="submit" className="bg-blue-500 text-white">
+      {state.loading ? "Submitting..." : type === "create" ? "Create" : "Update"}
+    </Button>
+  </div>
+</form>
+
+
+
+
+  
   );
 }

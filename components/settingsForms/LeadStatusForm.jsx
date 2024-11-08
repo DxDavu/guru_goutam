@@ -84,7 +84,8 @@ export default function LeadStatusForm({ type, data }) {
         {type === "create" ? "Create Lead Status" : "Edit Lead Status"}
       </h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="flex  gap-40">
+      <div className="grid col-2  gap-4">
         <div>
           <label className="text-sm font-medium">Lead Status</label>
           <Input {...register("status_name")} placeholder="Enter Lead Status" />
@@ -101,13 +102,16 @@ export default function LeadStatusForm({ type, data }) {
           )}
         </div>
       </div>
-
+      <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 w-64">
+      <h2 className="text-lg font-medium mb-4">Control:</h2>
       <div className="flex items-center gap-2 mt-4">
         <Checkbox
           checked={watch("active_status")}
           onCheckedChange={(checked) => setValue("active_status", checked)}
         />
         <label className="text-sm font-medium">Active Status</label>
+      </div>
+      </div>
       </div>
 
       <div className="flex justify-end gap-4 mt-6">

@@ -79,9 +79,12 @@ export default function OrderChecklistForm({ type, data }) {
       <h1 className="text-xl font-semibold">
         {type === "create" ? "Create Order Checklist" : "Edit Order Checklist"}
       </h1>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
+      <div className="flex gap-32 ">
+        {/* Branch Section */}
+        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 flex-2">
+          {/* Branch ID and Branch Name */}
+          <div className="grid grid-cols-1 gap-4 mb-4">
+            <div>
           <label className="text-sm font-medium">Checklist Name</label>
           <Input {...register("checklist_name")} placeholder="Enter Checklist Name" />
           {errors.checklist_name && (
@@ -107,14 +110,21 @@ export default function OrderChecklistForm({ type, data }) {
           )}
         </div>
       </div>
-
-      <div className="flex items-center gap-2 mt-4">
-        <Checkbox
-          checked={watch("active_status")}
-          onCheckedChange={(checked) => setValue("active_status", checked)}
-        />
-        <label className="text-sm font-medium">Active Status</label>
       </div>
+
+     {/* Control Section */}
+     <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 w-64">
+          <h2 className="text-lg font-medium mb-4">Control:</h2>
+          <div className="flex items-center justify-start">
+            <label className="mr-2 text-sm font-medium">Active Status*</label>
+            <Checkbox
+              checked={watch("active_status")}
+              onCheckedChange={(checked) => setValue("active_status", checked)}
+            />
+      </div>
+      </div>
+      </div>
+    
 
       <div className="flex justify-end gap-4 mt-6">
         <Button variant="outline" onClick={() => router.push("/settings/order-checklist")}>

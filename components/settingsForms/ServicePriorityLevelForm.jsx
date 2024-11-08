@@ -79,7 +79,10 @@ export default function ServicePriorityLevelForm({ type, data }) {
     <form onSubmit={onSubmit} className="space-y-4">
       <h1 className="text-xl font-semibold">{type === "create" ? "Add Priority Level" : "Edit Priority Level"}</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="flex  gap-40">
+    {/* Department Form Section */}
+    <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 max-w-md">
+      <div className="grid grid-cols-1 gap-4">
         <div>
           <label className="text-sm font-medium">Priority Level</label>
           <Input {...register("priority_level")} placeholder="Enter Priority Level" />
@@ -89,17 +92,21 @@ export default function ServicePriorityLevelForm({ type, data }) {
         <div>
           <label className="text-sm font-medium">Description</label>
           <Input {...register("description")} placeholder="Enter Description" />
-        </div>
+          </div>
       </div>
+    </div>
 
-      <div className="flex items-center gap-2 mt-4">
+       {/* Control Section */}
+       <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 w-84 mr-40">
+      <div className="flex items-center justify-end">
+        <label className="mr-2 text-sm font-medium">Active Status*</label>
         <Checkbox
           checked={watch("active_status")}
           onCheckedChange={(checked) => setValue("active_status", checked)}
         />
-        <label className="text-sm font-medium">Active Status</label>
       </div>
-
+    </div>
+  </div>
       <div className="flex justify-end gap-4 mt-6">
         <Button variant="outline" onClick={() => router.push("/settings/service-priority-level")}>
           Cancel

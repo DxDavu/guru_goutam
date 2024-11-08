@@ -114,8 +114,8 @@ export default function BranchForm({ type, data }) {
       <h1 className="text-xl font-semibold">
         {type === "create" ? "Add Branch" : "Edit Branch"}
       </h1>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div className="flex gap-9">
+      <div className="grid grid-cols-2  gap-4">
         <div>
           <label className="text-sm font-medium">Branch ID</label>
           <Input {...register("branch_id")} placeholder="Enter branch ID" />
@@ -127,6 +127,8 @@ export default function BranchForm({ type, data }) {
           <Input {...register("branch_name")} placeholder="Enter branch name" />
           {errors.branch_name && <p className="text-red-500 text-xs">{errors.branch_name.message}</p>}
         </div>
+        </div>
+        <div className="grid grid-cols-2  gap-4">
 
         <div>
           <label className="text-sm font-medium">Address</label>
@@ -191,13 +193,16 @@ export default function BranchForm({ type, data }) {
           {errors.city && <p className="text-red-500 text-xs">{errors.city.message}</p>}
         </div>
       </div>
-
+      <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 w-64">
+      <h2 className="text-lg font-medium mb-4">Control:</h2>
       <div className="flex items-center gap-2 mt-4">
         <Checkbox
           checked={watch("active_status")}
           onCheckedChange={(checked) => setValue("active_status", checked)}
         />
         <label className="text-sm font-medium">Active Status</label>
+      </div>
+      </div>
       </div>
 
       <div className="flex justify-end gap-4 mt-6">

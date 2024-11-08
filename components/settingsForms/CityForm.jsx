@@ -88,62 +88,82 @@ export default function CityForm({ type, data }) {
 
   return (
     <form onSubmit={onSubmit} className="space-y-4">
-      <div>
-        <label className="text-sm font-medium">City Name</label>
-        <Input {...register("name")} placeholder="Enter city name" />
-        {errors.name && <p className="text-red-500 text-xs">{errors.name.message}</p>}
+    <h1 className="text-xl font-semibold">
+      {type === "create" ? "Create Cities" : "Edit Cities"}
+    </h1>
+  
+    <div className="flex gap-40">
+      {/* City Form Section */}
+      <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 max-w-md">
+        <div className="grid grid-cols-1 gap-4">
+          <div>
+            <label className="text-sm font-medium">City Name</label>
+            <Input {...register("name")} placeholder="Enter city name" />
+            {errors.name && <p className="text-red-500 text-xs">{errors.name.message}</p>}
+          </div>
+  
+          <div>
+            <label className="text-sm font-medium">Country</label>
+            <Select
+              onValueChange={(value) => setValue("country", value)}
+              defaultValue={data?.country || ""}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select Country" />
+              </SelectTrigger>
+              <SelectContent>
+                {countries.map((country) => (
+                  <SelectItem key={country._id} value={country._id}>
+                    {country.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {errors.country && <p className="text-red-500 text-xs">{errors.country.message}</p>}
+          </div>
+  
+          <div>
+            <label className="text-sm font-medium">State</label>
+            <Select onValueChange={(value) => setValue("state", value)} defaultValue={data?.state || ""}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select State" />
+              </SelectTrigger>
+              <SelectContent>
+                {filteredStates.map((state) => (
+                  <SelectItem key={state._id} value={state._id}>
+                    {state.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {errors.state && <p className="text-red-500 text-xs">{errors.state.message}</p>}
+          </div>
+        </div>
       </div>
-
-      <div>
-        <label className="text-sm font-medium">Country</label>
-        <Select
-          onValueChange={(value) => setValue("country", value)}
-          defaultValue={data?.country || ""}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Select Country" />
-          </SelectTrigger>
-          <SelectContent>
-            {countries.map((country) => (
-              <SelectItem key={country._id} value={country._id}>
-                {country.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        {errors.country && <p className="text-red-500 text-xs">{errors.country.message}</p>}
+  
+      {/* Control Section */}
+      <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 w-84">
+        <h2 className="text-lg font-medium mb-4">Control:</h2>
+        <div className="flex items-center justify-end">
+          <label className="mr-2 text-sm font-medium">Active Status*</label>
+          <Checkbox
+            checked={watch("active_status")}
+            onCheckedChange={(checked) => setValue("active_status", checked)}
+          />
+        </div>
       </div>
-
-      <div>
-        <label className="text-sm font-medium">State</label>
-        <Select onValueChange={(value) => setValue("state", value)} defaultValue={data?.state || ""}>
-          <SelectTrigger>
-            <SelectValue placeholder="Select State" />
-          </SelectTrigger>
-          <SelectContent>
-            {filteredStates.map((state) => (
-              <SelectItem key={state._id} value={state._id}>
-                {state.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        {errors.state && <p className="text-red-500 text-xs">{errors.state.message}</p>}
-      </div>
-
-      <div className="flex items-center gap-2">
-        <Checkbox {...register("active_status")} />
-        <label className="text-sm">Active Status</label>
-      </div>
-
-      <div className="flex justify-end gap-4">
-        <Button variant="outline" onClick={() => router.push("/settings/cities")}>
-          Cancel
-        </Button>
-        <Button type="submit" className="bg-blue-500 text-white">
-          {state.loading ? "Submitting..." : type === "create" ? "Create" : "Update"}
-        </Button>
-      </div>
-    </form>
+    </div>
+  
+    {/* Buttons Section */}
+    <div className="flex justify-end gap-4 mt-6">
+      <Button variant="outline" onClick={() => router.push("/settings/cities")}>
+        Cancel
+      </Button>
+      <Button type="submit" className="bg-blue-500 text-white">
+        {state.loading ? "Submitting..." : type === "create" ? "Create" : "Update"}
+      </Button>
+    </div>
+  </form>
+  
   );
 }

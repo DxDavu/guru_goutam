@@ -65,15 +65,26 @@ export default function CountryForm({ type, data }) {
 
   return (
     <form onSubmit={onSubmit} className="space-y-4">
-      <div>
-        <label className="text-sm font-medium">Country Name</label>
-        <Input {...register("name")} placeholder="Enter country name" />
-        {errors.name && <p className="text-red-500 text-xs">{errors.name.message}</p>}
-      </div>
-      
-      <div className="flex items-center gap-2">
-        <Checkbox {...register("active_status")} />
-        <label className="text-sm">Active Status</label>
+
+      <h1 className="text-xl font-semibold">
+        {type === "create" ? "Add Country" : "Edit Country"}
+      </h1>
+
+      <div className="flex gap-32 ">
+
+        <div>
+          <label className="text-sm font-medium">Country Name</label>
+          <Input {...register("name")} placeholder="Enter country name" />
+          {errors.name && <p className="text-red-500 text-xs">{errors.name.message}</p>}
+        </div>
+
+        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 w-64">
+          <h2 className="text-lg font-medium mb-4">Control:</h2>
+          <div className="flex items-center gap-2">
+            <Checkbox {...register("active_status")} />
+            <label className="text-sm">Active Status</label>
+          </div>
+        </div>
       </div>
 
       <div className="flex justify-end gap-4">
