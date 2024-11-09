@@ -106,7 +106,7 @@ const ItemVariantForm = ({ type, data }) => {
         <div>
           <label className="text-sm font-medium">Item/Specification Name</label>
           <Select onValueChange={(value) => setValue("item_name", value)} defaultValue={data?.item_name || ""}>
-            <SelectTrigger>
+            <SelectTrigger  className="w-full max-w-xs border border-gray-300 rounded-md p-2">
               <SelectValue placeholder="Select Item Name" />
             </SelectTrigger>
             <SelectContent>
@@ -124,7 +124,7 @@ const ItemVariantForm = ({ type, data }) => {
           )}
       
           <label className="text-sm font-medium">Type</label>
-          <Input {...register("type")} placeholder="Enter Item Type" />
+          <Input {...register("type")} placeholder="Enter Item Type"  className="w-full max-w-xs border border-gray-300 rounded-md p-2"/>
           {errors.type && (
             <p className="text-red-500 text-xs">{errors.type.message}</p>
           )}

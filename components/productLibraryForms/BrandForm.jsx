@@ -69,19 +69,19 @@ const BrandForm = ({ type, data }) => {
           <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="text-sm font-medium">Brand Number</label>
-              <Input {...register("brand_number")} placeholder="Enter Brand Number" />
+              <Input {...register("brand_number")} placeholder="Enter Brand Number" className="w-full max-w-xs border border-gray-300 rounded-md p-2" />
               {errors.brand_number && <p className="text-red-500 text-xs">{errors.brand_number.message}</p>}
             </div>
 
             <div>
               <label className="text-sm font-medium">Brand Name</label>
-              <Input {...register("brand_name")} placeholder="Enter Brand Name" />
+              <Input {...register("brand_name")} placeholder="Enter Brand Name" className="w-full max-w-xs border border-gray-300 rounded-md p-2"/>
               {errors.brand_name && <p className="text-red-500 text-xs">{errors.brand_name.message}</p>}
             </div>
 
             <div className="mt-4">
               <label className="text-sm font-medium">Description</label>
-              <Input {...register("description")} placeholder="Enter Brand Description" />
+              <Input {...register("description")} placeholder="Enter Brand Description" className="w-full max-w-xs border border-gray-300 rounded-md p-2" />
               {errors.description && <p className="text-red-500 text-xs">{errors.description.message}</p>}
             </div>
           </div>

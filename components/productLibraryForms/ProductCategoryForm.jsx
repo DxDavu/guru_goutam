@@ -71,19 +71,19 @@ const ProductCategoryForm = ({ type, data }) => {
           <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="text-sm font-medium">Category Code</label>
-              <Input {...register("category_code")} placeholder="Enter Category Code" />
+              <Input {...register("category_code")} placeholder="Enter Category Code"  className="w-full max-w-xs border border-gray-300 rounded-md p-2"/>
               {errors.category_code && <p className="text-red-500 text-xs">{errors.category_code.message}</p>}
             </div>
 
             <div>
               <label className="text-sm font-medium">Category Name</label>
-              <Input {...register("category_name")} placeholder="Enter Category Name" />
+              <Input {...register("category_name")} placeholder="Enter Category Name"  className="w-full max-w-xs border border-gray-300 rounded-md p-2" />
               {errors.category_name && <p className="text-red-500 text-xs">{errors.category_name.message}</p>}
             </div>
 
             <div className="col-span-2">
               <label className="text-sm font-medium">Description</label>
-              <Input {...register("description")} placeholder="Enter Description" />
+              <Input {...register("description")} placeholder="Enter Description"  className="w-full max-w-xs border border-gray-300 rounded-md p-2" />
             </div>
           </div>
 

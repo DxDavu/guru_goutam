@@ -81,38 +81,49 @@ export default function ServicePriorityLevelForm({ type, data }) {
 
       <div className="flex  gap-40">
     {/* Department Form Section */}
-    <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 max-w-md">
+    <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 max-w-md flex-1">
       <div className="grid grid-cols-1 gap-4">
         <div>
           <label className="text-sm font-medium">Priority Level</label>
-          <Input {...register("priority_level")} placeholder="Enter Priority Level" />
+          <Input {...register("priority_level")} placeholder="Enter Priority Level"    className="w-full max-w-xs border border-gray-300 rounded-md p-2"/>
           {errors.priority_level && <p className="text-red-500 text-xs">{errors.priority_level.message}</p>}
         </div>
 
         <div>
           <label className="text-sm font-medium">Description</label>
-          <Input {...register("description")} placeholder="Enter Description" />
+          <Input {...register("description")} placeholder="Enter Description" 
+             className="w-full max-w-xs border border-gray-300 rounded-md p-2"/>
           </div>
       </div>
     </div>
 
-       {/* Control Section */}
-       <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 w-84 mr-40">
-      <div className="flex items-center justify-end">
-        <label className="mr-2 text-sm font-medium">Active Status*</label>
-        <Checkbox
-          checked={watch("active_status")}
-          onCheckedChange={(checked) => setValue("active_status", checked)}
-        />
+          {/* Control Section */}
+          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 w-64">
+          <h2 className="text-lg font-medium mb-4">Control:</h2>
+          <div className="flex items-center gap-2 mt-4">
+            <Checkbox {...register("active_status")} />
+            <label className="text-sm font-medium"> Active Status</label>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-      <div className="flex justify-end gap-4 mt-6">
-        <Button variant="outline" onClick={() => router.push("/settings/service-priority-level")}>
+
+      <div className="flex justify-center mt-5 gap-4">
+        <Button
+          variant="outline"
+          onClick={() => router.push("/settings/branches")}
+          className="w-[500px] h-[42px] px-4 py-2 border rounded-tl-lg rounded-br-lg border-opacity-0"
+        >
           Cancel
         </Button>
-        <Button type="submit" className="bg-blue-500 text-white">
-          {state.loading ? "Submitting..." : type === "create" ? "Create" : "Update"}
+        <Button
+          type="submit"
+          className="w-[500px] h-[42px] px-4 py-2 bg-blue-500 text-white rounded-tl-lg rounded-br-lg border-opacity-0"
+        >
+          {state.loading
+            ? "Submitting..."
+            : type === "create"
+              ? "Create"
+              : "Update"}
         </Button>
       </div>
     </form>

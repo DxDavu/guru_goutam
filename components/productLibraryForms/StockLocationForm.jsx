@@ -81,12 +81,12 @@ const StockLocationForm = ({ type, data }) => {
           <h3 className="text-lg font-semibold mb-4">Stock Location Information</h3>
           <div className="mb-4">
             <label className="text-sm font-medium">Stock Location ID</label>
-            <Input {...register("stock_location_id")} placeholder="Enter Stock Location ID" />
+            <Input {...register("stock_location_id")} placeholder="Enter Stock Location ID"  className="w-full max-w-xs border border-gray-300 rounded-md p-2"/>
             {errors.stock_location_id && <p className="text-red-500 text-xs">{errors.stock_location_id.message}</p>}
           </div>
           <div className="mb-4">
             <label className="text-sm font-medium">Stock Name</label>
-            <Input {...register("stock_name")} placeholder="Enter Stock Name" />
+            <Input {...register("stock_name")} placeholder="Enter Stock Name"  className="w-full max-w-xs border border-gray-300 rounded-md p-2" />
             {errors.stock_name && <p className="text-red-500 text-xs">{errors.stock_name.message}</p>}
           </div>
         </div>
@@ -97,27 +97,27 @@ const StockLocationForm = ({ type, data }) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="text-sm font-medium">Pincode</label>
-              <Input {...register("address.pincode")} placeholder="Enter Pincode" />
+              <Input {...register("address.pincode")} placeholder="Enter Pincode"   className="w-full max-w-xs border border-gray-300 rounded-md p-2"/>
             </div>
             <div>
               <label className="text-sm font-medium">Country</label>
-              <Input {...register("address.country")} placeholder="Enter Country" />
+              <Input {...register("address.country")} placeholder="Enter Country"   className="w-full max-w-xs border border-gray-300 rounded-md p-2"/>
             </div>
             <div>
               <label className="text-sm font-medium">State</label>
-              <Input {...register("address.state")} placeholder="Enter State" />
+              <Input {...register("address.state")} placeholder="Enter State"   className="w-full max-w-xs border border-gray-300 rounded-md p-2"/>
             </div>
             <div>
               <label className="text-sm font-medium">City</label>
-              <Input {...register("address.city")} placeholder="Enter City" />
+              <Input {...register("address.city")} placeholder="Enter City"   className="w-full max-w-xs border border-gray-300 rounded-md p-2"/>
             </div>
             <div>
               <label className="text-sm font-medium">Landmark</label>
-              <Input {...register("address.landmark")} placeholder="Enter Landmark" />
+              <Input {...register("address.landmark")} placeholder="Enter Landmark"  className="w-full max-w-xs border border-gray-300 rounded-md p-2" />
             </div>
             <div>
               <label className="text-sm font-medium">Street</label>
-              <Input {...register("address.street")} placeholder="Enter Street" />
+              <Input {...register("address.street")} placeholder="Enter Street"  className="w-full max-w-xs border border-gray-300 rounded-md p-2" />
             </div>
           </div>
         </div>

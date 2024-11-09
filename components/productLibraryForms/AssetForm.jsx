@@ -122,7 +122,7 @@ const AssetForm = ({ type, data }) => {
         <div className="mb-4">
           <label className="text-sm font-medium">Item Name</label>
           <Select onValueChange={(value) => setValue("item_name", value)} value={watch("item_name") || ""}>
-            <SelectTrigger><SelectValue placeholder="Select Item Name" /></SelectTrigger>
+            <SelectTrigger className="w-full max-w-xs border border-gray-300 rounded-md p-2"><SelectValue placeholder="Select Item Name"  /></SelectTrigger>
             <SelectContent>
               <SelectGroup>
                 {itemMasters.map((item) => (
@@ -137,7 +137,7 @@ const AssetForm = ({ type, data }) => {
         <div className="mb-4">
           <label className="text-sm font-medium">Item Type</label>
           <Select onValueChange={(value) => setValue("item_type", value)} value={watch("item_type") || ""}>
-            <SelectTrigger><SelectValue placeholder="Select Item Type" /></SelectTrigger>
+            <SelectTrigger className="w-full max-w-xs border border-gray-300 rounded-md p-2"><SelectValue placeholder="Select Item Type" /></SelectTrigger>
             <SelectContent>
               <SelectGroup>
                 {itemVariants.map((variant) => (
@@ -152,7 +152,7 @@ const AssetForm = ({ type, data }) => {
         <div className="mb-4">
           <label className="text-sm font-medium">Brand</label>
           <Select onValueChange={(value) => setValue("brand", value)} value={watch("brand") || ""}>
-            <SelectTrigger><SelectValue placeholder="Select Brand" /></SelectTrigger>
+            <SelectTrigger className="w-full max-w-xs border border-gray-300 rounded-md p-2"><SelectValue placeholder="Select Brand" /></SelectTrigger>
             <SelectContent>
               <SelectGroup>
                 {brands.map((brand) => (
@@ -170,25 +170,26 @@ const AssetForm = ({ type, data }) => {
         <h3 className="text-lg font-semibold mb-4">Additional Details</h3>
         <div className="mb-4">
           <label className="text-sm font-medium">Price</label>
-          <Input {...register("price", { valueAsNumber: true })} placeholder="Enter Price" />
+          <Input {...register("price", { valueAsNumber: true })} placeholder="Enter Price" 
+          className="w-full max-w-xs border border-gray-300 rounded-md p-2" />
           {errors.price && <p className="text-red-500 text-xs">{errors.price.message}</p>}
         </div>
         <div className="mb-4">
           <label className="text-sm font-medium">Date</label>
-          <Input type="date" {...register("date")} placeholder="Select Date" />
+          <Input type="date" {...register("date")} placeholder="Select Date" className="w-full max-w-xs border border-gray-300 rounded-md p-2"/>
           {errors.date && <p className="text-red-500 text-xs">{errors.date.message}</p>}
         </div>
         <div className="mb-4">
           <label className="text-sm font-medium">Warranty</label>
-          <Input {...register("warranty")} placeholder="Enter Warranty Period" />
+          <Input {...register("warranty")} placeholder="Enter Warranty Period"  className="w-full max-w-xs border border-gray-300 rounded-md p-2"/>
         </div>
         <div className="mb-4">
           <label className="text-sm font-medium">Warranty Time</label>
-          <Input {...register("warranty_time", { valueAsNumber: true })} placeholder="Enter Warranty Time" />
+          <Input {...register("warranty_time", { valueAsNumber: true })} placeholder="Enter Warranty Time" className="w-full max-w-xs border border-gray-300 rounded-md p-2"/>
         </div>
         <div className="mb-4">
           <label className="text-sm font-medium">Remarks</label>
-          <Input {...register("remarks")} placeholder="Enter Remarks" />
+          <Input {...register("remarks")} placeholder="Enter Remarks" className="w-full max-w-xs border border-gray-300 rounded-md p-2"/>
         </div>
       </div>
   

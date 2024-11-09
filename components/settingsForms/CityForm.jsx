@@ -92,13 +92,14 @@ export default function CityForm({ type, data }) {
       {type === "create" ? "Create Cities" : "Edit Cities"}
     </h1>
   
-    <div className="flex gap-40">
-      {/* City Form Section */}
-      <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 max-w-md">
+    <div className="flex  gap-x-40">
+    <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 max-w-md flex-1">
         <div className="grid grid-cols-1 gap-4">
           <div>
             <label className="text-sm font-medium">City Name</label>
-            <Input {...register("name")} placeholder="Enter city name" />
+            <Input {...register("name")} placeholder="Enter city name" 
+               className="w-full max-w-xs border border-gray-300 rounded-md p-2"
+            />
             {errors.name && <p className="text-red-500 text-xs">{errors.name.message}</p>}
           </div>
   
@@ -108,7 +109,7 @@ export default function CityForm({ type, data }) {
               onValueChange={(value) => setValue("country", value)}
               defaultValue={data?.country || ""}
             >
-              <SelectTrigger>
+              <SelectTrigger    className="w-full max-w-xs border border-gray-300 rounded-md p-2">
                 <SelectValue placeholder="Select Country" />
               </SelectTrigger>
               <SelectContent>
@@ -125,7 +126,7 @@ export default function CityForm({ type, data }) {
           <div>
             <label className="text-sm font-medium">State</label>
             <Select onValueChange={(value) => setValue("state", value)} defaultValue={data?.state || ""}>
-              <SelectTrigger>
+              <SelectTrigger    className="w-full max-w-xs border border-gray-300 rounded-md p-2">
                 <SelectValue placeholder="Select State" />
               </SelectTrigger>
               <SelectContent>
@@ -141,29 +142,42 @@ export default function CityForm({ type, data }) {
         </div>
       </div>
   
-      {/* Control Section */}
-      <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 w-84">
-        <h2 className="text-lg font-medium mb-4">Control:</h2>
-        <div className="flex items-center justify-end">
-          <label className="mr-2 text-sm font-medium">Active Status*</label>
-          <Checkbox
-            checked={watch("active_status")}
-            onCheckedChange={(checked) => setValue("active_status", checked)}
-          />
+       {/* Control Section */}
+       <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 w-64">
+          <h2 className="text-lg font-medium mb-4">Control:</h2>
+          <div className="flex items-center gap-2 mt-4">
+            <Checkbox {...register("active_status")} />
+            <label className="text-sm font-medium"> Active Status</label>
+          </div>
         </div>
+  </div>
+
+  <div className="flex justify-center mt-5 gap-4">
+        <Button
+          variant="outline"
+          onClick={() => router.push("/settings/branches")}
+          className="w-[500px] h-[42px] px-4 py-2 border rounded-tl-lg rounded-br-lg border-opacity-0"
+        >
+          Cancel
+        </Button>
+        <Button
+          type="submit"
+          className="w-[500px] h-[42px] px-4 py-2 bg-blue-500 text-white rounded-tl-lg rounded-br-lg border-opacity-0"
+        >
+          {state.loading
+            ? "Submitting..."
+            : type === "create"
+            ? "Create"
+            : "Update"}
+        </Button>
       </div>
-    </div>
-  
-    {/* Buttons Section */}
-    <div className="flex justify-end gap-4 mt-6">
-      <Button variant="outline" onClick={() => router.push("/settings/cities")}>
-        Cancel
-      </Button>
-      <Button type="submit" className="bg-blue-500 text-white">
-        {state.loading ? "Submitting..." : type === "create" ? "Create" : "Update"}
-      </Button>
-    </div>
-  </form>
+</form>
   
   );
 }
+
+
+
+
+
+

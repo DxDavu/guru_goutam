@@ -76,11 +76,11 @@ const ItemMasterForm = ({ type, data }) => {
 
             <div>
               <label className="text-sm font-medium">Item Name</label>
-              <Input {...register("item_name")} placeholder="Enter Item Name" />
+              <Input {...register("item_name")} placeholder="Enter Item Name"  className="w-full max-w-xs border border-gray-300 rounded-md p-2" />
               {errors.item_name && <p className="text-red-500 text-xs">{errors.item_name.message}</p>}
 
               <label className="text-sm font-medium">Description</label>
-              <Input {...register("description")} placeholder="Enter Description" />
+              <Input {...register("description")} placeholder="Enter Description"   className="w-full max-w-xs border border-gray-300 rounded-md p-2"/>
               {errors.description && <p className="text-red-500 text-xs">{errors.description.message}</p>}
             </div>
           </div>

@@ -80,69 +80,75 @@ export default function DepartmentForm({ type, data }) {
   }, [state, router, type]);
 
   return (
-<form onSubmit={onSubmit} className="space-y-4">
-  <h1 className="text-xl font-semibold">
-    {type === "create" ? "Create Department" : "Edit Department"}
-  </h1>
+    <form onSubmit={onSubmit} className="space-y-4">
+      <h1 className="text-xl font-semibold">
+        {type === "create" ? "Create Department" : "Edit Department"}
+      </h1>
 
-  <div className="flex  gap-40">
-    {/* Department Form Section */}
-    <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 max-w-md">
-      <h2 className="text-lg font-medium mb-4">Create Department:</h2>
-      <div className="grid grid-cols-1 gap-4">
-        <div>
-          <label className="text-sm font-medium">Department Name*</label>
-          <Input
-            {...register("department_name")}
-            placeholder="Enter Department Name"
-            className="w-full max-w-xs border border-gray-300 rounded-md p-2"
-          />
-          {errors.department_name && (
-            <p className="text-red-500 text-xs">{errors.department_name.message}</p>
-          )}
+      <div className="flex  gap-x-40">
+        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 max-w-md flex-1">
+          <h2 className="text-lg font-medium mb-4">Create Department:</h2>
+          <div className="grid grid-cols-1 gap-4">
+            <div>
+              <label className="text-sm font-medium">Department Name*</label>
+              <Input
+                {...register("department_name")}
+                placeholder="Enter Department Name"
+                className="w-full max-w-xs border border-gray-300 rounded-md p-2"
+              />
+              {errors.department_name && (
+                <p className="text-red-500 text-xs">{errors.department_name.message}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="text-sm font-medium">Description</label>
+              <Textarea
+                {...register("description")}
+                placeholder="Enter Description"
+                className="w-full max-w-xs border border-gray-300 rounded-md p-2"
+              />
+              {errors.description && (
+                <p className="text-red-500 text-xs">{errors.description.message}</p>
+              )}
+            </div>
+          </div>
         </div>
 
-        <div>
-          <label className="text-sm font-medium">Description</label>
-          <Textarea
-            {...register("description")}
-            placeholder="Enter Description"
-            className="w-full max-w-xs border border-gray-300 rounded-md p-2"
-          />
-          {errors.description && (
-            <p className="text-red-500 text-xs">{errors.description.message}</p>
-          )}
+        {/* Control Section */}
+        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 w-64">
+          <h2 className="text-lg font-medium mb-4">Control:</h2>
+          <div className="flex items-center gap-2 mt-4">
+            <Checkbox {...register("active_status")} />
+            <label className="text-sm font-medium"> Active Status</label>
+          </div>
         </div>
       </div>
-    </div>
 
-    {/* Control Section */}
-    <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 w-84 mr-40">
-      <h2 className="text-lg font-medium mb-4">Control:</h2>
-      <div className="flex items-center justify-end">
-        <label className="mr-2 text-sm font-medium">Active Status*</label>
-        <Checkbox
-          checked={watch("active_status")}
-          onCheckedChange={(checked) => setValue("active_status", checked)}
-        />
+      <div className="flex justify-center mt-5 gap-4">
+        <Button
+          variant="outline"
+          onClick={() => router.push("/settings/branches")}
+          className="w-[500px] h-[42px] px-4 py-2 border rounded-tl-lg rounded-br-lg border-opacity-0"
+        >
+          Cancel
+        </Button>
+        <Button
+          type="submit"
+          className="w-[500px] h-[42px] px-4 py-2 bg-blue-500 text-white rounded-tl-lg rounded-br-lg border-opacity-0"
+        >
+          {state.loading
+            ? "Submitting..."
+            : type === "create"
+              ? "Create"
+              : "Update"}
+        </Button>
       </div>
-    </div>
-  </div>
-
-  {/* Buttons */}
-  <div className="flex justify-end gap-4 mt-6">
-    <Button variant="outline" onClick={() => router.push("/settings/departments")}>
-      Cancel
-    </Button>
-    <Button type="submit" className="bg-blue-500 text-white">
-      {state.loading ? "Submitting..." : type === "create" ? "Create" : "Update"}
-    </Button>
-  </div>
-</form>
+    </form>
 
 
 
 
-  
+
   );
 }

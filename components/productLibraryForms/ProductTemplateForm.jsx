@@ -114,7 +114,7 @@ const ProductTemplateForm = ({ type, data }) => {
       <div className="mb-4">
         <label className="text-sm font-medium">Product Category</label>
         <Select onValueChange={(value) => setValue("category", value)} value={watch("category") || ""}>
-          <SelectTrigger><SelectValue placeholder="Select Category" /></SelectTrigger>
+          <SelectTrigger  className="w-full max-w-xs border border-gray-300 rounded-md p-2"><SelectValue placeholder="Select Category" /></SelectTrigger>
           <SelectContent>
             <SelectGroup>
               {categories.map((category) => (
@@ -127,13 +127,13 @@ const ProductTemplateForm = ({ type, data }) => {
       </div>
       <div className="mb-4">
         <label className="text-sm font-medium">Product Name</label>
-        <Input {...register("product_name")} placeholder="Enter Product Name" />
+        <Input {...register("product_name")} placeholder="Enter Product Name"   className="w-full max-w-xs border border-gray-300 rounded-md p-2"/>
         {errors.product_name && <p className="text-red-500 text-xs">{errors.product_name.message}</p>}
       </div>
       <div className="mb-4">
         <label className="text-sm font-medium">Brand</label>
         <Select onValueChange={(value) => setValue("brand", value)} value={watch("brand") || ""}>
-          <SelectTrigger><SelectValue placeholder="Select Brand" /></SelectTrigger>
+          <SelectTrigger  className="w-full max-w-xs border border-gray-300 rounded-md p-2"><SelectValue placeholder="Select Brand" /></SelectTrigger>
           <SelectContent>
             <SelectGroup>
               {brands.map((brand) => (
@@ -146,12 +146,12 @@ const ProductTemplateForm = ({ type, data }) => {
       </div>
       <div className="mb-4">
         <label className="text-sm font-medium">Model</label>
-        <Input {...register("model")} placeholder="Enter Model" />
+        <Input {...register("model")} placeholder="Enter Model"  className="w-full max-w-xs border border-gray-300 rounded-md p-2" />
         {errors.model && <p className="text-red-500 text-xs">{errors.model.message}</p>}
       </div>
       <div className="mb-4">
         <label className="text-sm font-medium">Description</label>
-        <Input {...register("description")} placeholder="Enter Description" />
+        <Input {...register("description")} placeholder="Enter Description"  className="w-full max-w-xs border border-gray-300 rounded-md p-2" />
         {errors.description && <p className="text-red-500 text-xs">{errors.description.message}</p>}
       </div>
     </div>
@@ -164,13 +164,13 @@ const ProductTemplateForm = ({ type, data }) => {
           <label className="text-sm font-medium capitalize">{spec}</label>
           <div className="flex space-x-4 mt-1">
             <Select onValueChange={(value) => setValue(`specifications.${spec}.brand`, value)} value={watch(`specifications.${spec}.brand`) || ""}>
-              <SelectTrigger><SelectValue placeholder="Select Brand" /></SelectTrigger>
+              <SelectTrigger  className="w-full max-w-xs border border-gray-300 rounded-md p-2"><SelectValue placeholder="Select Brand" /></SelectTrigger>
               <SelectContent>
                 <SelectGroup>{brands.map(brand => <SelectItem key={brand._id} value={brand._id.toString()}>{brand.brand_name}</SelectItem>)}</SelectGroup>
               </SelectContent>
             </Select>
             <Select onValueChange={(value) => setValue(`specifications.${spec}.type`, value)} value={watch(`specifications.${spec}.type`) || ""}>
-              <SelectTrigger><SelectValue placeholder="Select Type" /></SelectTrigger>
+              <SelectTrigger  className="w-full max-w-xs border border-gray-300 rounded-md p-2"><SelectValue placeholder="Select Type" /></SelectTrigger>
               <SelectContent>
                 <SelectGroup>{variants.map(variant => <SelectItem key={variant._id} value={variant._id.toString()}>{variant.type}</SelectItem>)}</SelectGroup>
               </SelectContent>
