@@ -2,7 +2,7 @@ import React from 'react'
 
 const CRM = () => {
   return (
-    <div>CRM</div>
+    <div>CRM2</div>
   )
 }
 
