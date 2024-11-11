@@ -29,7 +29,7 @@ export const columns = [
     ),
   },
   {
-    accessorKey: "customer_name",
+    accessorKey: "customer_name",  
     header: "Customer Name",
   },
   {
