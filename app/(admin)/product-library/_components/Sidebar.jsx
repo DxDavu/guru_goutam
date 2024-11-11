@@ -36,7 +36,8 @@ export default function Sidebar() {
   const [activeTab, setActiveTab] = useState('');
 
   return (
-    <aside className="w-20 bg-gray-100 border-r ml-2 h-full flex flex-col justify-start"> {/* Reduced width */}  
+    <aside className="w-20 bg-gray-100 border-r ml-2 h-full flex flex-col justify-start">
+       {/* Reduced width */}  
       <nav className="flex flex-col items-center py-1 space-y-2"> {/* Adjusted spacing */}  
         {sidebarLinks.map((link) => (
           <Link key={link.name} href={link.href}>
