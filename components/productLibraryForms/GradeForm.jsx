@@ -70,10 +70,10 @@ const GradeForm = ({ type, data }) => {
         </h1>
 
         {/* Category Information and Active Status Side by Side */}
-        <div className="flex flex-col md:flex-row gap-6">
+        <div className=" flex flex-col md:flex-row gap-6">
 
           {/* Category Information Fields */}
-          <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="bg-gray-50 flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
 
             <div>
               <label className="text-sm font-medium">Grade ID</label>

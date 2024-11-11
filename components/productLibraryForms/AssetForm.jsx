@@ -114,7 +114,7 @@ const AssetForm = ({ type, data }) => {
 
   return (
     <form className="w-full max-w-screen-2xl mx-auto p-8 bg-white shadow-md rounded-lg" onSubmit={onSubmit}>
-    <div className="flex justify-between gap-8">
+    <div className="bg-gray-200 flex justify-between gap-8">
   
       {/* Asset Information Section */}
       <div className="bg-gray-50 p-6 border rounded-lg shadow-lg w-full md:w-1/3">
@@ -194,8 +194,8 @@ const AssetForm = ({ type, data }) => {
       </div>
   
       {/* Status Section */}
-      <div className="bg-gray-50 p-6 border rounded-lg shadow-lg w-full md:w-1/3">
-        <h3 className="text-lg font-semibold mb-4">Control</h3>
+      <div className="bg-white p-6 rounded-lg shadow-sm mt-5 mr-5 border border-gray-200 w-72 h-28">
+      <h3 className="text-lg font-semibold mb-4">Control</h3>
         <div className="flex items-center gap-2">
           <Checkbox checked={watch("active_status")} onCheckedChange={(checked) => setValue("active_status", checked)} />
           <label className="text-sm font-medium">Active Status</label>

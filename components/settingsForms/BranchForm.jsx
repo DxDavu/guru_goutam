@@ -121,7 +121,9 @@ export default function BranchForm({ type, data }) {
         {type === "create" ? "Add Branch" : "Edit Branch"}
       </h1>
 
-      <div className="flex flex-wrap gap-8 justify-between mb-3">
+      {/* <div className="flex flex-wrap gap-8 justify-between mb-3"> */}
+      <div className=" bg-gray-200 p-6 border rounded-1g shadow-1g mb-6 flex  gap-8">
+
        
         <div className="bg-white p-6 rounded-lg shadow border w-full max-w-md flex-1">
           <h2 className="text-lg font-semibold mb-4">Branch Details</h2>
@@ -237,7 +239,7 @@ export default function BranchForm({ type, data }) {
         </div>
 
         
-        <div className="bg-gray-50 p-6 border rounded-2g shadow-2g w-full md:w-1/3">
+        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 w-80 h-28">
             <h3 className="text-lg font-semibold mb-4">Control</h3>
             <div className="flex items-center gap-2">
               <Checkbox checked={watch("active_status")} onCheckedChange={(checked) => setValue("active_status", checked)} />

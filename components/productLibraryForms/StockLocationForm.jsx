@@ -123,7 +123,7 @@ const StockLocationForm = ({ type, data }) => {
         </div>
 
         {/* Active Status Section */}
-        <div className="bg-gray-50 p-6 border rounded-lg shadow-lg w-full md:w-1/3">
+        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 w-80 h-28">
           <h3 className="text-lg font-semibold mb-4">Control</h3>
           <div className="flex items-center gap-2">
             <Checkbox checked={watch("active_status")} onCheckedChange={(checked) => setValue("active_status", checked)} />

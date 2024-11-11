@@ -18,7 +18,8 @@ import { toast } from "react-toastify";
 const schema = z.object({
   checklist_name: z.string().min(1, { message: "Checklist Name is required!" }),
   description: z.string().optional(),
-  checklist_qty: z.string().min(1, { message: "Checklist Qty is required!" }),
+  checklist_qty: z.number().positive().int().min(1, { message: "Checklist Quantity must be a positive integer" }),
+
   active_status: z.boolean().default(true),
 });
 
@@ -58,6 +59,7 @@ export default function OrderChecklistForm({ type, data }) {
   }, [type, data, reset]);
 
   const onSubmit = handleSubmit(async (formData) => {
+    const parsedData = { ...formData, checklist_qty: Number(formData.checklist_qty) };
     const response = await formAction({ ...formData, id: data?._id });
     if (response && !response.success) {
         state.message = response.message;
@@ -74,12 +76,18 @@ export default function OrderChecklistForm({ type, data }) {
     }
   }, [state, router, type]);
 
+
+  const handleQuantityChange = (event) => {
+    const value = event.target.value;
+    setValue("checklist_qty", value ? parseInt(value, 10) : 1);
+  };
+
   return (
     <form onSubmit={onSubmit} className="space-y-4">
       <h1 className="text-xl font-semibold">
         {type === "create" ? "Create Order Checklist" : "Edit Order Checklist"}
       </h1>
-      <div className="flex gap-32 ">
+      <div className=" bg-gray-200 p-6 border rounded-1g shadow-1g mb-6 flex  gap-40">
         {/* Branch Section */}
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 flex-2">
           {/* Branch ID and Branch Name */}
@@ -104,25 +112,26 @@ export default function OrderChecklistForm({ type, data }) {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label className="text-sm font-medium">Checklist Qty</label>
-          <Input type="number" {...register("checklist_qty")} placeholder="Enter Quantity"
-             className="w-full max-w-xs border border-gray-300 rounded-md p-2" />
-          {errors.checklist_qty && (
-            <p className="text-red-500 text-xs">{errors.checklist_qty.message}</p>
-          )}
-        </div>
-      </div>
+                <div>
+                  <label className="text-sm font-medium">Checklist Qty</label>
+                  <Input type="number" onChange={handleQuantityChange} placeholder="Enter Quantity"
+                    className="w-full max-w-xs border border-gray-300 rounded-md p-2" />
+                  {errors.checklist_qty && (
+                    <p className="text-red-500 text-xs">{errors.checklist_qty.message}</p>
+                  )}
+                </div>
+              </div>
       </div>
 
         {/* Control Section */}
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 w-64">
-          <h2 className="text-lg font-medium mb-4">Control:</h2>
-          <div className="flex items-center gap-2 mt-4">
-            <Checkbox {...register("active_status")} />
-            <label className="text-sm font-medium"> Active Status</label>
+  
+        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 w-80 h-28">
+            <h3 className="text-lg font-semibold mb-4">Control</h3>
+            <div className="flex items-center gap-2">
+              <Checkbox checked={watch("active_status")} onCheckedChange={(checked) => setValue("active_status", checked)} />
+              <label className="text-sm font-medium">Active Status</label>
+            </div>
           </div>
-        </div>
       </div>
 
       <div className="flex justify-center mt-5 gap-4">

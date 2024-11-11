@@ -84,55 +84,55 @@ export default function TaxListForm({ type, data }) {
       <h1 className="text-xl font-semibold">
         {type === "create" ? "Create Tax List" : "Edit Tax List"}
       </h1>
-      <div className=" bg-gray-50 p-6 border rounded-1g shadow-1g mb-6 flex  gap-40">
+      <div className=" bg-gray-200 p-6 border rounded-1g shadow-1g mb-6 flex  gap-40">
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 max-w-md flex-1">
           {/* Branch ID and Branch Name */}
           <div className="grid grid-cols-1 gap-4 mb-4">
             <div>
-          <label className="text-sm font-medium">Tax Name</label>
-          <Input {...register("tax_name")} placeholder="Enter Tax Name"    className="w-full max-w-xs border border-gray-300 rounded-md p-2" />
-          {errors.tax_name && (
-            <p className="text-red-500 text-xs">{errors.tax_name.message}</p>
-          )}
-        </div>
+              <label className="text-sm font-medium">Tax Name</label>
+              <Input {...register("tax_name")} placeholder="Enter Tax Name" className="w-full max-w-xs border border-gray-300 rounded-md p-2" />
+              {errors.tax_name && (
+                <p className="text-red-500 text-xs">{errors.tax_name.message}</p>
+              )}
+            </div>
 
-        <div>
-          <label className="text-sm font-medium">Percentage CGST</label>
-          <Input
-            {...register("percentage_cgst", { valueAsNumber: true })}
-            type="number"
-            placeholder="0%"
-               className="w-full max-w-xs border border-gray-300 rounded-md p-2"
-          />
-          {errors.percentage_cgst && (
-            <p className="text-red-500 text-xs">{errors.percentage_cgst.message}</p>
-          )}
-        </div>
+            <div>
+              <label className="text-sm font-medium">Percentage CGST</label>
+              <Input
+                {...register("percentage_cgst", { valueAsNumber: true })}
+                type="number"
+                placeholder="0%"
+                className="w-full max-w-xs border border-gray-300 rounded-md p-2"
+              />
+              {errors.percentage_cgst && (
+                <p className="text-red-500 text-xs">{errors.percentage_cgst.message}</p>
+              )}
+            </div>
 
-        <div>
-          <label className="text-sm font-medium">Percentage SGST</label>
-          <Input
-            {...register("percentage_sgst", { valueAsNumber: true })}
-            type="number"
-            placeholder="0%"
-               className="w-full max-w-xs border border-gray-300 rounded-md p-2"
-          />
-          {errors.percentage_sgst && (
-            <p className="text-red-500 text-xs">{errors.percentage_sgst.message}</p>
-          )}
-      </div>
+            <div>
+              <label className="text-sm font-medium">Percentage SGST</label>
+              <Input
+                {...register("percentage_sgst", { valueAsNumber: true })}
+                type="number"
+                placeholder="0%"
+                className="w-full max-w-xs border border-gray-300 rounded-md p-2"
+              />
+              {errors.percentage_sgst && (
+                <p className="text-red-500 text-xs">{errors.percentage_sgst.message}</p>
+              )}
+            </div>
           </div>
         </div>
 
 
         {/* Control Section */}
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 w-64 h-44">
-        <h2 className="text-lg font-medium mb-4">Control:</h2>
-          <div className="flex items-center gap-2 mt-4">
-            <Checkbox {...register("active_status")} />
-            <label className="text-sm font-medium"> Active Status</label>
+        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 w-80 h-28">
+            <h3 className="text-lg font-semibold mb-4">Control</h3>
+            <div className="flex items-center gap-2">
+              <Checkbox checked={watch("active_status")} onCheckedChange={(checked) => setValue("active_status", checked)} />
+              <label className="text-sm font-medium">Active Status</label>
+            </div>
           </div>
-        </div>
       </div>
 
       <div className="flex justify-center mt-5 gap-4">

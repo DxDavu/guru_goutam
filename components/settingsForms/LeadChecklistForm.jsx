@@ -58,7 +58,8 @@ export default function LeadChecklistForm({ type, data }) {
   }, [type, data, reset]);
 
   const onSubmit = handleSubmit(async (formData) => {
-    const response = await formAction({ ...formData, id: data?._id });
+    const parsedData = { ...formData, checklist_qty: Number(formData.checklist_qty) };
+    const response = await formAction({ ...parsedData, id: data?._id });
     if (response && !response.success) {
       state.message = response.message;
     }
@@ -74,6 +75,11 @@ export default function LeadChecklistForm({ type, data }) {
     }
   }, [state, router, type]);
 
+  const handleQuantityChange = (event) => {
+    const value = event.target.value;
+    setValue("checklist_qty", value ? parseInt(value, 10) : 1);
+  };
+
   return (
     <form onSubmit={onSubmit} className="space-y-4">
       <div className="bg-gray-50 p-6 border rounded-lg shadow-lg mb-6">
@@ -82,7 +88,7 @@ export default function LeadChecklistForm({ type, data }) {
           {type === "create" ? "Create Lead Checklist" : "Edit Lead Checklist"}
         </h1>
 
-        <div className="flex  gap-40">
+        <div className=" bg-gray-200 p-6 border rounded-1g shadow-1g mb-6 flex gap-40">
           {/* Department Form Section */}
           <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 max-w-md flex-1">
             <div className="grid grid-cols-1 gap-4">
@@ -104,22 +110,24 @@ export default function LeadChecklistForm({ type, data }) {
                 )}
               </div>
 
-              <div>
-                <label className="text-sm font-medium">Checklist Quantity</label>
-                <Input type="number" {...register("checklist_qty")} placeholder="Enter Checklist Quantity"
-                  className="w-full max-w-xs border border-gray-300 rounded-md p-2" />
-                {errors.checklist_qty && (
-                  <p className="text-red-500 text-xs">{errors.checklist_qty.message}</p>
-                )}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm font-medium">Checklist Qty</label>
+                  <Input type="number" onChange={handleQuantityChange} placeholder="Enter Quantity"
+                    className="w-full max-w-xs border border-gray-300 rounded-md p-2" />
+                  {errors.checklist_qty && (
+                    <p className="text-red-500 text-xs">{errors.checklist_qty.message}</p>
+                  )}
+                </div>
               </div>
             </div>
           </div>
 
           {/* Control Section */}
-          <div className="bg-gray-50 p-6 border rounded-lg shadow-lg w-full md:w-1/3">
+          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 w-80 h-28">
             <h3 className="text-lg font-semibold mb-4">Control</h3>
             <div className="flex items-center gap-2">
-              <Checkbox unchecked={watch("active_status")} onCheckedChange={(checked) => setValue("active_status", checked)} />
+              <Checkbox checked={watch("active_status")} onCheckedChange={(checked) => setValue("active_status", checked)} />
               <label className="text-sm font-medium">Active Status</label>
             </div>
           </div>
@@ -146,10 +154,5 @@ export default function LeadChecklistForm({ type, data }) {
         </Button>
       </div>
     </form>
-
-
-
-
-
   );
 }

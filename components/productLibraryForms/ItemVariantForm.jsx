@@ -93,7 +93,8 @@ const ItemVariantForm = ({ type, data }) => {
 
   return (
     <form className="w-full max-w-1xl mx-auto p-8 bg-white shadow-md rounded-lg" onSubmit={onSubmit}>
-    <div className="bg-gray-50 p-6 border rounded-lg shadow-lg mb-6">    <h1 className="text-xl font-semibold">
+    <div className="bg-gray-200 p-8 px-6 border rounded-lg shadow-lg mb-6">  
+        <h1 className="text-xl font-semibold">
       {type === "create" ? "Add  item varient" : "Edit Product Category"}
     </h1>
 
@@ -101,7 +102,7 @@ const ItemVariantForm = ({ type, data }) => {
       <div className="flex flex-col md:flex-row gap-6">
 
         {/* Category Information Fields */}
-        <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="bg-gray-50 flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
       
         <div>
           <label className="text-sm font-medium">Item/Specification Name</label>

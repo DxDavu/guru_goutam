@@ -60,7 +60,7 @@ const ProductCategoryForm = ({ type, data }) => {
 
   return (
     <form className="w-full max-w-1xl mx-auto p-8 bg-white shadow-md rounded-lg" onSubmit={onSubmit}>
-      <div className="bg-gray-50 p-6 border rounded-lg shadow-lg mb-6">    <h1 className="text-xl font-semibold">
+      <div className="bg-gray-200 p-6 border rounded-lg shadow-lg mb-6">    <h1 className="text-xl font-semibold">
         {type === "create" ? "Add Product Category" : "Edit Product Category"}
       </h1>
 
@@ -68,7 +68,7 @@ const ProductCategoryForm = ({ type, data }) => {
         <div className="flex flex-col md:flex-row gap-6">
 
           {/* Category Information Fields */}
-          <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="bg-gray-50 flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="text-sm font-medium">Category Code</label>
               <Input {...register("category_code")} placeholder="Enter Category Code"  className="w-full max-w-xs border border-gray-300 rounded-md p-2"/>
@@ -88,8 +88,8 @@ const ProductCategoryForm = ({ type, data }) => {
           </div>
 
           {/* Active Status Section */}
-          <div className="bg-gray-50 p-6 border rounded-lg shadow-lg w-full md:w-1/3">
-            <h3 className="text-lg font-semibold mb-4">Control</h3>
+          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 w-72 h-28">
+          <h3 className="text-lg font-semibold mb-4">Control</h3>
             <div className="flex items-center gap-2">
               <Checkbox checked={watch("active_status")} onCheckedChange={(checked) => setValue("active_status", checked)} />
               <label className="text-sm font-medium">Active Status</label>
