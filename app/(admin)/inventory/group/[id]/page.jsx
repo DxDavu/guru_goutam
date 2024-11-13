@@ -3,7 +3,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import GroupForm from "@/components/productLibraryForm/GroupForm";
+import GroupForm from "@/components/inventoryForm/GroupForm";
 import { getGroupById } from "@/actions/inventory/groupActions";
 
 export default function UpdateGroupPage({ params }) {

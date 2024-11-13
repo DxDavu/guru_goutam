@@ -2,9 +2,9 @@
 
 "use server";
 
-import { getProducts } from "@/actions/inventory/productsActions";
+import { getProducts } from "@/actions/inventory/productActions";
 import { DataTable } from "@/components/DataTable";
-import { columns, CreateNewProductButton } from "@/components/inventoryColumns/productsColumns";
+import { columns, CreateNewProductButton } from "@/components/inventoryColumns/productColumn";
 
 export default async function ProductsPage() {
   const products = await getProducts();

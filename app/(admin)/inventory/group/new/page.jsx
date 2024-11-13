@@ -2,7 +2,7 @@
 
 "use client";
 
-import GroupForm from "@/components/productLibraryForm/GroupForm";
+import GroupForm from "@/components/inventoryForm/GroupForm";
 
 export default function NewGroupPage() {
   return (

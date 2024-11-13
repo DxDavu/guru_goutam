@@ -1,12 +1,12 @@
-// @/app/(admin)/product-library/products/new/page.jsx
+// @/app/(admin)/settings/lead-checklist/new/page.jsx
 
 "use client";
 
-import ProductForm from "@/components/inventoryForm/ProductsForm";
+import ProductForm from "@/components/inventoryForm/ProductForm";
 
-export default function NewProductPage() {
+export default function NewProductsPage() {
   return (
-    <div className="bg-white p-1 rounded-md mx-auto">
+    <div >
       <ProductForm type="create" />
     </div>
   );

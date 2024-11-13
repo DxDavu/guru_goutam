@@ -40,6 +40,7 @@ export default function NavBar() {
           <div className="hidden lg:flex items-center space-x-6">
             <Menu isOpen={isOpen} />
           </div>
+     
 
           {/* Right Side: Settings and Profile */}
           <div className="flex items-center space-x-4">

@@ -11,7 +11,7 @@ import { toast } from "react-toastify";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { createGroup, updateGroup } from "@/actions/groupLibrary/groupActions";
+import { createGroup, updateGroup } from "@/actions/inventory/groupActions";
 
 const schema = z.object({
   group_name: z.string().nonempty("Group Name is required!"),
