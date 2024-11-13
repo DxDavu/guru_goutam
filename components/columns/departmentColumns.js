@@ -77,7 +77,8 @@ const DepartmentActionsCell = ({ row }) => {
 
 // Column definitions
 export const columns = [
-  { accessorKey: "slNo", header: "Sl.No." },
+  // { accessorKey: "slNo", header: "Sl.No." },
+  { id: "sl_no", header: "Sl. No", cell: ({ row }) => row.index + 1 },
   { accessorKey: "department_name", header: "Department" },
   { accessorKey: "description", header: "Description" },
   {
