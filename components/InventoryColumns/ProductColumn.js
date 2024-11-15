@@ -4,7 +4,7 @@
 
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { deleteProduct } from '@/actions/Inventory/productActions';
+import { deleteProduct } from '@/actions/inventory/productActions';
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useState } from "react";
@@ -17,6 +17,18 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export const columns = [
+  { id: "sl_no", header: "Sl. No", cell: ({ row }) => row.index + 1 },
+  {
+    accessorKey: "group_image",
+    header: "Image",
+    cell: ({ row }) => (
+      <img
+        src={row.original.group_image || "/download.jpg"} // Use a default image if group_image is not provided
+        alt={row.original.group_name}
+        className="w-12 h-12 object-cover" // Customize the class for image styling
+      />
+    ),
+  },
   { accessorKey: "supplier_name", header: "Supplier Name" },
   { accessorKey: "supplier_mail", header: "Supplier Email" },
   { accessorKey: "total_price", header: "Total Price" },
