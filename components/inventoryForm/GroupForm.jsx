@@ -1,7 +1,5 @@
 // @/components/groupLibraryForms/GroupForm.jsx
 
-"use client";
-
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -12,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { createGroup, updateGroup } from "@/actions/inventory/groupActions";
+import axios from 'axios';
 
 const schema = z.object({
   group_name: z.string().nonempty("Group Name is required!"),
@@ -32,13 +31,36 @@ const GroupForm = ({ type, data }) => {
     }
   }, [data, reset]);
 
-  const onSubmit = handleSubmit(async (formData) => {
+  const onSubmit = handleSubmit(async (formData, e) => {
     try {
-      if (type === "create") {
-        await createGroup(formData);
-      } else {
-        await updateGroup({ ...formData, id: data?._id });
+      const file = e.target.image?.files[0];
+      let filePath = '';
+
+      // If there's a file, upload it first
+      if (file) {
+        const uploadData = new FormData();
+        uploadData.append('image', file);
+            console.log(uploadData,"sammmm");
+            
+        const res = await axios.post('/api/upload', uploadData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+
+        filePath = res.data.filePath;
       }
+
+      // Call server action with file path
+      if (type === "create") {
+        await createGroup({ ...formData, group_image: filePath });
+      } else {
+        await updateGroup({ ...formData, id: data?._id, group_image: filePath || data?.group_image });
+      }
+
+      console.log('File path after upload hello.............:', filePath);
+
+
       toast.success(`Group ${type === "create" ? "created" : "updated"} successfully!`);
       router.push("/inventory/group");
       router.refresh();
@@ -61,6 +83,11 @@ const GroupForm = ({ type, data }) => {
         <label className="text-sm font-medium">Description</label>
         <Input {...register("description")} placeholder="Enter Description" />
         {errors.description && <p className="text-red-500 text-xs">{errors.description.message}</p>}
+      </div>
+
+      <div className="col-span-2">
+        <label className="text-sm font-medium">Image</label>
+        <input type="file" {...register("image")} accept="image/*" />
       </div>
 
       <div className="flex items-center gap-2 col-span-2">

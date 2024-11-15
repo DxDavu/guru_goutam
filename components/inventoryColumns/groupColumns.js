@@ -13,7 +13,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import Image from 'next/image';
+import Image from "next/image";
 
 const buttonClass = "bg-blue-500 text-white hover:bg-blue-600";
 
@@ -62,7 +62,10 @@ const Actions = ({ row }) => {
               Are you sure you want to delete this group?
             </p>
             <div className="flex justify-end gap-4 mt-4">
-              <Button variant="outline" onClick={() => setIsDeleteConfirmOpen(false)}>
+              <Button
+                variant="outline"
+                onClick={() => setIsDeleteConfirmOpen(false)}
+              >
                 Cancel
               </Button>
               <Button className="bg-red-500 text-white" onClick={onDelete}>
@@ -77,18 +80,16 @@ const Actions = ({ row }) => {
 };
 
 export const columns = [
+  { id: "sl_no", header: "Sl. No", cell: ({ row }) => row.index + 1 },
   {
-    id: "group_image",
-    header: "Group Image",
-    cell: () => (
-      <div className="relative w-12 h-12">
-        <Image
-          src="/path-to-default-group-image.jpg"
-          alt="Group"
-          layout="fill"
-          objectFit="cover"
-        />
-      </div>
+    accessorKey: "group_image",
+    header: "Image",
+    cell: ({ row }) => (
+      <img
+        src={row.original.group_image || "/download.jpg"} // Use a default image if group_image is not provided
+        alt={row.original.group_name}
+        className="w-12 h-12 object-cover" // Customize the class for image styling
+      />
     ),
   },
   { accessorKey: "group_name", header: "Group Name" },

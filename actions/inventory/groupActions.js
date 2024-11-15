@@ -6,6 +6,7 @@ import { connectToDatabase } from '@/lib/database';
 import Group from '@/lib/database/models/inventory/Group.model';
 import ProductCategory from '@/lib/database/models/productLibrary/ProductCategory.model';
 import Brand from '@/lib/database/models/productLibrary/Brand.model';
+import { upload } from '@/lib/middleware/uploadMiddleware'; // Import multer upload middleware
 
 // Fetch active Product Categories
 export const getActiveProductCategories = async () => {
@@ -48,7 +49,6 @@ export const getGroupById = async (id) => {
   };
 };
 
-// Create a new group
 export const createGroup = async (groupData) => {
   try {
     await connectToDatabase();
@@ -61,7 +61,6 @@ export const createGroup = async (groupData) => {
   }
 };
 
-// Update an existing group
 export const updateGroup = async (groupData) => {
   try {
     await connectToDatabase();
