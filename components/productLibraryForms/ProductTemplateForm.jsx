@@ -125,11 +125,15 @@ const ProductTemplateForm = ({ type, data }) => {
         </Select>
         {errors.category && <p className="text-red-500 text-xs">{errors.category.message}</p>}
       </div>
+
+
       <div className="mb-4">
         <label className="text-sm font-medium">Product Name</label>
         <Input {...register("product_name")} placeholder="Enter Product Name"   className="w-full max-w-xs border border-gray-300 rounded-md p-2"/>
         {errors.product_name && <p className="text-red-500 text-xs">{errors.product_name.message}</p>}
       </div>
+
+
       <div className="mb-4">
         <label className="text-sm font-medium">Brand</label>
         <Select onValueChange={(value) => setValue("brand", value)} value={watch("brand") || ""}>
@@ -144,6 +148,9 @@ const ProductTemplateForm = ({ type, data }) => {
         </Select>
         {errors.brand && <p className="text-red-500 text-xs">{errors.brand.message}</p>}
       </div>
+
+
+      
       <div className="mb-4">
         <label className="text-sm font-medium">Model</label>
         <Input {...register("model")} placeholder="Enter Model"  className="w-full max-w-xs border border-gray-300 rounded-md p-2" />
@@ -157,6 +164,8 @@ const ProductTemplateForm = ({ type, data }) => {
     </div>
 
     {/* Specifications Section */}
+
+    
     <div className="bg-gray-50 p-6 border rounded-lg shadow-lg w-full md:w-1/3">
       <h3 className="text-lg font-semibold mb-4">Specifications</h3>
       {["ram", "processor", "storage", "graphics", "os"].map((spec) => (
