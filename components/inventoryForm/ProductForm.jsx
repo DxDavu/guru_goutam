@@ -15,7 +15,9 @@ import { toast } from "react-toastify";
 // Schema for validation
 const schema = z.object({
   owner: z.string().min(1, { message: "Owner is required!" }),
+  brand: z.string().min(1, { message: "Owner is required!" }),
   select_supplier: z.string().min(1, { message: "Supplier is required!" }),
+  category: z.string().min(1, { message: "Supplier is required!" }),
   supplier_name: z.string().min(1, { message: "Supplier Name is required!" }),
   supplier_mail: z.string().email({ message: "Invalid email format" }).min(1, { message: "Supplier Email is required!" }),
   total_price: z.boolean(), // Change this to boolean since we're using a checkbox
@@ -36,8 +38,10 @@ export default function ProductForm({ type, data }) {
     resolver: zodResolver(schema),
     defaultValues: data || {
       owner: "",
+      brand: "",
       select_supplier: "",
       supplier_name: "",
+       category: "",
       supplier_mail: "",
       total_price: false, // Default value for checkbox
       active_status: true,
@@ -110,25 +114,35 @@ export default function ProductForm({ type, data }) {
                 {errors.owner && <p className="text-red-500 text-xs">{errors.owner.message}</p>}
               </div>
 
-              <div>
-                <label className="text-sm font-medium">Supplier</label>
+              {/* <div>
+                <label className="text-sm font-medium">Select Supplier</label>
                 <Input {...register("select_supplier")} placeholder="Enter Supplier Name" className="w-full max-w-xs border border-gray-300 rounded-md p-2" />
                 {errors.select_supplier && <p className="text-red-500 text-xs">{errors.select_supplier.message}</p>}
-              </div>
+              </div> */}
 
-              <div>
+              {/* <div>
                 <label className="text-sm font-medium">Supplier Name</label>
                 <Input {...register("supplier_name")} placeholder="Enter Supplier Name" className="w-full max-w-xs border border-gray-300 rounded-md p-2" />
                 {errors.supplier_name && <p className="text-red-500 text-xs">{errors.supplier_name.message}</p>}
-              </div>
-
+              </div> */}
               <div>
+                <label className="text-sm font-medium">Brand </label>
+                <Input {...register("brand")} placeholder="Enter Bra Name" className="w-full max-w-xs border border-gray-300 rounded-md p-2" />
+                {errors.brand && <p className="text-red-500 text-xs">{errors.brand.message}</p>}
+              </div>
+              {/* <div>
+                <label className="text-sm font-medium">Category </label>
+                <Input {...register("category")} placeholder="Enter Category " className="w-full max-w-xs border border-gray-300 rounded-md p-2" />
+                {errors.category && <p className="text-red-500 text-xs">{errors.category.message}</p>}
+              </div> */}
+
+              {/* <div>
                 <label className="text-sm font-medium">Supplier Email</label>
                 <Input {...register("supplier_mail")} type="email" placeholder="Enter Supplier Email" className="w-full max-w-xs border border-gray-300 rounded-md p-2" />
                 {errors.supplier_mail && <p className="text-red-500 text-xs">{errors.supplier_mail.message}</p>}
-              </div>
+              </div> */}
 
-              <div>
+              {/* <div>
                 <label className="text-sm font-medium">Total Price (Checkbox)</label>
                 <Checkbox
                   {...register("total_price")}
@@ -136,7 +150,7 @@ export default function ProductForm({ type, data }) {
                   onCheckedChange={(checked) => setValue("total_price", checked)}
                 />
                 {errors.total_price && <p className="text-red-500 text-xs">{errors.total_price.message}</p>}
-              </div>
+              </div> */}
             </div>
           </div>
 

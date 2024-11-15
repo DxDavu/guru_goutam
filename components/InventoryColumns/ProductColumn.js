@@ -17,9 +17,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export const columns = [
-  { accessorKey: "supplier_name", header: "Supplier Name" },
-  { accessorKey: "supplier_mail", header: "Supplier Email" },
-  { accessorKey: "total_price", header: "Total Price" },
+  // { accessorKey: "supplier_name", header: "Supplier Name" },
+  { accessorKey: "owner", header: " Owner" },
+  { accessorKey: "brand", header: " Brand" },
+  // { accessorKey: "category", header: " Category" },
+  // { accessorKey: "supplier_mail", header: "Supplier Email" },
+  // { accessorKey: "supplier", header: " Supplier" },
+  // { accessorKey: "total_price", header: "Total Price" },
   {
     accessorKey: "active_status",
     header: "Status",

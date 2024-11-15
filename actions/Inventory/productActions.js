@@ -9,6 +9,8 @@ import Product from '@/lib/database/models/Inventory/Products.model'; // Ensure 
 export const getProducts = async () => {
   await connectToDatabase();
   const products = await Product.find({}).lean();
+  console.log(products,'get products');
+  
   return products.map(product => ({
     ...product,
     _id: product._id.toString(),
