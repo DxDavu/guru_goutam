@@ -7,7 +7,7 @@ import { FaCartPlus   ,
 } from "react-icons/fa";
 
 const sidebarLinks= [
-    {name: 'Purchase_request' , href:'/procurement/purchase' , icon:< FaCartPlus/>},
+    {name: 'Purchase Request' , href:'/procurement/purchase' , icon:< FaCartPlus/>},
     // {name: 'Group' , href:'/inventory/group' , icon:< FaGroupArrowsRotate  />}
 ]
 
