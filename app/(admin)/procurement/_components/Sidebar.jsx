@@ -1,14 +1,11 @@
 'use client';
 import Link from 'next/link';
 import {useState} from  'react';
-import { FaCartPlus   ,
-    FaAlipay   
-
-} from "react-icons/fa";
+import { FaCartPlus } from "react-icons/fa";
 
 const sidebarLinks= [
     {name: 'Purchase Request' , href:'/procurement/purchase' , icon:< FaCartPlus/>},
-    // {name: 'Group' , href:'/inventory/group' , icon:< FaGroupArrowsRotate  />}
+   
 ]
 
 

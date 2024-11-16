@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import PurchaseRequestForm from "@/components/procurementForm/purchaseForm";
-import { getPurchaseById } from '@/actions/procuurement/purchaseActions';
+import PurchaseRequestForm from "@/components/procurementForm/purchaseRequestForm";
+import { getPurchaseById } from '@/actions/procurement/purchaseRequestActions';
 import { useRouter } from "next/navigation";
 
 export default function EditPrPage({ params }) {
