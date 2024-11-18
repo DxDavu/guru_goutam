@@ -25,4 +25,3 @@ export const POST = async (req) => {
     return NextResponse.json({ error: "File upload failed." }, { status: 500 });
   }
 };
-
