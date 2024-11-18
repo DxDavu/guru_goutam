@@ -15,6 +15,8 @@ import { Button } from "@/components/ui/button";
 import { createProductTemplate, updateProductTemplate, getActiveProductCategories, getActiveBrands, getActiveItemVariants } from "@/actions/productLibrary/productTemplateActions";
 import { useFormState } from "react-dom";
 
+const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL || "http://localhost:3000";
+
 const schema = z.object({
   product_name: z.string().nonempty("Product Name is required!"),
   category: z.string().nonempty("Category is required!"),
@@ -92,7 +94,7 @@ const ProductTemplateForm = ({ type, data }) => {
         const fileUploadData = new FormData();
         fileUploadData.append("file", file);
 
-        const response = await fetch("/api/upload-image", { method: "POST", body: fileUploadData });
+        const response = await fetch(`${baseUrl}/api/upload-image`, { method: "POST", body: fileUploadData });
         if (!response.ok) throw new Error("File upload failed");
         const result = await response.json();
         imagePath = result.path; // Get the uploaded image path
