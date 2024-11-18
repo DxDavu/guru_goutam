@@ -25,6 +25,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
+    "formidable": "^3.5.2",
     "lucide-react": "^0.453.0",
     "mongodb": "^6.9.0",
     "mongoose": "^8.7.0",

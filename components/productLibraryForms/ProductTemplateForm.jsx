@@ -22,7 +22,7 @@ const schema = z.object({
   model: z.string().nonempty("Model is required!"),
   active_status: z.boolean().default(true),
   description: z.string().optional(),
-  // image: z.any().optional(), // Comment out image schema validation
+  image: z.any().optional(), // Comment out image schema validation
   specifications: z.object({
     ram: z.object({ brand: z.string(), type: z.string() }).optional(),
     processor: z.object({ brand: z.string(), type: z.string() }).optional(),
@@ -37,7 +37,8 @@ const ProductTemplateForm = ({ type, data }) => {
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
   const [variants, setVariants] = useState([]);
-
+  const [imagePreview, setImagePreview] = useState(data?.image || null);
+  
   const { register, handleSubmit, setValue, watch, reset, formState: { errors } } = useForm({
     resolver: zodResolver(schema),
     defaultValues: data || {},
@@ -71,26 +72,43 @@ const ProductTemplateForm = ({ type, data }) => {
     fetchOptions();
   }, [data, reset]);
 
+
+  const handleImageChange = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => setImagePreview(reader.result); // Show preview of uploaded image
+      reader.readAsDataURL(file);
+    }
+  };
+
   const onSubmit = handleSubmit(async (formData) => {
     try {
-      // let imagePath = data?.image || ""; // Comment out image path variable
+      let imagePath = null;
 
-      // if (formData.image && formData.image[0]) {
-      //   const file = formData.image[0];
-      //   const uploadResponse = await fetch('/api/upload-image', {
-      //     method: 'POST',
-      //     body: new FormData().append("image", file),
-      //   });
+      // Handle file upload
+      const file = formData.image?.[0];
+      if (file) {
+        const fileUploadData = new FormData();
+        fileUploadData.append("file", file);
 
-      //   if (!uploadResponse.ok) throw new Error("Image upload failed");
+        const response = await fetch("/api/upload-image", { method: "POST", body: fileUploadData });
+        if (!response.ok) throw new Error("File upload failed");
+        const result = await response.json();
+        imagePath = result.path; // Get the uploaded image path
+      }
 
-      //   const { filePath } = await uploadResponse.json();
-      //   imagePath = filePath;
-      // }
+      // Send plain data to the server action
+      const plainData = {
+        ...formData,
+        image: imagePath || data?.image, // Use uploaded image or existing one
+        id: data?._id, // Include the ID if updating
+      };
 
-      await formAction({ ...formData, /* image: imagePath, */ id: data?._id });
+      await formAction(plainData);
     } catch (error) {
       console.error(error.message || "An unexpected error occurred.");
+      toast.error(error.message || "An unexpected error occurred.");
     }
   });
 
@@ -123,11 +141,26 @@ const ProductTemplateForm = ({ type, data }) => {
         {errors.category && <p className="text-red-500 text-xs">{errors.category.message}</p>}
       </div>
 
-      {/* <div>
+      <div>
         <label className="text-sm font-medium">Add Images</label>
-        <Input type="file" {...register("image")} accept="image/*" />
+        {imagePreview && (
+          <div className="mb-4">
+            <img
+              src={imagePreview}
+              alt="Preview"
+              className="w-32 h-32 object-cover border border-gray-300 rounded"
+            />
+          </div>
+        )}
+        <Input
+          type="file"
+          name="file"
+          {...register("image")}
+          accept="image/*"
+          onChange={handleImageChange} // Update preview on file selection
+        />
         {errors.image && <p className="text-red-500 text-xs">{errors.image.message}</p>}
-      </div> */}
+      </div>
 
       <div>
         <label className="text-sm font-medium">Product Name</label>
