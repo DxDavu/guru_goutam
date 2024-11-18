@@ -34,6 +34,16 @@ export const getProductTemplates = async () => {
   const templates = await ProductTemplate.find({})
     .populate('category', 'category_name')
     .populate('brand', 'brand_name')
+    .populate("specifications.ram.brand", "brand_name")
+    .populate("specifications.ram.type", "type")
+    .populate("specifications.processor.brand", "brand_name")
+    .populate("specifications.processor.type", "type")
+    .populate("specifications.storage.brand", "brand_name")
+    .populate("specifications.storage.type", "type")
+    .populate("specifications.graphics.brand", "brand_name")
+    .populate("specifications.graphics.type", "type")
+    .populate("specifications.os.brand", "brand_name")
+    .populate("specifications.os.type", "type")
     .lean();
   return templates.map(template => ({
     ...template,
