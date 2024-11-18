@@ -14,6 +14,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { createProductTemplate, updateProductTemplate, getActiveProductCategories, getActiveBrands, getActiveItemVariants } from "@/actions/productLibrary/productTemplateActions";
 import { useFormState } from "react-dom";
+import { CldUploadWidget } from 'next-cloudinary';
+import Image from "next/image";
 
 const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL || "http://localhost:3000";
 
@@ -40,6 +42,8 @@ const ProductTemplateForm = ({ type, data }) => {
   const [brands, setBrands] = useState([]);
   const [variants, setVariants] = useState([]);
   const [imagePreview, setImagePreview] = useState(data?.image || null);
+  const [tempImg, setTempImg] = useState(null);
+  const [img, setImg] = useState(null);
   
   const { register, handleSubmit, setValue, watch, reset, formState: { errors } } = useForm({
     resolver: zodResolver(schema),
@@ -65,8 +69,8 @@ const ProductTemplateForm = ({ type, data }) => {
       if (data) {
         reset({
           ...data,
-          category: data.category?._id,
-          brand: data.brand?._id,
+          category: data.category?._id.toString(),
+          brand: data.brand?._id.toString(),
           specifications: data.specifications || {}
         });
       }
@@ -75,36 +79,14 @@ const ProductTemplateForm = ({ type, data }) => {
   }, [data, reset]);
 
 
-  const handleImageChange = (e) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => setImagePreview(reader.result); // Show preview of uploaded image
-      reader.readAsDataURL(file);
-    }
-  };
-
   const onSubmit = handleSubmit(async (formData) => {
     try {
-      let imagePath = null;
-
-      // Handle file upload
-      const file = formData.image?.[0];
-      if (file) {
-        const fileUploadData = new FormData();
-        fileUploadData.append("file", file);
-
-        const response = await fetch(`${baseUrl}/api/upload-image`, { method: "POST", body: fileUploadData });
-        if (!response.ok) throw new Error("File upload failed");
-        const result = await response.json();
-        imagePath = result.path; // Get the uploaded image path
-      }
-
+      console.log(img);
       // Send plain data to the server action
       const plainData = {
         ...formData,
-        image: imagePath || data?.image, // Use uploaded image or existing one
-        id: data?._id, // Include the ID if updating
+        image: img?.secure_url || data?.image,
+        id: data?._id,
       };
 
       await formAction(plainData);
@@ -113,6 +95,22 @@ const ProductTemplateForm = ({ type, data }) => {
       toast.error(error.message || "An unexpected error occurred.");
     }
   });
+
+  const handleImageUpload = (result) => {
+    setImg(result.info); // Save the uploaded image info
+    setImagePreview(result.info.secure_url); // Update the preview with the new image
+  };
+
+  const handleRemoveImage = () => {
+    setImg(null);
+    setImagePreview(data?.image || null);
+  };
+
+  const handleCancel = () => {
+    setImg(null); // Reset temp image
+    setImagePreview(data?.image || null); // Reset preview
+    router.push("/product-library/product-template");
+  };
 
   useEffect(() => {
     if (state?.success) {
@@ -142,26 +140,43 @@ const ProductTemplateForm = ({ type, data }) => {
         </Select>
         {errors.category && <p className="text-red-500 text-xs">{errors.category.message}</p>}
       </div>
-
+   
       <div>
-        <label className="text-sm font-medium">Add Images</label>
+        <label className="text-sm font-medium">Current Image</label>
         {imagePreview && (
-          <div className="mb-4">
+          <div className="mb-4 relative">
             <img
               src={imagePreview}
               alt="Preview"
               className="w-32 h-32 object-cover border border-gray-300 rounded"
             />
+            <button
+              type="button"
+              onClick={handleRemoveImage}
+              className="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full"
+            >
+              ✕
+            </button>
           </div>
         )}
-        <Input
-          type="file"
-          name="file"
-          {...register("image")}
-          accept="image/*"
-          onChange={handleImageChange} // Update preview on file selection
-        />
-        {errors.image && <p className="text-red-500 text-xs">{errors.image.message}</p>}
+      </div>
+
+      <div>
+        <label className="text-sm font-medium">Upload New Image</label>
+        <CldUploadWidget
+          uploadPreset="gurugoutam"
+          onSuccess={handleImageUpload}
+        >
+          {({ open }) => (
+            <div
+              className="text-xs text-gray-500 flex items-center gap-2 cursor-pointer"
+              onClick={() => open()}
+            >
+              <Image src="/upload.png" alt="Upload Icon" width={28} height={28} />
+              <span>Click Here</span>
+            </div>
+          )}
+        </CldUploadWidget>
       </div>
 
       <div>
@@ -224,7 +239,7 @@ const ProductTemplateForm = ({ type, data }) => {
       <div className="col-span-2 flex justify-end">
       <Button
           variant="outline"
-          onClick={() => router.push("/product-library/product-template")}
+          onClick={handleCancel}
         >
           Cancel
         </Button>

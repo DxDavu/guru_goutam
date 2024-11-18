@@ -1,4 +1,4 @@
-// @/app/api/upload-image/route.js
+// @/app/(admin)/api/upload-image/route.js
 
 import { NextResponse } from "next/server";
 import path from "path";
