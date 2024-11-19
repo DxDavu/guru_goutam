@@ -14,6 +14,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { createProductTemplate, updateProductTemplate, getActiveProductCategories, getActiveBrands, getActiveItemVariants } from "@/actions/productLibrary/productTemplateActions";
 import { useFormState } from "react-dom";
+import { CldUploadWidget } from 'next-cloudinary';
+import Image from "next/image";
+
+const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL || "http://localhost:3000";
 
 const schema = z.object({
   product_name: z.string().nonempty("Product Name is required!"),
@@ -22,7 +26,7 @@ const schema = z.object({
   model: z.string().nonempty("Model is required!"),
   active_status: z.boolean().default(true),
   description: z.string().optional(),
-  // image: z.any().optional(), // Comment out image schema validation
+  image: z.any().optional(), // Comment out image schema validation
   specifications: z.object({
     ram: z.object({ brand: z.string(), type: z.string() }).optional(),
     processor: z.object({ brand: z.string(), type: z.string() }).optional(),
@@ -37,7 +41,10 @@ const ProductTemplateForm = ({ type, data }) => {
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
   const [variants, setVariants] = useState([]);
-
+  const [imagePreview, setImagePreview] = useState(data?.image || null);
+  const [tempImg, setTempImg] = useState(null);
+  const [img, setImg] = useState(null);
+  
   const { register, handleSubmit, setValue, watch, reset, formState: { errors } } = useForm({
     resolver: zodResolver(schema),
     defaultValues: data || {},
@@ -62,8 +69,8 @@ const ProductTemplateForm = ({ type, data }) => {
       if (data) {
         reset({
           ...data,
-          category: data.category?._id,
-          brand: data.brand?._id,
+          category: data.category?._id.toString(),
+          brand: data.brand?._id.toString(),
           specifications: data.specifications || {}
         });
       }
@@ -71,28 +78,39 @@ const ProductTemplateForm = ({ type, data }) => {
     fetchOptions();
   }, [data, reset]);
 
+
   const onSubmit = handleSubmit(async (formData) => {
     try {
-      // let imagePath = data?.image || ""; // Comment out image path variable
+      console.log(img);
+      // Send plain data to the server action
+      const plainData = {
+        ...formData,
+        image: img?.secure_url || data?.image,
+        id: data?._id,
+      };
 
-      // if (formData.image && formData.image[0]) {
-      //   const file = formData.image[0];
-      //   const uploadResponse = await fetch('/api/upload-image', {
-      //     method: 'POST',
-      //     body: new FormData().append("image", file),
-      //   });
-
-      //   if (!uploadResponse.ok) throw new Error("Image upload failed");
-
-      //   const { filePath } = await uploadResponse.json();
-      //   imagePath = filePath;
-      // }
-
-      await formAction({ ...formData, /* image: imagePath, */ id: data?._id });
+      await formAction(plainData);
     } catch (error) {
       console.error(error.message || "An unexpected error occurred.");
+      toast.error(error.message || "An unexpected error occurred.");
     }
   });
+
+  const handleImageUpload = (result) => {
+    setImg(result.info); // Save the uploaded image info
+    setImagePreview(result.info.secure_url); // Update the preview with the new image
+  };
+
+  const handleRemoveImage = () => {
+    setImg(null);
+    setImagePreview(data?.image || null);
+  };
+
+  const handleCancel = () => {
+    setImg(null); // Reset temp image
+    setImagePreview(data?.image || null); // Reset preview
+    router.push("/product-library/product-template");
+  };
 
   useEffect(() => {
     if (state?.success) {
@@ -125,7 +143,47 @@ const ProductTemplateForm = ({ type, data }) => {
         </Select>
         {errors.category && <p className="text-red-500 text-xs">{errors.category.message}</p>}
       </div>
+   
+      <div>
+        <label className="text-sm font-medium">Current Image</label>
+        {imagePreview && (
+          <div className="mb-4 relative">
+            <img
+              src={imagePreview}
+              alt="Preview"
+              className="w-32 h-32 object-cover border border-gray-300 rounded"
+            />
+            <button
+              type="button"
+              onClick={handleRemoveImage}
+              className="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full"
+            >
+              ✕
+            </button>
+          </div>
+        )}
+      </div>
 
+<<<<<<< HEAD
+=======
+      <div>
+        <label className="text-sm font-medium">Upload New Image</label>
+        <CldUploadWidget
+          uploadPreset="gurugoutam"
+          onSuccess={handleImageUpload}
+        >
+          {({ open }) => (
+            <div
+              className="text-xs text-gray-500 flex items-center gap-2 cursor-pointer"
+              onClick={() => open()}
+            >
+              <Image src="/upload.png" alt="Upload Icon" width={28} height={28} />
+              <span>Click Here</span>
+            </div>
+          )}
+        </CldUploadWidget>
+      </div>
+>>>>>>> ecb30855f65813289dcba54968599ac549402496
 
       <div className="mb-4">
         <label className="text-sm font-medium">Product Name</label>
@@ -216,6 +274,19 @@ const ProductTemplateForm = ({ type, data }) => {
 </form>
 
 
+<<<<<<< HEAD
+=======
+      <div className="col-span-2 flex justify-end">
+      <Button
+          variant="outline"
+          onClick={handleCancel}
+        >
+          Cancel
+        </Button>
+        <Button type="submit" className="bg-blue-500 text-white mx-2">{type === "create" ? "Create" : "Update"}</Button>
+      </div>
+    </form>
+>>>>>>> ecb30855f65813289dcba54968599ac549402496
   );
 };
 

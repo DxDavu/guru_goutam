@@ -25,11 +25,17 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
+    "formidable": "^3.5.2",
     "lucide-react": "^0.453.0",
     "mongodb": "^6.9.0",
     "mongoose": "^8.7.0",
     "multer": "^1.4.5-lts.1",
+<<<<<<< HEAD
     "next": "^15.0.3",
+=======
+    "next": "14.2.13",
+    "next-cloudinary": "^6.16.0",
+>>>>>>> ecb30855f65813289dcba54968599ac549402496
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.53.1",
