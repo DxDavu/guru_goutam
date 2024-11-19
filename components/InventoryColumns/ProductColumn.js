@@ -1,18 +1,3 @@
-"use client";
-
-import { MoreHorizontal } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { deleteProduct } from '@/actions/Inventory/productActions';
-import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
-import { useState } from "react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
 // export const columns = [
 //   // { accessorKey: "image", header: "Product Image " },
@@ -96,8 +81,47 @@ import {
 //   },
 // ];
 
+"use client";
 
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import { Button } from "@/components/ui/button";
+import { MoreHorizontal } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { deleteProduct } from "@/actions/Inventory/productActions";
 
+// Helper function to format specifications into a human-readable string
+const formatSpecificationsToString = (specifications) => {
+  return Object.entries(specifications || {})
+    .map(([key, spec]) => {
+      if (!spec || typeof spec !== "object") return `${key.toUpperCase()}: N/A`;
+
+      // Convert ObjectId to string if it's an ObjectId
+      const type = spec.type && (typeof spec.type === "string" || typeof spec.type === "number") 
+                    ? spec.type 
+                    : "N/A";
+      const brand = spec.brand && (typeof spec.brand === "string" || typeof spec.brand === "number") 
+                    ? spec.brand 
+                    : "N/A";
+
+      // Handle MongoDB ObjectIds by converting them to strings using .toString()
+      const formattedType = spec.type instanceof Object && spec.type.toString ? spec.type.toString() : type;
+      const formattedBrand = spec.brand instanceof Object && spec.brand.toString ? spec.brand.toString() : brand;
+
+      return `${key.toUpperCase()}: ${formattedType} - ${formattedBrand}`;
+    })
+    .join(", ");
+};
+
+// Columns definition
+// Columns definition (remains the same)
 export const columns = [
   {
     id: "sl_no",
@@ -117,25 +141,11 @@ export const columns = [
     header: "Specifications",
     cell: ({ row }) => {
       const specs = row.original.specifications;
-
-      if (!specs) {
-        return <div>No specifications available</div>;
-      }
-
-      // Convert ObjectId to string if needed (you can do this conversion in backend too)
-      const specifications = [
-        `RAM: ${specs.ram?.type?.name || 'N/A'} ${specs.ram?.brand?.name || 'N/A'}`,
-        `Processor: ${specs.processor?.type?.name || 'N/A'} ${specs.processor?.brand?.name || 'N/A'}`,
-        `Storage: ${specs.storage?.type?.name || 'N/A'} ${specs.storage?.brand?.name || 'N/A'}`,
-        `Graphics: ${specs.graphics?.type?.name || 'N/A'} ${specs.graphics?.brand?.name || 'N/A'}`,
-        `OS: ${specs.os?.type?.name || 'N/A'} ${specs.os?.brand?.name || 'N/A'}`,
-      ];
+      if (!specs) return <span>N/A</span>;
 
       return (
-        <div>
-          {specifications.map((spec, index) => (
-            <div key={index}>{spec}</div>
-          ))}
+        <div className="text-sm text-gray-700">
+          {formatSpecificationsToString(specs)}
         </div>
       );
     },
@@ -171,8 +181,9 @@ export const columns = [
           await deleteProduct(row.original._id);
           toast.success("Product deleted successfully!");
           setIsDeleteConfirmOpen(false);
-          router.refresh();
-        } catch {
+          router.push(router.asPath); // Refresh the page
+        } catch (error) {
+          console.error("Error deleting product:", error);
           toast.error("Failed to delete product.");
         }
       };
@@ -210,12 +221,6 @@ export const columns = [
 ];
 
 
-
-
-
-
-
-
 // Component to render the "Create New Product" button
 export const CreateNewProductButton = () => {
   const router = useRouter();
@@ -224,6 +229,18 @@ export const CreateNewProductButton = () => {
       <Button className="bg-blue-500 text-white" onClick={() => router.push("/inventory/products/new")}>
         Create New Product
       </Button>
+    </div>
+  );
+};
+
+// Component for displaying specifications as a standalone section
+export const SpecificationDisplay = ({ specifications }) => {
+  const specificationsString = formatSpecificationsToString(specifications);
+
+  return (
+    <div className="bg-gray-50 p-6 border rounded-lg shadow-lg w-full md:w-1/3">
+      <h3 className="text-lg font-semibold mb-4">Specifications</h3>
+      <p>{specificationsString}</p>
     </div>
   );
 };

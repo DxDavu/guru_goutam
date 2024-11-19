@@ -7,6 +7,7 @@ import {columns,CreateNewProductButton} from '@/components/InventoryColumns/Prod
 
 export default async function ProductPage() {
   const products = await getProducts();
+  console.log(products)
 
   return (
     <div className="bg-white p-1 rounded-md mt-0 flex-1">

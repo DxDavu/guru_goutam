@@ -43,7 +43,7 @@ const schema = z.object({
 const ProductForm = ({ type, data }) => {
   const router = useRouter();
   const [categories, setCategories] = useState([]);
-  const [specifications,setSpecifications]=useState();
+  const [specifications, setSpecifications] = useState();
   const [brands, setBrands] = useState([]);
   const [variants, setVariants] = useState([]);
 
@@ -60,7 +60,7 @@ const ProductForm = ({ type, data }) => {
 
   useEffect(() => {
     async function fetchOptions() {
-      const [categoriesData, brandsData, variantsData,specifications] = await Promise.all([
+      const [categoriesData, brandsData, variantsData, specifications] = await Promise.all([
         getActiveProductCategories(),
         getActiveBrands(),
         getActiveItemVariants(),
@@ -83,6 +83,7 @@ const ProductForm = ({ type, data }) => {
   }, [data, reset]);
 
   const onSubmit = handleSubmit(async (formData) => {
+    console.log(formData, "formdata")
     try {
       await formAction({ ...formData, /* image: imagePath, */ id: data?._id });
     } catch (error) {
@@ -99,7 +100,7 @@ const ProductForm = ({ type, data }) => {
       toast.error(state.message);
     }
   }, [state, router, type]);
-
+  console.log(onSubmit, "shaaaaaaa")
   return (
     <form onSubmit={onSubmit} className="w-full max-w-screen-2xl mx-auto p-8 bg-white shadow-md rounded-lg">
       <h1 className="text-xl font-semibold">
@@ -126,7 +127,7 @@ const ProductForm = ({ type, data }) => {
           </div>
 
 
-    
+
 
 
           <div className="mb-4">
@@ -190,60 +191,54 @@ const ProductForm = ({ type, data }) => {
 
 
         <div className="bg-gray-50 p-6 border rounded-lg shadow-lg w-full md:w-1/3">
-  <h3 className="text-lg font-semibold mb-4">Specifications</h3>
-  {["ram", "processor", "storage", "graphics", "os"].map((spec) => (
-    <div key={spec} className="mb-4">
-      <label className="text-sm font-medium capitalize">{spec}</label>
-      <div className="flex space-x-4 mt-1">
-        <Select
-          onValueChange={(value) => setValue(`specifications.${spec}.brand`, value)}
-          value={watch(`specifications.${spec}.brand`) || ""}
-        >
-          <SelectTrigger className="w-full max-w-xs border border-gray-300 rounded-md p-2">
-            <SelectValue placeholder="Select Brand" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              {brands.map((brand) => (
-                <SelectItem key={brand._id} value={brand._id.toString()}>
-                  {brand.brand_name}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-        <Select
-          onValueChange={(value) => setValue(`specifications.${spec}.type`, value)}
-          value={watch(`specifications.${spec}.type`) || ""}
-        >
-          <SelectTrigger className="w-full max-w-xs border border-gray-300 rounded-md p-2">
-            <SelectValue placeholder="Select Type" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              {variants.map((variant) => (
-                <SelectItem key={variant._id} value={variant._id.toString()}>
-                  {variant.type}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-      </div>
-      {errors.specifications?.[spec] && (
-        <p className="text-red-500 text-xs">
-          {errors.specifications[spec].message}
-        </p>
-      )}
-    </div>
-  ))}
-</div>
-
-
-
-
-
-
+          <h3 className="text-lg font-semibold mb-4">Specifications</h3>
+          {["ram", "processor", "storage", "graphics", "os"].map((spec) => (
+            <div key={spec} className="mb-4">
+              <label className="text-sm font-medium capitalize">{spec}</label>
+              <div className="flex space-x-4 mt-1">
+                <Select
+                  onValueChange={(value) => setValue(`specifications.${spec}.brand`, value)}
+                  value={watch(`specifications.${spec}.brand`) || ""}
+                >
+                  <SelectTrigger className="w-full max-w-xs border border-gray-300 rounded-md p-2">
+                    <SelectValue placeholder="Select Brand" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {brands.map((brand) => (
+                        <SelectItem key={brand._id} value={brand._id.toString()}>
+                          {brand.brand_name}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+                <Select
+                  onValueChange={(value) => setValue(`specifications.${spec}.type`, value)}
+                  value={watch(`specifications.${spec}.type`) || ""}
+                >
+                  <SelectTrigger className="w-full max-w-xs border border-gray-300 rounded-md p-2">
+                    <SelectValue placeholder="Select Type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {variants.map((variant) => (
+                        <SelectItem key={variant._id} value={variant._id.toString()}>
+                          {variant.type}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+              {errors.specifications?.[spec] && (
+                <p className="text-red-500 text-xs">
+                  {errors.specifications[spec].message}
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
 
 
 
