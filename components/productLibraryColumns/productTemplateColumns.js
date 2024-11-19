@@ -32,12 +32,12 @@ export const columns = [
   {
     accessorKey: "category",
     header: "Category",
-    cell: ({ row }) => row.original.category?.category_name || "N/A",
+    cell: ({ row }) => row.original.category || "N/A",
   },
   {
     accessorKey: "brand",
     header: "Brand",
-    cell: ({ row }) => row.original.brand?.brand_name || "N/A",
+    cell: ({ row }) => row.original.brand || "N/A",
   },
   {
     accessorKey: "description",
@@ -103,7 +103,8 @@ export const columns = [
           toast.error("Failed to delete product template.");
         }
       };
-
+       
+       
       return (
         <>
           <DropdownMenu>
