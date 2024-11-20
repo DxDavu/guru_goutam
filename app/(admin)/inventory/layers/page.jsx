@@ -7,9 +7,8 @@ import { FaCube  ,
 } from "react-icons/fa";
 
 const sidebarLinks= [
-    {name: 'Products' , href:'/inventory/products' , icon:< FaCube/>},
-    {name: 'Layers' , href:'/inventory/layers' , icon:< FaCube/>},
-    // {name: 'Group' , href:'/inventory/group' , icon:< FaGroupArrowsRotate  />}
+    {name: 'Layer1' , href:'/inventory/layer1' , icon:< FaCube/>},
+    {name: 'Layer2' , href:'/inventory/layer2' , icon:< FaCube/>},
 ]
 
 

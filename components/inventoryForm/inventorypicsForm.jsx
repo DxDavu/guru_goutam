@@ -8,7 +8,6 @@ import { FaCube  ,
 
 const sidebarLinks= [
     {name: 'Products' , href:'/inventory/products' , icon:< FaCube/>},
-    {name: 'Layers' , href:'/inventory/layers' , icon:< FaCube/>},
     // {name: 'Group' , href:'/inventory/group' , icon:< FaGroupArrowsRotate  />}
 ]
 
