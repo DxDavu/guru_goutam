@@ -1,12 +1,10 @@
-// @/components/columns/productColumns.js
-
 "use client";
 
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { deleteProduct } from '@/actions/inventory/productActions';
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+
 import { useState } from "react";
 import {
   DropdownMenu,
@@ -15,27 +13,72 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { deleteProduct } from "@/actions/inventory/productActions";
 
 export const columns = [
-  { id: "sl_no", header: "Sl. No", cell: ({ row }) => row.index + 1 },
   {
-    accessorKey: "group_image",
-    header: "Image",
+    accessorKey: "z",
+    header: "Product Image",
     cell: ({ row }) => (
-      <img
-        src={row.original.group_image || "/download.jpg"} // Use a default image if group_image is not provided
-        alt={row.original.group_name}
-        className="w-12 h-12 object-cover" // Customize the class for image styling
-      />
+      row.index +1,
+      <div className="flex justify-center">
+        <img
+          src={row.original.image || "/avatar.png"} // Placeholder if no image
+          alt="Product"
+          className="w-16 h-16 object-cover border rounded"
+        />
+      </div>
     ),
   },
-  { accessorKey: "supplier_name", header: "Supplier Name" },
-  { accessorKey: "supplier_mail", header: "Supplier Email" },
-  { accessorKey: "total_price", header: "Total Price" },
+  // {
+  //   id: "sl_no",
+  //   header: "Sl. No",
+  //   cell: ({ row }) => row.index + 1,
+  // },
+  {
+    accessorKey: "product_name",
+    header: "Product Name",
+  },
+  {
+    accessorKey: "product_qty",
+    header: "Product QTY",
+  },
+
+  {
+    accessorKey: "category",
+    header: "Category",
+  },
+  {
+    accessorKey: "brand",
+    header: "Brand",
+  },
+  {
+    id: "specifications",
+    header: "Specifications",
+    cell: ({ row }) => {
+      const specs = row.original.specifications || {};
+      return (
+        <ul className="text-sm">
+          {Object.entries(specs).map(([key, spec]) => (
+            <li key={key}>
+              <strong className="capitalize">{key}:</strong>{" "}
+              {spec?.brand?.brand_name || "N/A"} - {spec?.type?.type || "N/A"}
+            </li>
+          ))}
+        </ul>
+      );
+    },
+  },
+  {
+    accessorKey: "purchase_price",
+    header: "Purchase Price",
+  },
   {
     accessorKey: "active_status",
     header: "Status",
-    cell: ({ row }) => <span>{row.original.active_status ? "Active" : "Inactive"}</span>,
+    cell: ({ row }) => (
+      <span>{row.original.active_status ? "Active" : "Inactive"}</span>
+    ),
   },
   {
     id: "actions",
@@ -49,8 +92,9 @@ export const columns = [
           await deleteProduct(row.original._id);
           toast.success("Product deleted successfully!");
           setIsDeleteConfirmOpen(false);
-          router.refresh();
-        } catch {
+          router.push(router.asPath); // Refresh the page
+        } catch (error) {
+          console.error("Error deleting product:", error);
           toast.error("Failed to delete product.");
         }
       };
@@ -86,6 +130,7 @@ export const columns = [
     },
   },
 ];
+
 
 // Component to render the "Create New Product" button
 export const CreateNewProductButton = () => {

@@ -57,7 +57,6 @@ const ProductTemplateForm = ({ type, data }) => {
   const [brands, setBrands] = useState([]);
   const [variants, setVariants] = useState([]);
   const [imagePreview, setImagePreview] = useState(data?.image || null);
-  const [tempImg, setTempImg] = useState(null);
   const [img, setImg] = useState(null);
 
   const {
@@ -147,7 +146,6 @@ const ProductTemplateForm = ({ type, data }) => {
     }
   }, [state, router, type]);
 
-
   return (
     <form
       onSubmit={onSubmit}
@@ -186,47 +184,61 @@ const ProductTemplateForm = ({ type, data }) => {
             )}
           </div>
 
-          <div>
-            <label className="text-sm font-medium mb-4">Current Image</label>
-            {imagePreview && (
-              <div className="mb-4 relative">
-                <img
-                  src={imagePreview}
-                  alt="Preview"
-                  className="w-32 h-32 object-cover border border-gray-300 rounded"
-                />
-                <button
-                  type="button"
-                  onClick={handleRemoveImage}
-                  className="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full"
-                >
-                  ✕
-                </button>
-              </div>
-            )}
-          </div>
-
-          <div>
-            <label className="text-sm font-medium">Upload New Image</label>
-            <CldUploadWidget
-              uploadPreset="gurugoutam"
-              onSuccess={handleImageUpload}
-            >
-              {({ open }) => (
-                <div
-                  className="text-xs text-gray-500 flex items-center gap-2 cursor-pointer"
-                  onClick={() => open()}
-                >
-                  <Image
-                    src="/upload.png"
-                    alt="Upload Icon"
-                    width={28}
-                    height={28}
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Upload Product Image
+            </label>
+            <div className="flex items-center gap-4">
+              {/* Image Preview Section */}
+              {imagePreview ? (
+                <div className="relative">
+                  <img
+                    src={imagePreview}
+                    alt="Preview"
+                    className="w-24 h-24 object-cover rounded-lg border border-gray-300 shadow-sm"
                   />
-                  <span>Click Here</span>
+                  <button
+                    type="button"
+                    onClick={handleRemoveImage}
+                    className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full shadow hover:bg-red-600"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ) : (
+                <div className="w-24 h-24 bg-gray-100 flex items-center justify-center rounded-lg border border-dashed border-gray-300">
+                  <span className="text-xs text-gray-500">
+                    {" "}
+                    <Image
+                      src="/upload.png"
+                      alt="Upload Icon"
+                      width={28}
+                      height={28}
+                    />
+                  </span>
                 </div>
               )}
-            </CldUploadWidget>
+
+              {/* Upload Button */}
+              <CldUploadWidget
+                uploadPreset="gurugoutam"
+                onSuccess={handleImageUpload}
+              >
+                {({ open }) => (
+                  <button
+                    type="button"
+                    onClick={() => open()}
+                    className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  >
+                    Upload Image
+                  </button>
+                )}
+              </CldUploadWidget>
+            </div>
+            {/* Helper Text */}
+            <p className="mt-2 text-xs text-gray-500">
+              Supported formats: JPG, PNG (max size: 2MB)
+            </p>
           </div>
 
           <div>

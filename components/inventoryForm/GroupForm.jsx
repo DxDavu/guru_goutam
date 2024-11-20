@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { createGroup, updateGroup } from "@/actions/inventory/groupActions";
 import axios from 'axios';
 
+
 const schema = z.object({
   group_name: z.string().nonempty("Group Name is required!"),
   description: z.string().optional(),
@@ -85,10 +86,10 @@ const GroupForm = ({ type, data }) => {
         {errors.description && <p className="text-red-500 text-xs">{errors.description.message}</p>}
       </div>
 
-      <div className="col-span-2">
+      {/* <div className="col-span-2">
         <label className="text-sm font-medium">Image</label>
         <input type="file" {...register("image")} accept="image/*" />
-      </div>
+      </div> */}
 
       <div className="flex items-center gap-2 col-span-2">
         <Checkbox checked={watch("active_status")} onCheckedChange={(checked) => setValue("active_status", checked)} />

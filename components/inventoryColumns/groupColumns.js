@@ -81,20 +81,23 @@ const Actions = ({ row }) => {
 
 export const columns = [
   { id: "sl_no", header: "Sl. No", cell: ({ row }) => row.index + 1 },
-  {
-    accessorKey: "group_image",
-    header: "Image",
-    cell: ({ row }) => (
-      <img
-        src={row.original.group_image || "/download.jpg"} // Use a default image if group_image is not provided
-        alt={row.original.group_name}
-        className="w-12 h-12 object-cover" // Customize the class for image styling
-      />
-    ),
-  },
+  // {
+  //   accessorKey: "image",
+  //   header: "Image",
+  //   cell: ({ row }) => (
+  //     row.index +1,
+  //     <div className="flex justify-center">
+  //     <img
+  //       src={row.original.image || "/avatar.png"} // Placeholder if no image
+  //       alt="Product"
+  //       className="w-16 h-16 object-cover border rounded"
+  //     />
+  //   </div>
+  //   ),
+  // },
   { accessorKey: "group_name", header: "Group Name" },
   { accessorKey: "description", header: "Description" },
-  { accessorKey: "category", header: "Category" },
+  { accessorKey: "category", header: "Product Quantity" },
   {
     accessorKey: "active_status",
     header: "Status",
