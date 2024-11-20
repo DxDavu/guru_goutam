@@ -147,6 +147,7 @@ const ProductTemplateForm = ({ type, data }) => {
     }
   }, [state, router, type]);
 
+
   return (
     <form
       onSubmit={onSubmit}

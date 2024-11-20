@@ -45,6 +45,8 @@ export const getProductTemplates = async () => {
     .populate("specifications.os.brand", "brand_name")
     .populate("specifications.os.type", "type")
     .lean();
+    
+    
   return templates.map(template => ({
     ...template,
     _id: template._id.toString(),
