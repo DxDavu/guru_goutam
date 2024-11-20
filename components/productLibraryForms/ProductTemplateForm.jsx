@@ -187,7 +187,7 @@ const ProductTemplateForm = ({ type, data }) => {
           </div>
 
           <div>
-            <label className="text-sm font-medium">Current Image</label>
+            <label className="text-sm font-medium mb-4">Current Image</label>
             {imagePreview && (
               <div className="mb-4 relative">
                 <img
@@ -230,7 +230,7 @@ const ProductTemplateForm = ({ type, data }) => {
           </div>
 
           <div>
-            <label className="text-sm font-medium">Product Name</label>
+            <label className="text-sm font-medium mt-4">Product Name</label>
             <Input
               {...register("product_name")}
               placeholder="Enter Product Name"
