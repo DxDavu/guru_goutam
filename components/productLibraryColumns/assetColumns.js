@@ -35,6 +35,24 @@ const ActionsCellContent = ({ row, onDelete }) => {
   const userPermissions = useUserPermissions();
   const canEdit = checkPermissions(userPermissions, "Asset", "can_edit");
   const canDelete = checkPermissions(userPermissions, "Asset", "can_delete");
+export const columns = [
+  { id: "sl_no", header: "Sl. No", cell: ({ row}) => row.index + 1 },
+  { accessorKey: "item_name", header: "Item Name" },
+  { accessorKey: "item_type", header: "Item Type" },
+  { accessorKey: "brand", header: "Brand" },
+  { accessorKey: "price", header: "Price" },
+  { accessorKey: "date", header: "Date" },
+  { accessorKey: "warranty", header: "Warranty" },
+  { accessorKey: "warranty_time", header: "Warranty Time" },
+  { accessorKey: "active_status", header: "Status", cell: ({ row }) => <span>{row.original.active_status ? "Active" : "Inactive"}</span> },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      const router = useRouter();
+      const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+      const userPermissions = useUserPermissions();
+      const canEdit = checkPermissions(userPermissions, "Asset", "can_edit");
+      const canDelete = checkPermissions(userPermissions, "Asset", "can_delete");
 
   const onEdit = () => {
     router.push(`/product-library/assets/${row.original._id}`);

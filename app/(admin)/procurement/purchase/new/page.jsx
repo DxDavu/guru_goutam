@@ -1,6 +1,6 @@
 "use client";
 
-import PurchaseRequestForm from "@/components/procurementForm/purchaseRequestForm";
+import PurchaseRequestForm from "@/components/procurementForm/purchaseForm";
 
 export default function NewPrPage() {
   return (

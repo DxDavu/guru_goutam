@@ -1,6 +1,7 @@
 // @/app/(admin)/settings/lead-status/page.jsx
 
 
+"use server";
 
 import { getLeadStatuses } from "@/actions/settings/leadStatusActions";
 import { DataTable } from "@/components/DataTable";

@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import PurchaseRequestForm from "@/components/procurementForm/purchaseForm";
-import { getPurchaseById } from '@/actions/procurement/purchaseAction';
+import PoQuotationForm from "@/components/procurementForm/po_quotationForm";
+import { getPoQuotationById } from '@/actions/procurement/po_quotationAction';
 import { useRouter } from "next/navigation";
 
 export default function EditPrPage({ params }) {
@@ -12,7 +12,7 @@ export default function EditPrPage({ params }) {
 
   useEffect(() => {
     async function fetchPurchase() {
-      const purchase = await getPurchaseById(id);
+      const purchase = await getPoQuotationById(id);
       setPurchaseData(purchase);
       setLoading(false);
     }
@@ -23,7 +23,7 @@ export default function EditPrPage({ params }) {
 
   return (
     <div>
-<PurchaseRequestForm type="edit" data={purchaseData} />
+<PoQuotationForm type="edit" data={purchaseData} />
 </div>
   );
 }

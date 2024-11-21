@@ -1,7 +1,7 @@
 // @/components/DataTable.js
 
-"use client";
-import * as React from "react";
+"use client"
+import * as React from "react"
 import {
   flexRender,
   getCoreRowModel,
@@ -9,7 +9,7 @@ import {
   getSortedRowModel,
   useReactTable,
   getFilteredRowModel,
-} from "@tanstack/react-table";
+} from "@tanstack/react-table"
 
 import {
   Table,
@@ -18,7 +18,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/components/ui/table"
 import { Button } from "./ui/button";
 import { Input } from "@/components/ui/input"
 
@@ -43,13 +43,11 @@ export function DataTable ({
     onSortingChange: setSorting,
     onGlobalFilterChange: setGlobalFilter,
     globalFilterFn: "includesString", // You can customize the filter function here
-  });
+  })
 
   return (
-    <div className="bg-[#F2F4F0]">
-      {" "}
-      {/* Overall background color */}
-      <div className="flex items-center py-2 px-4">
+    <div>
+      <div className="flex items-center py-1">
         <Input
           placeholder="Filter key fields"
           value={globalFilter ?? ""}
@@ -57,13 +55,9 @@ export function DataTable ({
           className="max-w-sm"
         />
       </div>
-      <div className="rounded-md border border-gray-300 overflow-hidden">
-        <Table className="min-w-full bg-white">
-          <TableHeader
-            className="border-b border-gray-300 bg-[#EAEAEA]"
-          >
-            {" "}
-            {/* Header background color with border */}
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
