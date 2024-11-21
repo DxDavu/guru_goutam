@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { useForm } from "react-hook-form";
@@ -316,4 +317,6 @@ const ProductForm = ({ type, data }) => {
   );
 };
 
-export default ProductForm;
+export default ProductForm;    
+
+

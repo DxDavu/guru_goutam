@@ -8,7 +8,7 @@ import { FaCube  ,
 
 const sidebarLinks= [
     {name: 'Products' , href:'/inventory/products' , icon:< FaCube/>},
-    {name: 'Layers' , href:'/inventory/layer' , icon:< FaCube/>},
+    // {name: 'Layers' , href:'/inventory/layer' , icon:< FaCube/>},
 ]
 
 
