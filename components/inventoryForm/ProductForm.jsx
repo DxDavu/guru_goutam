@@ -62,7 +62,6 @@ const ProductForm = ({ type, data }) => {
   const [brands, setBrands] = useState([]);
   const [variants, setVariants] = useState([]);
   const [imagePreview, setImagePreview] = useState(data?.image || null);
-  const [tempImg, setTempImg] = useState(null);
   const [img, setImg] = useState(null);
 
   const {

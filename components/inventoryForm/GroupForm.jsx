@@ -41,7 +41,7 @@ const GroupForm = ({ type, data }) => {
       if (file) {
         const uploadData = new FormData();
         uploadData.append('image', file);
-            console.log(uploadData,"sammmm");
+          
             
         const res = await axios.post('/api/upload', uploadData, {
           headers: {
@@ -59,7 +59,6 @@ const GroupForm = ({ type, data }) => {
         await updateGroup({ ...formData, id: data?._id, group_image: filePath || data?.group_image });
       }
 
-      console.log('File path after upload hello.............:', filePath);
 
 
       toast.success(`Group ${type === "create" ? "created" : "updated"} successfully!`);
@@ -85,11 +84,6 @@ const GroupForm = ({ type, data }) => {
         <Input {...register("description")} placeholder="Enter Description" />
         {errors.description && <p className="text-red-500 text-xs">{errors.description.message}</p>}
       </div>
-
-      {/* <div className="col-span-2">
-        <label className="text-sm font-medium">Image</label>
-        <input type="file" {...register("image")} accept="image/*" />
-      </div> */}
 
       <div className="flex items-center gap-2 col-span-2">
         <Checkbox checked={watch("active_status")} onCheckedChange={(checked) => setValue("active_status", checked)} />
