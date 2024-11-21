@@ -1,15 +1,14 @@
 'use client';
 import Link from 'next/link';
 import {useState} from  'react';
-import { FaCartPlus   ,FaRegNewspaper ,
-    FaAlipay   
+import { FaCube  ,
+    FaGroupArrowsRotate  
 
 } from "react-icons/fa";
 
 const sidebarLinks= [
-    {name: 'Purchase_request' , href:'/procurement/purchase' , icon:< FaCartPlus/>},
-    {name: 'PO Quotation' , href:'/procurement/po_quotation' , icon:< FaRegNewspaper />},
-    // {name: 'Group' , href:'/inventory/group' , icon:< FaGroupArrowsRotate  />}
+    {name: 'Layer1' , href:'/inventory/layer1' , icon:< FaCube/>},
+    {name: 'Layer2' , href:'/inventory/layer2' , icon:< FaCube/>},
 ]
 
 

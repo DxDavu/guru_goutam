@@ -6,46 +6,49 @@ import Purchase from '@/lib/database/models/procurement/Purchase.model';
 // Get all purchase requests
 export const getPurchase = async () => {
   await connectToDatabase();
-  const purchases = await Purchase.find({}).lean();
-  return purchases.map(purchase => ({
-    ...purchase,
-    _id: purchase._id.toString(),
+  const products = await Purchase.find({}) 
+   .lean();
+   console.log(products,"data soon");
+   
+
+  console.log(products,'get data')
+  return products.map((product) => ({
+    ...product,
+    _id: product._id.toString(),  // Convert ObjectId to string
   }));
 };
 
-// Get a single purchase request by ID
+
+// Get a single product by ID
 export const getPurchaseById = async (id) => {
-  await connectToDatabase();
-  const purchase = await Purchase.findById(id).lean();
-  if (!purchase) {
-    return { success: false, error: true, message: 'Purchase details not found' };
+  try {
+    await connectToDatabase();
+    const product = await Purchase.findById(id)
+      .lean();
+    if (!product) return null;
+    return {
+      ...product,
+      _id: product._id.toString(),  // Convert ObjectId to string
+    };
+  } catch (error) {
+    console.error("Error fetching product by ID:", error);
+    throw new Error("Error fetching product: " + error.message);
   }
-  return {
-    ...purchase,
-    _id: purchase._id.toString(),
-  };
 };
 
+
 // Create a new purchase request
-export const createPurchase = async (currentState, p_requestData) => {
-  await connectToDatabase();
-
-  // Check if a similar purchase request exists based on unique constraints (optional, customize as needed)
-  const existingPurchase = await Purchase.findOne({ pr_id: p_requestData.pr_id });
-  if (existingPurchase) {
-    return { success: false, error: true, message: 'Purchase Request ID already exists' };
-  }
-
+export const createPurchase = async (currentState, templateData) => {
   try {
-    const newPurchase = new Purchase(p_requestData);
-    const savedPr = await newPurchase.save();
-    return { success: true, error: false, purchase: savedPr.toObject() };
+    await connectToDatabase();
+    const newTemplate = new Purchase(templateData);
+    const savedTemplate = await newTemplate.save();
+    return { success: true,
+       error: false, message: "Product Template created successfully",
+        template: savedTemplate.toObject() };
   } catch (error) {
-    return {
-      success: false,
-      error: true,
-      message: error.message || 'Failed to create Purchase details.',
-    };
+    console.error("Error creating product template:", error);
+    return { success: false, error: true, message: "Error creating product ." };
   }
 };
 

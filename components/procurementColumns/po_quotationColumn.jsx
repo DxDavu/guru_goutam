@@ -2,8 +2,7 @@
 
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { deletePurchase } from '@/actions/procurement/purchaseAction';
-deletePurchase
+import { deletePoQuotation } from '@/actions/procurement/po_quotationAction';
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useState } from "react";
@@ -17,12 +16,12 @@ import {
 
 
 export const columns = [
-  { accessorKey: "pr_id", header: "PR ID" },
-  { accessorKey: "pr_date", header: "PR Date" },
-  { accessorKey: "pr_owner", header: "Owner" },
+  { accessorKey: "quotation_id", header: "PR ID" },
+  { accessorKey: "quotation_date", header: "PR Date" },
+  { accessorKey: "quote_owner", header: "Owner" },
   { accessorKey: "supplier", header: "Supplier" },
-  { accessorKey: "total_product_qty", header: "Total Product QTY" },
-  { accessorKey: "approve_status", header: "Approve Status" },
+  { accessorKey: "phone_number", header: "Total Product QTY" },
+  { accessorKey: "purchase_price", header: "Total Product QTY" },
   {
     accessorKey: "move_to_next",
     header: "Move to Next",
@@ -35,9 +34,9 @@ export const columns = [
           <Button
             variant="solid"
             className="bg-blue-500 text-white hover:bg-blue-600"
-            onClick={() => router.push("/procurement/po_quotation/new")}
+            onClick={() => router.push("/procurement/purchase_order")}
           >
-            Add po quotation 
+            Add purchase orders 
           </Button>
         </div>
       );
@@ -54,10 +53,10 @@ export const columns = [
       const router = useRouter();
       const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
 
-      const onEdit = () => router.push(`/procurement/purchase/${row.original._id}`);
+      const onEdit = () => router.push(`/procurement/po_quotation/${row.original._id}`);
       const onDelete = async () => {
         try {
-          await deletePurchase(row.original._id);
+          await deletePoQuotation(row.original._id);
           toast.success("Purchase deleted successfully!");
           setIsDeleteConfirmOpen(false);
           router.refresh();
@@ -99,11 +98,11 @@ export const columns = [
 ];
 
 
-export const CreateNewPrButton = () => {
+export const CreateNewQuotationButton = () => {
   const router = useRouter();
   return (
     <div className="flex justify-end mb-1">
-      <Button className="bg-blue-500 text-white" onClick={() => router.push("/procurement/purchase/new")}>
+      <Button className="bg-blue-500 text-white" onClick={() => router.push("/procurement/po_quotation/new")}>
         Create New PR
       </Button>
     </div>

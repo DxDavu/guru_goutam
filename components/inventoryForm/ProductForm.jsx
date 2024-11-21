@@ -13,8 +13,11 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { createProduct, updateProduct, getActiveProductCategories, getActiveBrands, getActiveItemVariants } from "@/actions/Inventory/productActions";
 import { useFormState } from "react-dom";
+import { CldUploadWidget } from 'next-cloudinary';
+import Image from "next/image";
 
-// Schema for validation
+const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL || "http://localhost:3000";
+
 
 const schema = z.object({
   product_name: z.string().nonempty("Product Name is required!"),
@@ -22,6 +25,7 @@ const schema = z.object({
     .number()
     .positive("Product Qty must be a positive number!")
     .or(z.undefined().nullable()),
+    image: z.any().optional(), // Comment out image schema validation,
 
   purchase_price: z
     .number()
@@ -31,6 +35,8 @@ const schema = z.object({
   category: z.string().nonempty("Category is required!"),
   brand: z.string().nonempty("Brand is required!"),
   active_status: z.boolean().default(true),
+  image: z.any().optional(), // Comment out image schema validation
+
   specifications: z.object({
     ram: z.object({ brand: z.string(), type: z.string() }).optional(),
     processor: z.object({ brand: z.string(), type: z.string() }).optional(),
@@ -43,9 +49,13 @@ const schema = z.object({
 const ProductForm = ({ type, data }) => {
   const router = useRouter();
   const [categories, setCategories] = useState([]);
-  const [specifications, setSpecifications] = useState();
   const [brands, setBrands] = useState([]);
   const [variants, setVariants] = useState([]);
+  const [imagePreview, setImagePreview] = useState(data?.image || null);
+  const [tempImg, setTempImg] = useState(null);
+  const [img, setImg] = useState(null);
+
+
 
   const { register, handleSubmit, setValue, watch, reset, formState: { errors } } = useForm({
     resolver: zodResolver(schema),
@@ -60,21 +70,20 @@ const ProductForm = ({ type, data }) => {
 
   useEffect(() => {
     async function fetchOptions() {
-      const [categoriesData, brandsData, variantsData, specifications] = await Promise.all([
+      const [categoriesData, brandsData, variantsData] = await Promise.all([
         getActiveProductCategories(),
         getActiveBrands(),
         getActiveItemVariants(),
       ]);
       setCategories(categoriesData);
-      setSpecifications(specifications);
       setBrands(brandsData);
       setVariants(variantsData);
 
       if (data) {
         reset({
           ...data,
-          category: data.category?._id,
-          brand: data.brand?._id,
+          category: data.category?._id.toString(),
+          brand: data.brand?._id.toString(),
           specifications: data.specifications || {}
         });
       }
@@ -83,24 +92,49 @@ const ProductForm = ({ type, data }) => {
   }, [data, reset]);
 
   const onSubmit = handleSubmit(async (formData) => {
-    console.log(formData, "formdata")
     try {
-      await formAction({ ...formData, /* image: imagePath, */ id: data?._id });
+      console.log(img);
+      // Send plain data to the server action
+      const plainData = {
+        ...formData,
+        image: img?.secure_url || data?.image,
+        id: data?._id,
+      };
+
+      await formAction(plainData);
     } catch (error) {
       console.error(error.message || "An unexpected error occurred.");
+      toast.error(error.message || "An unexpected error occurred.");
     }
   });
 
+  const handleImageUpload = (result) => {
+    setImg(result.info); // Save the uploaded image info
+    setImagePreview(result.info.secure_url); // Update the preview with the new image
+  };
+
+  const handleRemoveImage = () => {
+    setImg(null);
+    setImagePreview(data?.image || null);
+  };
+
+  const handleCancel = () => {
+    setImg(null); // Reset temp image
+    setImagePreview(data?.image || null); // Reset preview
+    router.push("/inventory/products");
+  };
+
   useEffect(() => {
     if (state?.success) {
-      toast.success(`Product  ${type === "create" ? "created" : "updated"} successfully!`);
+      toast.success(`Product Template ${type === "create" ? "created" : "updated"} successfully!`);
       router.push("/inventory/products");
       router.refresh();
     } else if (state?.error) {
       toast.error(state.message);
     }
   }, [state, router, type]);
-  console.log(onSubmit, "shaaaaaaa")
+
+  
   return (
     <form onSubmit={onSubmit} className="w-full max-w-screen-2xl mx-auto p-8 bg-white shadow-md rounded-lg">
       <h1 className="text-xl font-semibold">
@@ -126,7 +160,43 @@ const ProductForm = ({ type, data }) => {
             {errors.category && <p className="text-red-500 text-xs">{errors.category.message}</p>}
           </div>
 
+          <div className="mb-4">
+            <label className="text-sm font-medium">Current Image</label>
+            {imagePreview && (
+              <div className="mb-4 relative">
+                <img
+                  src={imagePreview}
+                  alt="Preview"
+                  className="w-32 h-32 object-cover border border-gray-300 rounded"
+                />
+                <button
+                  type="button"
+                  onClick={handleRemoveImage}
+                  className="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full"
+                >
+                  ✕
+                </button>
+              </div>
+            )}
+          </div>
 
+          <div className="mb-4">
+            <label className="text-sm font-medium">Upload New Image</label>
+            <CldUploadWidget
+              uploadPreset="gurugoutam"
+              onSuccess={handleImageUpload}
+            >
+              {({ open }) => (
+                <div
+                  className="text-xs text-gray-500 flex items-center gap-2 cursor-pointer"
+                  onClick={() => open()}
+                >
+                  <Image src="/upload.png" alt="Upload Icon" width={28} height={28} />
+                  <span>Click Here</span>
+                </div>
+              )}
+            </CldUploadWidget>
+          </div>
 
 
 
@@ -196,48 +266,25 @@ const ProductForm = ({ type, data }) => {
             <div key={spec} className="mb-4">
               <label className="text-sm font-medium capitalize">{spec}</label>
               <div className="flex space-x-4 mt-1">
-                <Select
-                  onValueChange={(value) => setValue(`specifications.${spec}.brand`, value)}
-                  value={watch(`specifications.${spec}.brand`) || ""}
-                >
-                  <SelectTrigger className="w-full max-w-xs border border-gray-300 rounded-md p-2">
-                    <SelectValue placeholder="Select Brand" />
-                  </SelectTrigger>
+                <Select onValueChange={(value) => setValue(`specifications.${spec}.brand`, value)} value={watch(`specifications.${spec}.brand`) || ""}>
+                  <SelectTrigger className="w-full max-w-xs border border-gray-300 rounded-md p-2"><SelectValue placeholder="Select Brand" /></SelectTrigger>
                   <SelectContent>
-                    <SelectGroup>
-                      {brands.map((brand) => (
-                        <SelectItem key={brand._id} value={brand._id.toString()}>
-                          {brand.brand_name}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
+                    <SelectGroup>{brands.map(brand => <SelectItem key={brand._id} value={brand._id.toString()}>{brand.brand_name}</SelectItem>)}</SelectGroup>
                   </SelectContent>
                 </Select>
-                <Select
-                  onValueChange={(value) => setValue(`specifications.${spec}.type`, value)}
-                  value={watch(`specifications.${spec}.type`) || ""}
-                >
-                  <SelectTrigger className="w-full max-w-xs border border-gray-300 rounded-md p-2">
-                    <SelectValue placeholder="Select Type" />
-                  </SelectTrigger>
+                <Select onValueChange={(value) => setValue(`specifications.${spec}.type`, value)} value={watch(`specifications.${spec}.type`) || ""}>
+                  <SelectTrigger className="w-full max-w-xs border border-gray-300 rounded-md p-2"><SelectValue placeholder="Select Type" /></SelectTrigger>
                   <SelectContent>
-                    <SelectGroup>
-                      {variants.map((variant) => (
-                        <SelectItem key={variant._id} value={variant._id.toString()}>
-                          {variant.type}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
+                    <SelectGroup>{variants.map(variant => <SelectItem key={variant._id} value={variant._id.toString()}>{variant.type}</SelectItem>)}</SelectGroup>
                   </SelectContent>
                 </Select>
               </div>
-              {errors.specifications?.[spec] && (
-                <p className="text-red-500 text-xs">
-                  {errors.specifications[spec].message}
-                </p>
-              )}
+              {errors.specifications?.[spec] && <p className="text-red-500 text-xs">{errors.specifications[spec].message}</p>}
             </div>
           ))}
+          <div className="mt-4">
+            <button type="button" className="text-blue-500 text-sm">Add Custom field</button>
+          </div>
         </div>
 
 

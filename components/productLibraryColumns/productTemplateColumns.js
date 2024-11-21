@@ -18,9 +18,10 @@ import {
 
 export const columns = [
   {
-    accessorKey: "image",
+    accessorKey: "z",
     header: "Product Image",
     cell: ({ row }) => (
+      row.index +1,
       <div className="flex justify-center">
         <img
           src={row.original.image || "/avatar.png"} // Placeholder if no image
@@ -34,12 +35,12 @@ export const columns = [
   {
     accessorKey: "category",
     header: "Category",
-    cell: ({ row }) => row.original.category?.category_name || "N/A",
+    cell: ({ row }) => row.original.category || "N/A",
   },
   {
     accessorKey: "brand",
     header: "Brand",
-    cell: ({ row }) => row.original.brand?.brand_name || "N/A",
+    cell: ({ row }) => row.original.brand|| "N/A",
   },
   {
     accessorKey: "description",
@@ -54,7 +55,7 @@ export const columns = [
     id: "specifications",
     header: "Specifications",
     cell: ({ row }) => {
-      const specs = row.original.specifications || {};
+      const specs = row.original.specifications || {}
       return (
         <ul className="text-sm">
           {Object.entries(specs).map(([key, spec]) => (
@@ -105,7 +106,7 @@ export const columns = [
           toast.error("Failed to delete product template.");
         }
       };
-
+console.log(row.origina,'hi hekkol')
       return (
         <>
           <DropdownMenu>
