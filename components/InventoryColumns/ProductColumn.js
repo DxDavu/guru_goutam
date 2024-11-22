@@ -21,7 +21,7 @@ export const columns = [
     accessorKey: "z",
     header: "Product Image",
     cell: ({ row }) => (
-      row.index +1,
+      row.index + 1,
       <div className="flex justify-center">
         <img
           src={row.original.image || "/avatar.png"} // Placeholder if no image
@@ -102,6 +102,18 @@ export const columns = [
 
       return (
         <>
+        <div className="flex col-2">
+          <div className="flex flex-col items-start">
+            <p className="text-gray-700 mb-2">{row.original.move_to_next || " "}</p>
+            <Button
+              variant="solid"
+              className="bg-blue-500 text-white hover:bg-blue-600 w-auto px-4 py-2 text-sm"
+              onClick={() => router.push("/inventory/view_product")} // Adjusted path to root level
+            >
+              View Product
+            </Button>
+          </div>
+
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
@@ -126,6 +138,7 @@ export const columns = [
               </div>
             </div>
           )}
+          </div>
         </>
       );
     },

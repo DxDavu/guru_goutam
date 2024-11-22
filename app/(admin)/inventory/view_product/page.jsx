@@ -1,17 +1,24 @@
 "use server";
 
-import { getPo } from '@/actions/procurement/purchase_orderAction';
+import { getProducts} from '@/actions/Inventory/productActions'
 import { DataTable } from "@/components/DataTable";
-import { columns, CreateNewPOButton } from '@/components/procurementColumns/purchase_orderColumn';
+import {columns} from '@/components/InventoryColumns/view_productColumn';
+
 
 export default async function ProductPage() {
-  const products = await getPo();
-  console.log(products);
+  const products = await getProducts();
+ 
 
   return (
     <div className="bg-white p-1 rounded-md mt-0 flex-1">
-      <CreateNewPOButton />
       <DataTable columns={columns} data={products} />
     </div>
   );
 }
+
+
+
+
+
+
+
