@@ -11,6 +11,7 @@ import {
   FaMapMarkerAlt,
   FaClipboardList,
   FaListAlt,
+  FaFileInvoice,
   FaTasks,
   FaClipboardCheck,
   FaFlag,
@@ -23,6 +24,7 @@ import {
 
 const sidebarLinks = [
   { name: ' Delivery Challan', href: '/operation/delivery_challan', icon: <FaUser /> },
+  { name: ' Invoice ', href: '/operation/invoice', icon: <FaFileInvoice /> },
 
 ];
 
