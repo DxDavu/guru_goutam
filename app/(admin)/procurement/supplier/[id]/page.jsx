@@ -27,3 +27,11 @@ export default function EditSupplierPage({ params }) {
 </div>
   );
 }
+
+// git checkout nizam_v8 -- path/to/procurementColumn
+
+
+
+
+
+
