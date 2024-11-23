@@ -15,6 +15,10 @@ const menuItems = [
     href: '/product-library',
   },
   {
+    label: 'Procurement',
+    href: '/procurement',
+  },
+  {
     label: 'Inventory',
     href: '/inventory',
   },

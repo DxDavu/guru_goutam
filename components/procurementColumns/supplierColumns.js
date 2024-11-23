@@ -1,45 +1,56 @@
-// @/components/productLibraryColumns/productTemplateColumns.js
+// @/components/procurementColumns/supplierColumns.js
 
 "use client";
 
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { deleteProductTemplate } from "@/actions/productLibrary/productTemplateActions";
-import { useRouter } from "next/navigation";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel } from "@/components/ui/dropdown-menu";
+import { deleteSupplier } from "@/actions/procurement/supplierActions";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
 export const columns = [
-  { id: "sl_no", header: "Sl. No", cell: ({ row, index }) => index + 1 },
-  { accessorKey: "product_name", header: "Product Name" },
-  { accessorKey: "category", header: "Category" },
-  { accessorKey: "brand", header: "Brand" },
-  { accessorKey: "active_status", header: "Status", cell: ({ row }) => <span>{row.original.active_status ? "Active" : "Inactive"}</span> },
+  { accessorKey: "supplier_id", header: "Supplier ID" },
+  { accessorKey: "supplier_name", header: "Supplier Name" },
+  { accessorKey: "website", header: "Website" },
+  { accessorKey: "email", header: "Email" },
+  { accessorKey: "telephone_1", header: "Telephone" },
+  { accessorKey: "country", header: "Country" },
+  { accessorKey: "state", header: "State" },
+  { accessorKey: "city", header: "City" },
+  {
+    accessorKey: "active_status",
+    header: "Status",
+    cell: ({ row }) => (
+      <span
+        className={`px-2 py-1 rounded ${
+          row.original.active_status ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+        }`}
+      >
+        {row.original.active_status ? "Active" : "Inactive"}
+      </span>
+    ),
+  },
   {
     id: "actions",
+    header: "Actions",
     cell: ({ row }) => {
       const router = useRouter();
       const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
 
       const onEdit = () => {
-        router.push(`/product-library/product-template/${row.original._id}`);
+        router.push(`/procurement/suppliers/${row.original._id}`);
       };
 
       const onDelete = async () => {
         try {
-          await deleteProductTemplate(row.original._id);
-          toast.success("Product Template deleted successfully!");
+          await deleteSupplier(row.original._id);
+          toast.success("Supplier deleted successfully!");
           setIsDeleteConfirmOpen(false);
           router.refresh();
         } catch {
-          toast.error("Failed to delete product template.");
+          toast.error("Failed to delete supplier.");
         }
       };
 
@@ -63,7 +74,9 @@ export const columns = [
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
               <div className="bg-white p-6 rounded-md max-w-sm mx-auto">
                 <h3 className="text-lg font-medium">Delete Confirmation</h3>
-                <p className="mt-2 text-sm">Are you sure you want to delete this product template?</p>
+                <p className="mt-2 text-sm">
+                  Are you sure you want to delete this supplier?
+                </p>
                 <div className="flex justify-end gap-4 mt-4">
                   <Button variant="outline" onClick={() => setIsDeleteConfirmOpen(false)}>
                     Cancel
@@ -81,13 +94,17 @@ export const columns = [
   },
 ];
 
-export const CreateNewProductTemplateButton = () => {
+// New Supplier Button Component
+export const CreateNewSupplierButton = () => {
   const router = useRouter();
 
   return (
-    <div className="flex justify-end mb-1">
-      <Button className="bg-blue-500 text-white" onClick={() => router.push("/product-library/product-template/new")}>
-        Create New Product Template
+    <div className="flex justify-end mb-4">
+      <Button
+        className="bg-blue-500 text-white"
+        onClick={() => router.push("/procurement/suppliers/new")}
+      >
+        + Add New Supplier
       </Button>
     </div>
   );
