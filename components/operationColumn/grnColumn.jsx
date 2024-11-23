@@ -2,7 +2,7 @@
 
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { deleteInvoice } from '@/actions/operation/invoiceAction';
+import { deleteGrn } from '@/actions/operation/grnAction';
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useState } from "react";
@@ -14,56 +14,27 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-
 export const columns = [
-    { accessorKey: "invoice_number", header: "Invoice Number" },
+    { accessorKey: "grn_number", header: "GRN Number" },
     { accessorKey: "dc_number", header: "DC Number" },
-    { accessorKey: "order_number", header: "Order Number" },
-    { accessorKey: "customer_number", header: "Customer Number" },
-    { accessorKey: "invoice_date", header: "Invoice Date" },
-    { accessorKey: "customer_name", header: "Customer Name" },
-    { accessorKey: "created_by", header: "Created By" },
-    { accessorKey: "amount", header: "Amount" },
-    // {
-    //   accessorKey: "move_to_next",
-    //   header: "Move to Next",
-    //   cell: ({ row }) => {
-    //     const router = useRouter();
-  
-    //     return (
-    //       <div className="flex flex-col items-start">
-    //         <p className="text-gray-700 mb-2">{row.original.move_to_next || " "}</p>
-    //         <Button
-    //           variant="solid"
-    //           className="bg-blue-500 text-white hover:bg-blue-600"
-    //           onClick={() => router.push("/operation/invoice")}
-    //         >
-    //           Add purchase orders
-    //         </Button>
-    //       </div>
-    //     );
-    //   },
-    // },
-    {
-      accessorKey: "active_status",
-      header: "Status",
-      cell: ({ row }) => <span>{row.original.active_status ? "Active" : "Inactive"}</span>,
-    },
+    { accessorKey: "owner_number", header: "Owner Number" },
+    { accessorKey: "date", header: "Date" },
+    { accessorKey: "company", header: "Company" },
     {
       id: "actions",
       cell: ({ row }) => {
         const router = useRouter();
         const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   
-        const onEdit = () => router.push(`/operations/invoice/${row.original._id}`);
+        const onEdit = () => router.push(`/operation/grn/${row.original._id}`);
         const onDelete = async () => {
           try {
-            await deleteInvoice(row.original._id);
-            toast.success("Invoice deleted successfully!");
+            await deleteGrn(row.original._id); // Replace with appropriate delete logic for GRN
+            toast.success("GRN deleted successfully!");
             setIsDeleteConfirmOpen(false);
             router.refresh();
           } catch {
-            toast.error("Failed to delete Invoice.");
+            toast.error("Failed to delete GRN.");
           }
         };
   
@@ -85,7 +56,7 @@ export const columns = [
               <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
                 <div className="bg-white p-6 rounded-md max-w-sm mx-auto">
                   <h3 className="text-lg font-medium">Delete Confirmation</h3>
-                  <p className="mt-2 text-sm">Are you sure you want to delete this Invoice?</p>
+                  <p className="mt-2 text-sm">Are you sure you want to delete this GRN?</p>
                   <div className="flex justify-end gap-4 mt-4">
                     <Button variant="outline" onClick={() => setIsDeleteConfirmOpen(false)}>Cancel</Button>
                     <Button className="bg-red-500 text-white" onClick={onDelete}>Yes, Delete</Button>
@@ -99,14 +70,15 @@ export const columns = [
     },
   ];
   
-  export const CreateNewInvoiceButton = () => {
+  export const CreateNewGrnButton = () => {
     const router = useRouter();
     return (
       <div className="flex justify-end mb-1">
-        <Button className="bg-blue-500 text-white" onClick={() => router.push("/operation/invoice/new")}>
-          Create New Invoice
+        <Button className="bg-blue-500 text-white" onClick={() => router.push("/operation/grn/new")}>
+          Create New GRN
         </Button>
       </div>
     );
   };
   
+

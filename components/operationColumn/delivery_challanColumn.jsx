@@ -32,7 +32,7 @@ export const columns = [
           <Button
             variant="solid"
             className="bg-blue-500 text-white hover:bg-blue-600"
-            onClick={() => router.push("/operation/invoice")}
+            onClick={() => router.push("/operation/invoice/new")}
           >
             Add purchase orders
           </Button>
