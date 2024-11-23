@@ -12,7 +12,7 @@ import {
 } from 'react-icons/fa';
 
 const sidebarLinks = [
-  { name: 'Purchase Request', href: '/procurement/purchage-request', icon: <FaUser /> },
+  { name: 'Purchase Request', href: '/procurement/purchase-requests', icon: <FaUser /> },
   { name: 'PO Quotations', href: '/procurement/po-quotations', icon: <FaRegAddressCard /> },
   { name: 'Purchage Orders', href: '/procurement/purchage-orders', icon: <FaRegBuilding /> },
   { name: 'Payments', href: '/procurement/payments', icon: <FaRegBuilding /> },
