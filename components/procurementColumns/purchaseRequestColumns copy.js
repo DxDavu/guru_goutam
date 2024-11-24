@@ -1,5 +1,3 @@
-// @/components/procurementColumns/purchaseRequestColumns.jsx
-
 "use client";
 
 import { MoreHorizontal } from "lucide-react";
@@ -15,43 +13,34 @@ import {
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { advanceToNextStage, updateStageStatus, deletePurchaseRequest } from "@/actions/procurement/purchaseRequestActions";
-
-// @/components/procurementColumns/purchaseRequestColumns.jsx
+import { deletePurchaseRequest } from "@/actions/procurement/purchaseRequestActions";
 
 export const columns = [
   { accessorKey: "pr_id", header: "PR ID" },
-  {
-    accessorKey: "pr_date",
-    header: "PR Date",
+  { accessorKey: "pr_date", header: "PR Date" ,
     cell: ({ row }) => {
       const rawDate = row.original.pr_date;
       const formattedDate = format(new Date(rawDate), "dd-MM-yyyy");
       return <span>{formattedDate}</span>;
     },
-  },
+   },
   { accessorKey: "owner", header: "PR Owner" },
   { accessorKey: "supplier", header: "Supplier" },
   { accessorKey: "total_quantity", header: "Total Product QTY" },
   {
-    id: "current_stage",
-    header: "Current Stage",
-    cell: ({ row }) => {
-      const stages = row.original.stages || []; // Ensure stages is defined
-      if (stages.length === 0) return <span>No Stage Data</span>; // Handle empty stages array
-      const currentStage = stages[stages.length - 1];
-      return (
-        <span
-          className={`px-2 py-1 rounded ${
-            currentStage.status === "Approved"
-              ? "bg-green-100 text-green-700"
-              : "bg-yellow-100 text-yellow-700"
-          }`}
-        >
-          {currentStage.stage_name} ({currentStage.status})
-        </span>
-      );
-    },
+    accessorKey: "approve_status",
+    header: "Approve Status",
+    cell: ({ row }) => (
+      <span
+        className={`px-2 py-1 rounded ${
+          row.original.approve_status === "Approved"
+            ? "bg-green-100 text-green-700"
+            : "bg-red-100 text-red-700"
+        }`}
+      >
+        {row.original.approve_status}
+      </span>
+    ),
   },
   {
     id: "move_to_next",
@@ -60,35 +49,13 @@ export const columns = [
       const router = useRouter();
 
       const handleMoveToNext = async () => {
-        const stages = row.original.stages || [];
-        const currentStage = stages[stages.length - 1]?.stage_name || null;
-        const nextStageMap = {
-            "Purchase Request": "PO Quotations",
-            "PO Quotations": "Purchase Orders",
-            "Purchase Orders": "Payments",
-        };
-        const nextStageName = nextStageMap[currentStage];
-    
-        if (!nextStageName) {
-            toast.error("This request has reached its final stage.");
-            return;
-        }
-    
-        const response = await advanceToNextStage(row.original._id);
-    
-        if (response.success) {
-            toast.success(response.message || "Successfully moved to the next stage.");
-            router.refresh(); // Refresh the data
-        } else {
-            toast.error(response.message || "Failed to move to the next stage.");
-        }
-    };
-    
-      
+        toast.success(`Purchase Request ${row.original.pr_id} moved to PO Quotation.`);
+        router.refresh();
+      };
 
       return (
         <Button onClick={handleMoveToNext} className="bg-blue-500 text-white">
-          Move to Next Stage
+          Add PO Quotations
         </Button>
       );
     },
@@ -106,23 +73,14 @@ export const columns = [
 
       const handleDelete = async () => {
         try {
-          // Call deletePurchaseRequest action with row ID
-          const response = await deletePurchaseRequest(row.original._id);
-          
-          // Handle response
-          if (response.success) {
-            toast.success(response.message || "Purchase Request deleted successfully");
-            setIsDeleteConfirmOpen(false); // Close confirmation dialog
-            router.refresh(); // Refresh the page to reflect changes
-          } else {
-            toast.error(response.message || "Failed to delete the Purchase Request");
-          }
-        } catch (error) {
-          console.error("Error deleting purchase request:", error);
-          toast.error("An unexpected error occurred while deleting the Purchase Request");
+          await deletePurchaseRequest(row.original._id);
+          toast.success("Purchase Request deleted successfully!");
+          setIsDeleteConfirmOpen(false);
+          router.refresh();
+        } catch {
+          toast.error("Failed to delete Purchase Request.");
         }
       };
-            
 
       return (
         <>
@@ -142,6 +100,7 @@ export const columns = [
             </DropdownMenuContent>
           </DropdownMenu>
 
+          {/* Confirmation Dialog */}
           {isDeleteConfirmOpen && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
               <div className="bg-white p-6 rounded-md max-w-sm mx-auto">
@@ -165,7 +124,6 @@ export const columns = [
     },
   },
 ];
-
 
 export const CreateNewPurchaseRequestButton = () => {
   const router = useRouter();
