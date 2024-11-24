@@ -10,10 +10,13 @@ import ProductTemplate from "@/lib/database/models/productLibrary/ProductTemplat
 // Fetch active suppliers
 export const getSuppliers = async () => {
   await connectToDatabase();
-  const suppliers = await Supplier.find({ active_status: true }, "supplier_name").lean();
+  const suppliers = await Supplier.find({ active_status: true })  
+  .lean();
   return suppliers.map((supplier) => ({
     _id: supplier._id.toString(),
     supplier_name: supplier.supplier_name,
+    email: supplier.email,
+    phone: supplier.telephone_1,
   }));
 };
 

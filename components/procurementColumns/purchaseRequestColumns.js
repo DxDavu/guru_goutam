@@ -2,6 +2,7 @@
 
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { format } from "date-fns";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -16,7 +17,13 @@ import { deletePurchaseRequest } from "@/actions/procurement/purchaseRequestActi
 
 export const columns = [
   { accessorKey: "pr_id", header: "PR ID" },
-  { accessorKey: "pr_date", header: "PR Date" },
+  { accessorKey: "pr_date", header: "PR Date" ,
+    cell: ({ row }) => {
+      const rawDate = row.original.pr_date;
+      const formattedDate = format(new Date(rawDate), "dd-MM-yyyy");
+      return <span>{formattedDate}</span>;
+    },
+   },
   { accessorKey: "owner", header: "PR Owner" },
   { accessorKey: "supplier", header: "Supplier" },
   { accessorKey: "total_quantity", header: "Total Product QTY" },

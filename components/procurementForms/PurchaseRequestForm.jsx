@@ -21,6 +21,9 @@ import { Button } from "@/components/ui/button";
 import ProductSelectionModal from "@/components/procurementModals/ProductSelectionModal";
 import { useFormState } from "react-dom";
 import { getSuppliers, createPurchaseRequest, updatePurchaseRequest } from "@/actions/procurement/purchaseRequestActions";
+import { format } from "date-fns";
+import Loader from "@/components/ui/loader";
+
 
 const schema = z.object({
   pr_id: z.string().nonempty("Purchase Request ID is required!"),
@@ -37,6 +40,7 @@ const PurchaseRequestForm = ({ type, data }) => {
   const [suppliers, setSuppliers] = useState([]);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
+  const [isLoadingSuppliers, setIsLoadingSuppliers] = useState(false);
 
   // useFormState for form action and handling state
   const [state, formAction] = useFormState(
@@ -51,19 +55,28 @@ const PurchaseRequestForm = ({ type, data }) => {
 
   useEffect(() => {
     async function fetchSuppliers() {
+      setIsLoadingSuppliers(true);
       try {
         const supplierData = await getSuppliers();
-        setSuppliers(supplierData.filter((supplier) => supplier.supplier_name)); // Filter valid suppliers
+        setSuppliers(supplierData.filter((supplier) => supplier.supplier_name));
+        setIsLoadingSuppliers(false);     
 
         if (data) {
           reset({
             ...data,
             supplier: data.supplier?._id || data.supplier || "",
+            pr_date: format(new Date(data.pr_date), "yyyy-MM-dd"), // Format the date for input
+            order_type: data.order_type || "",
+            owner: data.owner || "",
+            supplier: data.supplier?._id || "",
+            purchase_type: data.purchase_type || "",
+            description: data.description || "",
           });
           setSelectedProducts(data.products || []);
         }
       } catch (error) {
         console.error("Error fetching suppliers:", error);
+        setIsLoadingSuppliers(false);
       }
     }
     fetchSuppliers();
@@ -151,7 +164,10 @@ const PurchaseRequestForm = ({ type, data }) => {
 
         {/* Supplier Details */}
         <div>
-          <h3 className="font-medium">Supplier Details:</h3>
+        <h3 className="font-medium">Supplier Details:</h3>
+        {isLoadingSuppliers ? (
+            <Loader /> // Replace with your spinner component
+          ) : (
           <Select
             onValueChange={(value) => setValue("supplier", value)}
             value={watch("supplier") || ""}
@@ -168,7 +184,20 @@ const PurchaseRequestForm = ({ type, data }) => {
                 ))}
               </SelectGroup>
             </SelectContent>
-          </Select>
+          </Select>          
+            )}
+            {watch("supplier") && (
+                <div className="mt-2 text-sm text-gray-600">
+                  {suppliers
+                    .filter((s) => s._id === watch("supplier"))
+                    .map((s) => (
+                      <div key={s._id}>
+                        {s.email && <p>Email: {s.email}</p>}
+                        {s.phone && <p>Phone: {s.phone}</p>}
+                      </div>
+                    ))}
+                </div>
+              )}
         </div>
 
         {/* Additional Information */}
