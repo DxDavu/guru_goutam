@@ -69,14 +69,26 @@ import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 
 const menuItems = [
-  { label: "Dashboard", href: "/dashboard" },
-  { label: "Product Library", href: "/product-library" },
-  { label: "Procurement", href: "/procurement" },
-  { label: "Inventory", href: "/inventory" },
-  { label: "CRM", href: "/crm" },
-  { label: "Operations", href: "/operation" },
-  { label: "User Performance", href: "/user-performance" },
-  { label: "Client", href: "/client" },
+  {
+    label: 'Dashboard',
+    href: '/dashboard',
+  },
+  {
+    label: 'Product Library',
+    href: '/product-library',
+  },
+  {
+    label: 'Procurement',
+    href: '/procurement',
+  },
+  {
+    label: 'Inventory',
+    href: '/inventory',
+  },
+  {
+    label: 'CRM',
+    href: '/crm',
+  },
 ];
 
 export default function Menu({ isOpen }) {

@@ -1,8 +1,10 @@
+// app/(admin)/settings/layout.jsx
+
 import Sidebar from './_components/Sidebar';
 import { UserPermissionsProvider } from "@/context/UserPermissionsContext";
 
 
-export default async function ProcurementLayout({ children }) {
+export default async function SettingsLayout({ children }) {
 
   return (
     <div className="flex h-screen">

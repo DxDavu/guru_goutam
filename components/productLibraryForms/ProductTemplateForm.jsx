@@ -68,8 +68,8 @@ const ProductTemplateForm = ({ type, data }) => {
       if (data) {
         reset({
           ...data,
-          category: data.category?._id.toString(),
-          brand: data.brand?._id.toString(),
+          category: data.category?._id || data.category || "",
+          brand: data.brand?._id || data.brand || "",
           specifications: data.specifications || {}
         });
       }

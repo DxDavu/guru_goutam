@@ -3,7 +3,7 @@
 import React from 'react'
 import { useUser  } from '@clerk/nextjs'
 
-const Procurement = () => {
+const ProductLibrary = () => {
 
   const { isLoaded, isSignedIn, user } = useUser()
 
@@ -21,4 +21,4 @@ const Procurement = () => {
   )
 }
 
-export default Procurement
+export default ProductLibrary
