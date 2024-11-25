@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { deleteDeliveryChallan } from '@/actions/operation/delivery_challanAction';
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+
 import { useState } from "react";
 import {
   DropdownMenu,
@@ -13,37 +13,92 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { deleteService } from "@/actions/operation/serviceAction";
 
 export const columns = [
-  { accessorKey: "dc_id", header: "DC ID" },
-  { accessorKey: "order_id", header: "Order ID" },
-  { accessorKey: "quotation_id", header: "Quotation ID" },
-  { accessorKey: "dc_date", header: "DC Date" },
-  { accessorKey: "company", header: "Company" },
   {
-    accessorKey: "move_to_next",
-    header: "Move to Next",
-    cell: ({ row }) => {
-      const router = useRouter();
-
-      return (
-        <div className="flex flex-col items-start">
-          <p className="text-gray-700 mb-2">{row.original.move_to_next || " "}</p>
-          <Button
-            variant="solid"
-            className="bg-blue-500 text-white hover:bg-blue-600"
-            onClick={() => router.push("/operation/invoice/new")}
-          >
-            Add purchase orders
-          </Button>
-        </div>
-      );
-    },
+    accessorKey: "z",
+    header: "Product Image",
+    cell: ({ row }) => (
+      row.index + 1,
+      <div className="flex justify-center">
+        <img
+          src={row.original.image || "/avatar.png"} // Placeholder if no image
+          alt="Product"
+          className="w-16 h-16 object-cover border rounded"
+        />
+      </div>
+    ),
   },
   {
-    accessorKey: "active_status",
-    header: "Status",
-    cell: ({ row }) => <span>{row.original.active_status ? "Active" : "Inactive"}</span>,
+    accessorKey: "type",
+    header: "Type",
+  },
+  {
+    accessorKey: "priority",
+    header: "Priority",
+  },
+  {
+    accessorKey: "product_id",
+    header: "Product ID",
+  },
+  {
+    accessorKey: "product_name",
+    header: "Product Name",
+  },
+  {
+    accessorKey: "order_no",
+    header: "Order No",
+  },
+  {
+    accessorKey: "client_id",
+    header: "Client ID",
+  },
+  {
+    accessorKey: "amc",
+    header: "AMC",
+    cell: ({ row }) => <span>{row.original.amc ? "Yes" : "No"}</span>,
+  },
+  {
+    accessorKey: "sale_date",
+    header: "Sale Date",
+    cell: ({ row }) => new Date(row.original.sale_date).toLocaleDateString(),
+  },
+  {
+    accessorKey: "client_name",
+    header: "Client Name",
+  },
+  {
+    accessorKey: "service_head",
+    header: "Service Head",
+  },
+  {
+    accessorKey: "service_staff",
+    header: "Service Staff",
+  },
+  {
+    accessorKey: "service_receive_data",
+    header: "Service Receive Data",
+  },
+  {
+    accessorKey: "start_date_time",
+    header: "Start Date & Time",
+    cell: ({ row }) => new Date(row.original.start_date_time).toLocaleString(),
+  },
+  {
+    accessorKey: "end_date_time",
+    header: "End Date & Time",
+    cell: ({ row }) => new Date(row.original.end_date_time).toLocaleString(),
+  },
+  {
+    accessorKey: "task_duration",
+    header: "Task Duration",
+    cell: ({ row }) => `${row.original.task_duration} mins`, // Assuming task duration is in minutes
+  },
+  {
+    accessorKey: "expense",
+    header: "Expense",
+    cell: ({ row }) => `$${row.original.expense.toFixed(2)}`,
   },
   {
     id: "actions",
@@ -51,10 +106,10 @@ export const columns = [
       const router = useRouter();
       const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
 
-      const onEdit = () => router.push(`/operation/delivery_challan/${row.original._id}`);
+      const onEdit = () => router.push(`/operation/service/${row.original._id}`);
       const onDelete = async () => {
         try {
-          await deleteDeliveryChallan(row.original._id);
+          await deleteService(row.original._id);
           toast.success("Delivery Challan deleted successfully!");
           setIsDeleteConfirmOpen(false);
           router.refresh();
@@ -95,12 +150,13 @@ export const columns = [
   },
 ];
 
-export const CreateNewDeliveryChallanButton = () => {
+// Component to render the "Create New Product" button
+export const CreateNewServiceButton = () => {
   const router = useRouter();
   return (
     <div className="flex justify-end mb-1">
-      <Button className="bg-blue-500 text-white" onClick={() => router.push("/operation/delivery_challan/new")}>
-        Create New DC
+      <Button className="bg-blue-500 text-white" onClick={() => router.push("/operation/service/new")}>
+        Create New Service
       </Button>
     </div>
   );
