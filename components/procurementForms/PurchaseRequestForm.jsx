@@ -20,11 +20,7 @@ import {
 import { Button } from "@/components/ui/button";
 import ProductSelectionModal from "@/components/procurementModals/ProductSelectionModal";
 import { useFormState } from "react-dom";
-import {
-  getSuppliers,
-  createPurchaseRequest,
-  updatePurchaseRequest,
-} from "@/actions/procurement/purchaseRequestActions";
+import { getSuppliers, createPurchaseRequest, updatePurchaseRequest } from "@/actions/procurement/purchaseRequestActions";
 import { format } from "date-fns";
 import Loader from "@/components/ui/loader";
 
@@ -46,6 +42,7 @@ const PurchaseRequestForm = ({ type, data }) => {
   const [isLoadingSuppliers, setIsLoadingSuppliers] = useState(false);
   const [updatedStages, setUpdatedStages] = useState({});
   const [stages, setStages] = useState(data?.stages || []);
+  const [poQuotations, setPoQuotations] = useState(data?.stages?.find((stage) => stage.stage_name === "PO Quotations")?.quotations || []);
 
   const [state, formAction] = useFormState(
     type === "create" ? createPurchaseRequest : updatePurchaseRequest,
@@ -57,6 +54,7 @@ const PurchaseRequestForm = ({ type, data }) => {
     defaultValues: data || {},
   });
 
+  // Fetch suppliers and populate initial form data
   useEffect(() => {
     async function fetchSuppliers() {
       setIsLoadingSuppliers(true);
@@ -72,7 +70,6 @@ const PurchaseRequestForm = ({ type, data }) => {
             pr_date: format(new Date(data.pr_date), "yyyy-MM-dd"),
             order_type: data.order_type || "",
             owner: data.owner || "",
-            supplier: data.supplier?._id || "",
             purchase_type: data.purchase_type || "",
             description: data.description || "",
           });
@@ -111,6 +108,10 @@ const PurchaseRequestForm = ({ type, data }) => {
     );
   };
 
+  const handleRemoveProduct = (productId) => {
+    setSelectedProducts((prev) => prev.filter((p) => p.product._id !== productId));
+  };
+
   const handleStageStatusChange = (stageName, newStatus) => {
     setUpdatedStages((prev) => ({
       ...prev,
@@ -118,8 +119,44 @@ const PurchaseRequestForm = ({ type, data }) => {
     }));
   };
 
-  const handleRemoveProduct = (productId) => {
-    setSelectedProducts((prev) => prev.filter((p) => p.product._id !== productId));
+  const handleAddQuotation = () => {
+    setPoQuotations((prev) => [
+      ...prev,
+      {
+        supplier: "",
+        products: selectedProducts.map((product) => ({
+          product: product.product._id,
+          quantity: product.quantity,
+          amount: 0,
+        })),
+        total_amount: 0,
+      },
+    ]);
+  };
+
+  const handleQuotationChange = (index, field, value) => {
+    setPoQuotations((prev) =>
+      prev.map((q, i) => (i === index ? { ...q, [field]: value } : q))
+    );
+  };
+
+  const handleProductQuotationChange = (quotationIndex, productIndex, field, value) => {
+    setPoQuotations((prev) =>
+      prev.map((q, i) =>
+        i === quotationIndex
+          ? {
+              ...q,
+              products: q.products.map((p, j) =>
+                j === productIndex ? { ...p, [field]: value } : p
+              ),
+            }
+          : q
+      )
+    );
+  };
+
+  const handleRemoveQuotation = (index) => {
+    setPoQuotations((prev) => prev.filter((_, i) => i !== index));
   };
 
   const onSubmit = handleSubmit(async (formData) => {
@@ -127,6 +164,7 @@ const PurchaseRequestForm = ({ type, data }) => {
       const stagesToUpdate = stages.map((stage) => ({
         ...stage,
         status: updatedStages[stage.stage_name] || stage.status,
+        quotations: stage.stage_name === "PO Quotations" ? poQuotations : stage.quotations,
       }));
 
       await formAction({
@@ -157,6 +195,7 @@ const PurchaseRequestForm = ({ type, data }) => {
   return (
     <form onSubmit={onSubmit} className="space-y-8">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-6">
+        {/* Purchase Request Details */}
         <div>
           <h3 className="font-medium">Purchase Request Details:</h3>
           <Input {...register("pr_id")} placeholder="Purchase Request ID" />
@@ -177,7 +216,8 @@ const PurchaseRequestForm = ({ type, data }) => {
           </Select>
           <Input {...register("owner")} placeholder="Owner" />
         </div>
-
+  
+        {/* Supplier Details */}
         <div>
           <h3 className="font-medium">Supplier Details:</h3>
           {isLoadingSuppliers ? (
@@ -202,7 +242,8 @@ const PurchaseRequestForm = ({ type, data }) => {
             </Select>
           )}
         </div>
-
+  
+        {/* Additional Information */}
         <div>
           <h3 className="font-medium">Additional Information:</h3>
           <Select
@@ -221,18 +262,21 @@ const PurchaseRequestForm = ({ type, data }) => {
           </Select>
         </div>
       </div>
-
+  
+      {/* Workflow Stages */}
       <div>
         <h3 className="font-medium mb-2">Workflow Stages:</h3>
         {stages.length > 0 ? (
           <ul className="space-y-2">
-            {stages.map((stage, index) => (
-              <li key={index} className="p-2 rounded border">
+            {stages.map((stage) => (
+              <li key={stage.stage_name} className="p-2 rounded border">
                 <div className="flex justify-between items-center">
                   <span>{stage.stage_name}</span>
                   <Select
                     value={updatedStages[stage.stage_name] || stage.status}
-                    onValueChange={(newStatus) => handleStageStatusChange(stage.stage_name, newStatus)}
+                    onValueChange={(value) =>
+                      handleStageStatusChange(stage.stage_name, value)
+                    }
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select Status" />
@@ -250,51 +294,126 @@ const PurchaseRequestForm = ({ type, data }) => {
             ))}
           </ul>
         ) : (
-          <p className="text-sm text-gray-500">No stages available.</p>
+          <p>No stages available.</p>
         )}
       </div>
-
+  
+      {/* PO Quotations */}
       <div>
-        <h3 className="font-medium mb-4">Selected Products:</h3>
+        <h3 className="font-medium">PO Quotations:</h3>
+        <Button type="button" onClick={handleAddQuotation}>
+          Add Quotation
+        </Button>
+        {poQuotations.map((quotation, index) => (
+          <div key={index} className="border p-4 mt-4 rounded-lg">
+            <Select
+              value={quotation.supplier}
+              onValueChange={(value) => handleQuotationChange(index, "supplier", value)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select Supplier" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {suppliers.map((supplier) => (
+                    <SelectItem key={supplier._id} value={supplier._id}>
+                      {supplier.supplier_name}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            {quotation.products.map((product, productIndex) => {
+                    // Match the product with selectedProducts or fallback to fetch data
+                    const matchedProduct =
+                      selectedProducts.find((p) => p.product._id === product.product) || product;
+
+                    return (
+                      <div key={product.product} className="flex items-center gap-4 mt-2">
+                        <img
+                          src={matchedProduct.product.image || "/placeholder.png"}
+                          alt={matchedProduct.product.product_name}
+                          className="w-12 h-12 object-cover rounded"
+                        />
+                        <div className="flex-grow">
+                          <p className="font-medium">{matchedProduct.product.product_name}</p>
+                          <p className="text-sm text-gray-500">{matchedProduct.product.category}</p>
+                        </div>
+                        <Input
+                          type="number"
+                          placeholder="Amount"
+                          value={product.amount || ""}
+                          onChange={(e) =>
+                            handleProductQuotationChange(
+                              index,
+                              productIndex,
+                              "amount",
+                              parseFloat(e.target.value)
+                            )
+                          }
+                        />
+                      </div>
+                    );
+                  })}
+
+            <Button
+              type="button"
+              onClick={() => handleRemoveQuotation(index)}
+              className="mt-4 bg-red-500 text-white"
+            >
+              Remove
+            </Button>
+          </div>
+        ))}
+      </div>
+  
+      {/* Selected Products */}
+      <div>
+        <h3 className="font-medium">Selected Products:</h3>
         <Button type="button" onClick={handleOpenModal}>
           Select Product
         </Button>
-        <div className="mt-4">
-          {selectedProducts.map((item) => (
-            <div key={item.product._id} className="flex items-center gap-4 border p-2 rounded-lg mb-2">
-              <img
-                src={item.product.image || "/placeholder.png"}
-                alt={item.product.product_name}
-                className="w-12 h-12 object-cover rounded"
-              />
-              <div className="flex-grow">
-                <p className="font-medium">{item.product.product_name}</p>
-                <p className="text-sm text-gray-500">
-                  {item.product.category} - {item.product.brand}
-                </p>
-              </div>
-              <input
-                type="number"
-                min="1"
-                value={item.quantity}
-                onChange={(e) => handleQuantityChange(item.product._id, parseInt(e.target.value, 10))}
-                className="w-16 text-center border rounded"
-              />
-              <Button variant="destructive" onClick={() => handleRemoveProduct(item.product._id)}>
-                Remove
-              </Button>
+        {selectedProducts.map((product) => (
+          <div key={product.product._id} className="flex items-center gap-4 mt-2">
+            <img
+              src={product.product.image || "/placeholder.png"}
+              alt={product.product.product_name}
+              className="w-12 h-12 object-cover rounded"
+            />
+            <div className="flex-grow">
+              <p className="font-medium">{product.product.product_name}</p>
+              <p className="text-sm text-gray-500">{product.product.category}</p>
             </div>
-          ))}
-        </div>
+            <Input
+              type="number"
+              min="1"
+              value={product.quantity}
+              onChange={(e) =>
+                handleQuantityChange(product.product._id, parseInt(e.target.value, 10))
+              }
+              className="w-16"
+            />
+            <Button
+              type="button"
+              onClick={() => handleRemoveProduct(product.product._id)}
+              className="bg-red-500 text-white"
+            >
+              Remove
+            </Button>
+          </div>
+        ))}
       </div>
-
+  
+      {/* Form Actions */}
       <div className="flex justify-end gap-4">
-        <Button onClick={() => router.push("/procurement/purchase-requests")}>Cancel</Button>
+        <Button onClick={() => router.push("/procurement/purchase-requests")}>
+          Cancel
+        </Button>
         <Button type="submit" className="bg-blue-500 text-white">
           {type === "create" ? "Create" : "Update"}
         </Button>
       </div>
-
+  
       <ProductSelectionModal
         isOpen={isProductModalOpen}
         onClose={handleCloseModal}
@@ -302,6 +421,7 @@ const PurchaseRequestForm = ({ type, data }) => {
       />
     </form>
   );
+  
 };
 
 export default PurchaseRequestForm;

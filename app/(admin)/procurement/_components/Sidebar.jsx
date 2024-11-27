@@ -13,9 +13,9 @@ import {
 
 const sidebarLinks = [
   { name: 'Purchase Request', href: '/procurement/purchase-requests', icon: <FaUser /> },
-  { name: 'PO Quotations', href: '/procurement/po-quotations', icon: <FaRegAddressCard /> },
-  { name: 'Purchage Orders', href: '/procurement/purchage-orders', icon: <FaRegBuilding /> },
-  { name: 'Payments', href: '/procurement/payments', icon: <FaRegBuilding /> },
+  // { name: 'PO Quotations', href: '/procurement/po-quotations', icon: <FaRegAddressCard /> },
+  // { name: 'Purchage Orders', href: '/procurement/purchage-orders', icon: <FaRegBuilding /> },
+  // { name: 'Payments', href: '/procurement/payments', icon: <FaRegBuilding /> },
   { name: 'Suppliers', href: '/procurement/suppliers', icon: <FaCity /> },  
 ];
 

@@ -20,10 +20,13 @@ import {
 import { Button } from "@/components/ui/button";
 import ProductSelectionModal from "@/components/procurementModals/ProductSelectionModal";
 import { useFormState } from "react-dom";
-import { getSuppliers, createPurchaseRequest, updatePurchaseRequest } from "@/actions/procurement/purchaseRequestActions";
+import {
+  getSuppliers,
+  createPurchaseRequest,
+  updatePurchaseRequest,
+} from "@/actions/procurement/purchaseRequestActions";
 import { format } from "date-fns";
 import Loader from "@/components/ui/loader";
-
 
 const schema = z.object({
   pr_id: z.string().nonempty("Purchase Request ID is required!"),
@@ -41,8 +44,9 @@ const PurchaseRequestForm = ({ type, data }) => {
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [isLoadingSuppliers, setIsLoadingSuppliers] = useState(false);
+  const [updatedStages, setUpdatedStages] = useState({});
+  const [stages, setStages] = useState(data?.stages || []);
 
-  // useFormState for form action and handling state
   const [state, formAction] = useFormState(
     type === "create" ? createPurchaseRequest : updatePurchaseRequest,
     { success: false, error: false, message: "" }
@@ -59,13 +63,13 @@ const PurchaseRequestForm = ({ type, data }) => {
       try {
         const supplierData = await getSuppliers();
         setSuppliers(supplierData.filter((supplier) => supplier.supplier_name));
-        setIsLoadingSuppliers(false);     
+        setIsLoadingSuppliers(false);
 
         if (data) {
           reset({
             ...data,
             supplier: data.supplier?._id || data.supplier || "",
-            pr_date: format(new Date(data.pr_date), "yyyy-MM-dd"), // Format the date for input
+            pr_date: format(new Date(data.pr_date), "yyyy-MM-dd"),
             order_type: data.order_type || "",
             owner: data.owner || "",
             supplier: data.supplier?._id || "",
@@ -73,6 +77,7 @@ const PurchaseRequestForm = ({ type, data }) => {
             description: data.description || "",
           });
           setSelectedProducts(data.products || []);
+          setStages(data.stages || []);
         }
       } catch (error) {
         console.error("Error fetching suppliers:", error);
@@ -82,7 +87,6 @@ const PurchaseRequestForm = ({ type, data }) => {
     fetchSuppliers();
   }, [data, reset]);
 
-  // Toggle modal state
   const handleOpenModal = useCallback(() => {
     setIsProductModalOpen(true);
   }, []);
@@ -94,7 +98,7 @@ const PurchaseRequestForm = ({ type, data }) => {
   const handleProductSelection = useCallback(
     (products) => {
       setSelectedProducts(products);
-      handleCloseModal(); // Close the modal after selection
+      handleCloseModal();
     },
     [handleCloseModal]
   );
@@ -107,18 +111,31 @@ const PurchaseRequestForm = ({ type, data }) => {
     );
   };
 
+  const handleStageStatusChange = (stageName, newStatus) => {
+    setUpdatedStages((prev) => ({
+      ...prev,
+      [stageName]: newStatus,
+    }));
+  };
+
   const handleRemoveProduct = (productId) => {
     setSelectedProducts((prev) => prev.filter((p) => p.product._id !== productId));
   };
 
   const onSubmit = handleSubmit(async (formData) => {
     try {
+      const stagesToUpdate = stages.map((stage) => ({
+        ...stage,
+        status: updatedStages[stage.stage_name] || stage.status,
+      }));
+
       await formAction({
         ...formData,
         products: selectedProducts.map((p) => ({
           product: p.product._id,
           quantity: p.quantity,
         })),
+        stages: stagesToUpdate,
         id: data?._id,
       });
     } catch (error) {
@@ -140,7 +157,6 @@ const PurchaseRequestForm = ({ type, data }) => {
   return (
     <form onSubmit={onSubmit} className="space-y-8">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-6">
-        {/* Purchase Request Details */}
         <div>
           <h3 className="font-medium">Purchase Request Details:</h3>
           <Input {...register("pr_id")} placeholder="Purchase Request ID" />
@@ -162,45 +178,31 @@ const PurchaseRequestForm = ({ type, data }) => {
           <Input {...register("owner")} placeholder="Owner" />
         </div>
 
-        {/* Supplier Details */}
         <div>
-        <h3 className="font-medium">Supplier Details:</h3>
-        {isLoadingSuppliers ? (
-            <Loader /> // Replace with your spinner component
+          <h3 className="font-medium">Supplier Details:</h3>
+          {isLoadingSuppliers ? (
+            <Loader />
           ) : (
-          <Select
-            onValueChange={(value) => setValue("supplier", value)}
-            value={watch("supplier") || ""}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select Supplier" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                {suppliers.map((supplier) => (
-                  <SelectItem key={supplier._id} value={supplier._id}>
-                    {supplier.supplier_name}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>          
-            )}
-            {watch("supplier") && (
-                <div className="mt-2 text-sm text-gray-600">
-                  {suppliers
-                    .filter((s) => s._id === watch("supplier"))
-                    .map((s) => (
-                      <div key={s._id}>
-                        {s.email && <p>Email: {s.email}</p>}
-                        {s.phone && <p>Phone: {s.phone}</p>}
-                      </div>
-                    ))}
-                </div>
-              )}
+            <Select
+              onValueChange={(value) => setValue("supplier", value)}
+              value={watch("supplier") || ""}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select Supplier" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {suppliers.map((supplier) => (
+                    <SelectItem key={supplier._id} value={supplier._id}>
+                      {supplier.supplier_name}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          )}
         </div>
 
-        {/* Additional Information */}
         <div>
           <h3 className="font-medium">Additional Information:</h3>
           <Select
@@ -220,28 +222,62 @@ const PurchaseRequestForm = ({ type, data }) => {
         </div>
       </div>
 
-      {/* Selected Products */}
+      <div>
+        <h3 className="font-medium mb-2">Workflow Stages:</h3>
+        {stages.length > 0 ? (
+          <ul className="space-y-2">
+            {stages.map((stage, index) => (
+              <li key={index} className="p-2 rounded border">
+                <div className="flex justify-between items-center">
+                  <span>{stage.stage_name}</span>
+                  <Select
+                    value={updatedStages[stage.stage_name] || stage.status}
+                    onValueChange={(newStatus) => handleStageStatusChange(stage.stage_name, newStatus)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select Status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectItem value="Pending">Pending</SelectItem>
+                        <SelectItem value="Approved">Approved</SelectItem>
+                        <SelectItem value="Rejected">Rejected</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-sm text-gray-500">No stages available.</p>
+        )}
+      </div>
+
       <div>
         <h3 className="font-medium mb-4">Selected Products:</h3>
-        {/* Ensure the modal trigger button has type="button" */}
         <Button type="button" onClick={handleOpenModal}>
           Select Product
         </Button>
         <div className="mt-4">
           {selectedProducts.map((item) => (
             <div key={item.product._id} className="flex items-center gap-4 border p-2 rounded-lg mb-2">
-              <img src={item.product.image} alt={item.product.product_name} className="w-12 h-12" />
-              <div>
-                <p>{item.product.product_name}</p>
-                <p className="text-sm text-gray-500">{item.product.category}</p>
+              <img
+                src={item.product.image || "/placeholder.png"}
+                alt={item.product.product_name}
+                className="w-12 h-12 object-cover rounded"
+              />
+              <div className="flex-grow">
+                <p className="font-medium">{item.product.product_name}</p>
+                <p className="text-sm text-gray-500">
+                  {item.product.category} - {item.product.brand}
+                </p>
               </div>
               <input
                 type="number"
                 min="1"
                 value={item.quantity}
-                onChange={(e) =>
-                  handleQuantityChange(item.product._id, parseInt(e.target.value, 10))
-                }
+                onChange={(e) => handleQuantityChange(item.product._id, parseInt(e.target.value, 10))}
                 className="w-16 text-center border rounded"
               />
               <Button variant="destructive" onClick={() => handleRemoveProduct(item.product._id)}>
