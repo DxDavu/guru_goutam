@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import PoForm from "@/components/procurementForm/purchase_orderForm";
+import PoForm from "@/components/procurementForms/purchase_orderForm";
 import { getPurchaseOrderById } from '@/actions/procurement/purchase_orderAction';
 import { useRouter } from "next/navigation";
 
