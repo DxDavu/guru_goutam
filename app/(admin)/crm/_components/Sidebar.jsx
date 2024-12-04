@@ -14,7 +14,7 @@ import {
 const sidebarLinks = [
   { name: 'Contacts', href: '/crm/contacts', icon: <FaRegAddressCard /> },
   { name: 'Leads', href: '/crm/leads', icon: <FaClipboardList /> },
-  { name: 'Quotation', href: '/quotation', icon: <FaTasks /> },
+  { name: 'Quotation', href: '/crm/quotation', icon: <FaTasks /> },
   { name: 'Orders', href: '/orders', icon: <FaRegBuilding /> },
 ];
 
