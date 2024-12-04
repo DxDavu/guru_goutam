@@ -89,9 +89,15 @@ const ProductTemplateForm = ({ type, data }) => {
       if (data) {
         reset({
           ...data,
+<<<<<<< HEAD
           category: data.category?._id.toString(),
           brand: data.brand?._id.toString(),
           specifications: data.specifications || {},
+=======
+          category: data.category?._id || data.category || "",
+          brand: data.brand?._id || data.brand || "",
+          specifications: data.specifications || {}
+>>>>>>> d773bc32bccc9f1d887ddd77b10d51a2310cfe8c
         });
       }
     }

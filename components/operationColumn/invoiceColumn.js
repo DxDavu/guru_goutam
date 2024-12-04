@@ -24,26 +24,26 @@ export const columns = [
     { accessorKey: "customer_name", header: "Customer Name" },
     { accessorKey: "created_by", header: "Created By" },
     { accessorKey: "amount", header: "Amount" },
-    {
-      accessorKey: "move_to_next",
-      header: "Move to Next",
-      cell: ({ row }) => {
-        const router = useRouter();
+    // {
+    //   accessorKey: "move_to_next",
+    //   header: "Move to Next",
+    //   cell: ({ row }) => {
+    //     const router = useRouter();
   
-        return (
-          <div className="flex flex-col items-start">
-            <p className="text-gray-700 mb-2">{row.original.move_to_next || " "}</p>
-            <Button
-              variant="solid"
-              className="bg-blue-500 text-white hover:bg-blue-600"
-              onClick={() => router.push("/operation/invoice")}
-            >
-              Add purchase orders
-            </Button>
-          </div>
-        );
-      },
-    },
+    //     return (
+    //       <div className="flex flex-col items-start">
+    //         <p className="text-gray-700 mb-2">{row.original.move_to_next || " "}</p>
+    //         <Button
+    //           variant="solid"
+    //           className="bg-blue-500 text-white hover:bg-blue-600"
+    //           onClick={() => router.push("/operation/invoice")}
+    //         >
+    //           Add purchase orders
+    //         </Button>
+    //       </div>
+    //     );
+    //   },
+    // },
     {
       accessorKey: "active_status",
       header: "Status",

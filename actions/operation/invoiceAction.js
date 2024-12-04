@@ -36,9 +36,7 @@ export const createInvoice = async (currentState, challanData) => {
   
     // Check if the dc_id already exists
     const existingChallan = await Invoice.findOne({ dc_id: challanData.dc_id });
-    if (existingChallan) {
-      return { success: false, error: true, message: 'Delivery Challan ID already exists' };
-    }
+ 
   
     try {
       // Create a new instance of the Invoice model

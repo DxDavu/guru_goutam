@@ -17,13 +17,13 @@ import {
 
 export const columns = [
   { accessorKey: "po_id", header: "Po ID" },
-  { accessorKey: "po_quotation_id", header: "Po Quotatin Id " },
+  // { accessorKey: "po_quotation_id", header: "Po Quotatin Id " },
   { accessorKey: "po_date", header: "Po Date" },
   { accessorKey: "po_owner", header: "Po Owner" },
-  { accessorKey: "supplier", header: "Supplier  " },
-  { accessorKey: "supplier_number", header: "Supplier Number  " },
+  // { accessorKey: "supplier", header: "Supplier  " },
+  // { accessorKey: "supplier_number", header: "Supplier Number  " },
   { accessorKey: "total_cost", header: "Total Total Cost " },
-  { accessorKey: "product_qty", header: "Product Qty" },
+  // { accessorKey: "product_qty", header: "Product Qty" },
   {
     accessorKey: "move_to_next",
     header: "Move to Next",

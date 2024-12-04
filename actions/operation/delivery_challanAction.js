@@ -33,9 +33,6 @@ export const createDeliveryChallan = async (currentState, challanData) => {
 
   // Check if the dc_id already exists
   const existingChallan = await DeliveryChallan.findOne({ dc_id: challanData.dc_id });
-  if (existingChallan) {
-    return { success: false, error: true, message: 'Delivery Challan ID already exists' };
-  }
 
   await connectToDatabase();
   const newChallan = new DeliveryChallan(challanData);

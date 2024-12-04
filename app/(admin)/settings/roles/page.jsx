@@ -10,7 +10,7 @@ export default async function RolesPage() {
   const roles = await getRoles();
 
   return (
-    <div className="bg-white p-1 rounded-md mt-0 flex-1">
+    <div>
       <CreateNewRoleButton />
       <DataTable columns={columns} data={roles} />
     </div>

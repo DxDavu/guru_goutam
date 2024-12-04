@@ -1,12 +1,12 @@
 "use server";
 
-import { getSupplier } from "@/actions/procurement/supplierAction"; 
+import { getSuppliers } from "@/actions/procurement/supplierActions"; 
 import { DataTable } from '@/components/DataTable';
-import { columns, CreateNewSupplierButton } from '@/components/procurementColumns/supplierColumn';
+import { columns, CreateNewSupplierButton } from '@/components/procurementColumns/supplierColumns';
 
 export default async function poSupplierPage() { // Make this function async
   
-    const purchase = await getSupplier(); // Await the server action
+    const purchase = await getSuppliers(); // Await the server action
     return (
         <div>
             <CreateNewSupplierButton />

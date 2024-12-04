@@ -51,7 +51,7 @@ export const columns = [
       const router = useRouter();
       const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
 
-      const onEdit = () => router.push(`/operations/delivery_challan/${row.original._id}`);
+      const onEdit = () => router.push(`/operation/delivery_challan/${row.original._id}`);
       const onDelete = async () => {
         try {
           await deleteDeliveryChallan(row.original._id);
