@@ -8,7 +8,7 @@ import { FaCartPlus   ,FaRegNewspaper ,
 } from "react-icons/fa";
 
 const sidebarLinks= [
-    {name: 'Purchase_request' , href:'/procurement/purchase' , icon:< FaCartPlus/>},
+    {name: 'Purchase Request' , href:'/procurement/purchase' , icon:< FaCartPlus/>},
     {name: 'PO Quotation' , href:'/procurement/po_quotation' , icon:< FaRegNewspaper />},
     {name: 'Purchase Order' , href:'/procurement/purchase_order' , icon:< FaJediOrder/>},
     {name: 'Supplier ' , href:'/procurement/supplier' , icon:< FaJediOrder/>},
