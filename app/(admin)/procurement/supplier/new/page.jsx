@@ -1,6 +1,6 @@
 "use client";
 
-import SupplierForm from "@/components/procurementForm/supplierForm";
+import SupplierForm from "@/components/procurementForms/supplierForm";
 
 export default function NewPrPage() {
   return (

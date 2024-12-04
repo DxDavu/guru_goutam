@@ -20,7 +20,7 @@ export const columns = [
   { accessorKey: "quotation_date", header: "PR Date" },
   { accessorKey: "quote_owner", header: "Owner" },
   { accessorKey: "supplier", header: "Supplier" },
-  { accessorKey: "phone_number", header: "Total Product QTY" },
+  // { accessorKey: "phone_number", header: "Total Product QTY" },
   { accessorKey: "supplier", header: "Supplier" },
 
   { accessorKey: "purchase_price", header: "Total Product QTY" },

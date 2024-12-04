@@ -102,7 +102,7 @@ export const CreateNewSupplierButton = () => {
     <div className="flex justify-end mb-4">
       <Button
         className="bg-blue-500 text-white"
-        onClick={() => router.push("/procurement/suppliers/new")}
+        onClick={() => router.push("/procurement/supplier/new")}
       >
         + Add New Supplier
       </Button>

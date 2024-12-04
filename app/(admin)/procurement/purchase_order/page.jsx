@@ -9,7 +9,7 @@ export default async function ProductPage() {
   console.log(products);
 
   return (
-    <div className="bg-white p-1 rounded-md mt-0 flex-1">
+    <div>
       <CreateNewPOButton />
       <DataTable columns={columns} data={products} />
     </div>
