@@ -30,6 +30,7 @@ const sidebarLinks = [
   { name: 'Asset', href: '/product-library/assets', icon: <FaGlobe /> },
   { name: 'Grade', href: '/product-library/grade', icon: <FaClipboardCheck /> },
   { name: 'Stock Locations', href: '/product-library/stock-location', icon: <FaListAlt /> },
+  { name: 'Pro', href: '/product-library/pro', icon: <FaGlobe /> },
 ];
 
 export default function Sidebar() {

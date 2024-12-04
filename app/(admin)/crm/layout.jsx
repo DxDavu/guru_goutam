@@ -1,6 +1,6 @@
 // app/(admin)/settings/layout.jsx
 
-import Sidebar from './components/Sidebar';
+import Sidebar from './_components/Sidebar';
 
 
 export default async function SettingsLayout({ children }) {
