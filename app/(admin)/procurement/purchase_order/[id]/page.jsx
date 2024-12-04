@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import PoForm from "@/components/procurementForm/purchase_orderForm";
-import { getPoById } from '@/actions/procurement/purchase_orderAction';
+import { getPurchaseOrderById } from '@/actions/procurement/purchase_orderAction';
 import { useRouter } from "next/navigation";
 
 export default function EditPrPage({ params }) {
@@ -12,7 +12,7 @@ export default function EditPrPage({ params }) {
 
   useEffect(() => {
     async function fetchPurchase() {
-      const purchase = await getPoById(id);
+      const purchase = await getPurchaseOrderById(id);
       setPurchaseData(purchase);
       setLoading(false);
     }

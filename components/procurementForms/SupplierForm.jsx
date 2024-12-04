@@ -100,89 +100,103 @@ const SupplierForm = ({ type, data }) => {
   }, [state, router, type]);
 
   return (
-    <form onSubmit={onSubmit} className="space-y-8">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-6">
-        {/* Supplier Information */}
-        <div className="border p-6 rounded-md space-y-4">
-          <h2 className="text-base font-semibold mb-4">Supplier Information</h2>
-          <Input {...register("supplier_id")} placeholder="Supplier ID" />
-          <Input {...register("regd_date")} type="date" placeholder="Registration Date" />
-          <Input {...register("supplier_name")} placeholder="Supplier Name" />
-          <Input {...register("supplier_owner")} placeholder="Supplier Owner" />
-          <Input {...register("vat_number")} placeholder="VAT Number" />
-          <Input {...register("cst_number")} placeholder="CST Number" />
-          <Input {...register("supplier_introduced_by")} placeholder="Introduced By" />
-          <Input {...register("description")} placeholder="Description" />
-        </div>
+    <form onSubmit={onSubmit} className="space-y-6 w-full">
+      <div className=" bg-gray-200 p-4 border rounded-1g shadow-1g mb-6 flex  gap-9">
 
-        {/* Supplier Address */}
-        <div className="border p-6 rounded-md space-y-4">
-          <h2 className="text-base font-semibold mb-4">Supplier Address</h2>
-          <Input {...register("address_line_1")} placeholder="Address Line 1" />
-          <Input {...register("address_line_2")} placeholder="Address Line 2" />
-          <Input {...register("pincode")} placeholder="Pincode" />
+        <div className=" grid grid-cols-3 bg-gray-50 p-2 border rounde-dlg shadow-lg w-full">
+          {/* Supplier Information */}
+          <div className="border p-4 rounded-md space-y-2">
+            <h2 className="text-base font-semibold mb-4">Supplier Information</h2>
 
-          <Select onValueChange={(value) => setValue("country", value)} value={watch("country") || ""}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select Country" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                {countries.map((country) => (
-                  <SelectItem key={country._id} value={country._id}>
-                    {country.name}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+            <div className="grid grid-cols-2 w-70 mt-4 gap-6">
+              <Input {...register("supplier_id")} placeholder="Supplier ID" />
+              <Input {...register("regd_date")} type="date" placeholder="Registration Date" />
+              <Input {...register("supplier_name")} placeholder="Supplier Name" />
+              <Input {...register("supplier_owner")} placeholder="Supplier Owner" />
+              <Input {...register("vat_number")} placeholder="VAT Number" />
+              <Input {...register("cst_number")} placeholder="CST Number" />
+            </div>
+            <Input {...register("supplier_introduced_by")} placeholder="Introduced By" />
+            <Input {...register("description")} placeholder="Description" className="h-20" />
+          </div>
 
-          <Select onValueChange={(value) => setValue("state", value)} value={watch("state") || ""}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select State" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                {states.map((state) => (
-                  <SelectItem key={state._id} value={state._id}>
-                    {state.name}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+          {/* Supplier Address */}
+          <div className="border p-4 rounded-md space-y-2">
+            <h2 className="text-base font-semibold mb-4">Supplier Address</h2>
+            <Input {...register("address_line_1")} placeholder="Address Line 1" />
+            <Input {...register("address_line_2")} placeholder="Address Line 2" />
 
-          <Select onValueChange={(value) => setValue("city", value)} value={watch("city") || ""}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select City" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                {cities.map((city) => (
-                  <SelectItem key={city._id} value={city._id}>
-                    {city.name}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+            <div className="grid grid-cols-2  mt-4 gap-6 w-70">
+             
+              <Input {...register("pincode")} placeholder="Pincode" />
 
-          <Input {...register("telephone_1")} placeholder="Telephone 1" />
-          <Input {...register("telephone_2")} placeholder="Telephone 2" />
-          <Input {...register("fax")} placeholder="Fax" />
-          <Input {...register("website")} placeholder="Website" />
-          <Input {...register("email")} placeholder="Email Address" />
-        </div>
+              <Select onValueChange={(value) => setValue("country", value)} value={watch("country") || ""}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select Country" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {countries.map((country) => (
+                      <SelectItem key={country._id} value={country._id}>
+                        {country.name}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
 
-        {/* Bank Details */}
-        <div className="border p-6 rounded-md space-y-4">
-          <h2 className="text-base font-semibold mb-4">Bank Details</h2>
-          <Input {...register("bank_name")} placeholder="Bank Name" />
-          <Input {...register("bank_address")} placeholder="Bank Address" />
-          <Input {...register("account_number")} placeholder="Account Number" />
-          <Input {...register("pan_number")} placeholder="PAN Number" />
-          <Input {...register("contact_person_in_bank")} placeholder="Contact Person in Bank" />
-          <Input {...register("contact_person_phone")} placeholder="Contact Person Phone" />
+              <Select onValueChange={(value) => setValue("state", value)} value={watch("state") || ""}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select State" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {states.map((state) => (
+                      <SelectItem key={state._id} value={state._id}>
+                        {state.name}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+
+              <Select onValueChange={(value) => setValue("city", value)} value={watch("city") || ""}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select City" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {cities.map((city) => (
+                      <SelectItem key={city._id} value={city._id}>
+                        {city.name}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+
+              <Input {...register("telephone_1")} placeholder="Telephone 1" />
+              <Input {...register("telephone_2")} placeholder="Telephone 2" />
+              <Input {...register("fax")} placeholder="Fax" />
+              <Input {...register("website")} placeholder="Website" />
+              <Input {...register("email")} placeholder="Email Address" />
+            </div>
+          </div>
+
+          {/* Bank Details */}
+          <div className=" p-6 rounded-md space-y-4">
+            <h2 className="text-base font-semibold mb-4">Bank Details</h2>
+            <Input {...register("bank_name")} placeholder="Bank Name" />
+            <Input {...register("bank_address")} placeholder="Bank Address" />
+            <div className="grid grid-cols-2 w-80 gap-4">
+            <Input {...register("account_number")} placeholder="Account Number" />
+            <Input {...register("pan_number")} placeholder="PAN Number" />
+
+            </div>
+          
+            <Input {...register("contact_person_in_bank")} placeholder="Contact Person in Bank" />
+            <Input {...register("contact_person_phone")} placeholder="Contact Person Phone" />
+          </div>
         </div>
       </div>
 

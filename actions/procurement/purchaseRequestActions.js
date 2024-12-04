@@ -27,7 +27,7 @@ export const getPurchaseRequests = async () => {
     .lean()
     .sort({ createdAt: -1 });
 
-  return purchaseRequests.map((pr) => ({
+    return purchaseRequests.map((pr) => ({
     ...pr,
     _id: pr._id.toString(),
     supplier: pr.supplier?.supplier_name || "",
@@ -37,7 +37,7 @@ export const getPurchaseRequests = async () => {
     })),
   }));
 };
-
+``
 // Fetch purchase request by ID
 export const getPurchaseRequestById = async (id) => {
   try {
@@ -90,6 +90,7 @@ export const createPurchaseRequest = async (currentStatus, prData) => {
         {
           stage_name: "Purchase Request",
           stage_id: `PurchaseRequest-${Date.now()}`,
+          
           status: "Pending",
           started_at: new Date(),
         },

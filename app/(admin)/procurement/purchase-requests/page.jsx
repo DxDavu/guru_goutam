@@ -12,6 +12,9 @@ import {
 export default async function PurchaseRequestsPage() {
   const purchaseRequests = await getPurchaseRequests();
 
+  console.log(purchaseRequests);
+  
+
   return (
     <div className="bg-white p-6 rounded-md mt-0 flex-1">
       <CreateNewPurchaseRequestButton />
