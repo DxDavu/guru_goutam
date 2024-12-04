@@ -1,5 +1,5 @@
 
-import PoForm from "@/components/procurementForm/purchase_orderForm";
+import PoForm from "@/components/procurementForms/purchase_orderForm";
 
 export  default function NewPage(){
     return (

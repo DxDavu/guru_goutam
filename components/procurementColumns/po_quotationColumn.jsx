@@ -21,6 +21,8 @@ export const columns = [
   { accessorKey: "quote_owner", header: "Owner" },
   { accessorKey: "supplier", header: "Supplier" },
   { accessorKey: "phone_number", header: "Total Product QTY" },
+  { accessorKey: "supplier", header: "Supplier" },
+
   { accessorKey: "purchase_price", header: "Total Product QTY" },
   {
     accessorKey: "move_to_next",

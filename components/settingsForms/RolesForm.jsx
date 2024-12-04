@@ -118,7 +118,10 @@ const RolesForm = ({ type, data }) => {
     <form className="flex flex-col gap-4" onSubmit={onSubmit}>
       <h1 className="text-xl font-semibold">{type === "create" ? "Create New Role" : "Edit Role"}</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className=" bg-gray-200 p-6 border rounded-1g shadow-1g mb-6 flex  gap-40">
+        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100  flex-1">
+          <div className="grid grid-cols-1 gap-4">
+
         <div>
           <label className="text-sm font-medium">Role Name</label>
           <Input {...register("role_name")} placeholder="Enter Role Name" />
@@ -164,6 +167,8 @@ const RolesForm = ({ type, data }) => {
             </div>
           ))}
         </div>
+      </div>
+      </div>
       </div>
 
       {error && <p className="text-red-500">{error}</p>}

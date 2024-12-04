@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import PoQuotationForm from "@/components/procurementForm/po_quotationForm";
+import PoQuotationForm from "@/components/procurementForms/po_quotationForm";
 import { getPoQuotationById } from '@/actions/procurement/po_quotationAction';
 import { useRouter } from "next/navigation";
 
