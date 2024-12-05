@@ -1,0 +1,178 @@
+[1mdiff --git a/components/procurementForms/PurchaseRequestForm.jsx b/components/procurementForms/PurchaseRequestForm.jsx[m
+[1mindex 966b13e..0278e1b 100644[m
+[1m--- a/components/procurementForms/PurchaseRequestForm.jsx[m
+[1m+++ b/components/procurementForms/PurchaseRequestForm.jsx[m
+[36m@@ -1,430 +1,188 @@[m
+[31m-// @/components/procurementForms/PurchaseRequestForm.jsx[m
+[31m-[m
+ "use client";[m
+ [m
+[31m-import { useForm } from "react-hook-form";[m
+ import { zodResolver } from "@hookform/resolvers/zod";[m
+[32m+[m[32mimport { useForm } from "react-hook-form";[m
+ import { z } from "zod";[m
+[31m-import { useRouter } from "next/navigation";[m
+[31m-import { useEffect, useState, useCallback } from "react";[m
+[31m-import { toast } from "react-toastify";[m
+ import { Input } from "@/components/ui/input";[m
+[31m-import {[m
+[31m-  Select,[m
+[31m-  SelectTrigger,[m
+[31m-  SelectValue,[m
+[31m-  SelectContent,[m
+[31m-  SelectGroup,[m
+[31m-  SelectItem,[m
+[31m-} from "@/components/ui/select";[m
+[32m+[m[32mimport { Textarea } from "@/components/ui/textarea";[m
+ import { Button } from "@/components/ui/button";[m
+[31m-import ProductSelectionModal from "@/components/procurementModals/ProductSelectionModal";[m
+[31m-import { useFormState } from "react-dom";[m
+[31m-import { getSuppliers, createPurchaseRequest, updatePurchaseRequest } from "@/actions/procurement/purchaseRequestActions";[m
+[31m-import { format } from "date-fns";[m
+[31m-import Loader from "@/components/ui/loader";[m
+[32m+[m[32mimport {[m
+[32m+[m[32m  createPurchaseRequest,[m
+[32m+[m[32m  updatePurchaseRequest,[m
+[32m+[m[32m} from "@/actions/procurement/purchaseRequestActions";[m
+[32m+[m[32mimport { useRouter } from "next/navigation";[m
+[32m+[m[32mimport { useEffect } from "react";[m
+[32m+[m[32mimport { toast } from "react-toastify";[m
+ [m
+[32m+[m[32m// Schema for validation[m
+ const schema = z.object({[m
+[31m-  pr_id: z.string().nonempty("Purchase Request ID is required!"),[m
+[31m-  pr_date: z.string().nonempty("Purchase Request Date is required!"),[m
+[31m-  order_type: z.enum(["Sale", "Rent"]),[m
+[31m-  owner: z.string().nonempty("Owner is required!"),[m
+[31m-  supplier: z.string().nonempty("Supplier is required!"),[m
+[31m-  purchase_type: z.enum(["Buy", "Sell"]),[m
+[31m-  description: z.string().optional(),[m
+[32m+[m[32m  purchase_request_id: z.string().min(1, { message: "Purchase Request ID is required!" }),[m
+[32m+[m[32m  po_date: z.string().min(1, { message: "Purchase Order Date is required!" }),[m
+[32m+[m[32m  order_type: z.enum(["Sale", "Buy"], { message: "Order Type is required!" }),[m
+[32m+[m[32m  owner: z.string().min(1, { message: "Owner is required!" }),[m
+[32m+[m[32m  supplier: z.object({[m
+[32m+[m[32m    supplier_name: z.string().min(1, { message: "Supplier Name is required!" }),[m
+[32m+[m[32m    supplier_email: z.string().email({ message: "Valid Supplier Email is required!" }),[m
+[32m+[m[32m    supplier_number: z.string().min(1, { message: "Supplier Number is required!" }),[m
+[32m+[m[32m  }),[m
+[32m+[m[32m  total_quantity: z[m
+[32m+[m[32m    .number()[m
+[32m+[m[32m    .min(1, { message: "Total Quantity must be greater than 0!" }),[m
+[32m+[m[32m  additional_info: z[m
+[32m+[m[32m    .object({[m
+[32m+[m[32m      purchase_type: z.enum(["Buy", "Sale"]).optional(),[m
+[32m+[m[32m      description: z.string().optional(),[m
+[32m+[m[32m    })[m
+[32m+[m[32m    .optional(),[m
+ });[m
+ [m
+[31m-const PurchaseRequestForm = ({ type, data }) => {[m
+[32m+[m[32mexport default function PurchaseRequestForm({ type, data }) {[m
+   const router = useRouter();[m
+[31m-  const [suppliers, setSuppliers] = useState([]);[m
+[31m-  const [selectedProducts, setSelectedProducts] = useState([]);[m
+[31m-  const [isProductModalOpen, setIsProductModalOpen] = useState(false);[m
+[31m-  const [isLoadingSuppliers, setIsLoadingSuppliers] = useState(false);[m
+[31m-  const [updatedStages, setUpdatedStages] = useState({});[m
+[31m-  const [stages, setStages] = useState(data?.stages || []);[m
+[31m-  const [poQuotations, setPoQuotations] = useState(data?.stages?.find((stage) => stage.stage_name === "PO Quotations")?.quotations || []);[m
+ [m
+[31m-  const [state, formAction] = useFormState([m
+[31m-    type === "create" ? createPurchaseRequest : updatePurchaseRequest,[m
+[31m-    { success: false, error: false, message: "" }[m
+[31m-  );[m
+[31m-[m
+[31m-  const { register, handleSubmit, setValue, reset, watch } = useForm({[m
+[32m+[m[32m  const {[m
+[32m+[m[32m    register,[m
+[32m+[m[32m    handleSubmit,[m
+[32m+[m[32m    setValue,[m
+[32m+[m[32m    formState: { errors },[m
+[32m+[m[32m    reset,[m
+[32m+[m[32m  } = useForm({[m
+     resolver: zodResolver(schema),[m
+[31m-    defaultValues: data || {},[m
+[32m+[m[32m    defaultValues: {[m
+[32m+[m[32m      purchase_request_id: data?.purchase_request_id || "",[m
+[32m+[m[32m      po_date: data?.po_date || "",[m
+[32m+[m[32m      order_type: data?.order_type || "Buy",[m
+[32m+[m[32m      owner: data?.owner || "",[m
+[32m+[m[32m      supplier: data?.supplier || {[m
+[32m+[m[32m        supplier_name: "",[m
+[32m+[m[32m        supplier_email: "",[m
+[32m+[m[32m        supplier_number: "",[m
+[32m+[m[32m      },[m
+[32m+[m[32m      total_quantity: data?.total_quantity || 0,[m
+[32m+[m[32m      additional_info: data?.additional_info || { purchase_type: "", description: "" },[m
+[32m+[m[32m    },[m
+   });[m
+ [m
+[31m-  // Fetch suppliers and populate initial form data[m
+   useEffect(() => {[m
+[31m-    async function fetchSuppliers() {[m
+[31m-      setIsLoadingSuppliers(true);[m
+[31m-      try {[m
+[31m-        const supplierData = await getSuppliers();[m
+[31m-        setSuppliers(supplierData.filter((supplier) => supplier.supplier_name));[m
+[31m-        setIsLoadingSuppliers(false);[m
+[31m-[m
+[31m-        if (data) {[m
+[31m-          reset({[m
+[31m-            ...data,[m
+[31m-            supplier: data.supplier?._id || data.supplier || "",[m
+[31m-            pr_date: format(new Date(data.pr_date), "yyyy-MM-dd"),[m
+[31m-            order_type: data.order_type || "",[m
+[31m-            owner: data.owner || "",[m
+[31m-            purchase_type: data.purchase_type || "",[m
+[31m-            description: data.description || "",[m
+[31m-          });[m
+[31m-          setSelectedProducts(data.products || []);[m
+[31m-          setStages(data.stages || []);[m
+[31m-        }[m
+[31m-      } catch (error) {[m
+[31m-        console.error("Error fetching suppliers:", error);[m
+[31m-        setIsLoadingSuppliers(false);[m
+[31m-      }[m
+[32m+[m[32m    if (type === "edit" && data) {[m
+[32m+[m[32m      reset(data);[m
+     }[m
+[31m-    fetchSuppliers();[m
+[31m-  }, [data, reset]);[m
+[31m-[m
+[31m-  const handleOpenModal = useCallback(() => {[m
+[31m-    setIsProductModalOpen(true);[m
+[31m-  }, []);[m
+[31m-[m
+[31m-  const handleCloseModal = useCallback(() => {[m
+[31m-    setIsProductModalOpen(false);[m
+[31m-  }, []);[m
+[31m-[m
+[31m-  const handleProductSelection = useCallback([m
+[31m-    (products) => {[m
+[31m-      setSelectedProducts(products);[m
+[31m-      handleCloseModal();[m
+[31m-    },[m
+[31m-    [handleCloseModal][m
+[31m-  );[m
+[31m-[m
+[31m-  const handleQuantityChange = (productId, quantity) => {[m
+[31m-    setSelectedProducts((prev) =>[m
+[31m-      prev.map((p) =>[m
+[31m-        p.product._id === productId ? { ...p, quantity: Math.max(1, quantity) } : p[m
+[31m-      )[m
+[31m-    );[m
+[31m-  };[m
+[31m-[m
+[31m-  const handleRemoveProduct = (productId) => {[m
+[31m-    setSelectedProducts((prev) => prev.filter((p) => p.product._id !== productId));[m
+[31m-  };[m
+[31m-[m
+[31m-  const handleStageStatusChange = (stageName, newStatus) => {[m
+[31m-    setUpdatedStages((prev) => ({[m
+[31m-      ...prev,[m
+[31m-      [stageName]: newStatus,[m
+[31m-    }));[m
+[31m-  };[m
+[31m-[m
+[31m-  const handleAddQuotatio
