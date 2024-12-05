@@ -1,7 +1,6 @@
 // app/(admin)/inventory/layout.jsx
 
 import Sidebar from './_components/Sidebar';
-import { UserPermissionsProvider } from "@/context/UserPermissionsContext";
 
 
 export default async function SettingsLayout({ children }) {
@@ -12,10 +11,8 @@ export default async function SettingsLayout({ children }) {
       <Sidebar />
 
       {/* Main Content Area */}
-      <main className="flex-1 p-8">
-      <UserPermissionsProvider>
-        {children}
-      </UserPermissionsProvider>
+      <main className="flex-1 p-8">      
+        {children}      
       </main>
     </div>
   );
