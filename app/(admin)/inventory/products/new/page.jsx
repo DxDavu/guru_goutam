@@ -1,13 +1,15 @@
-// @/app/(admin)/settings/lead-checklist/new/page.jsx
+// @/app/(admin)/inventory/products/new/page.jsx
 
 "use client";
 
-import ProductForm from "@/components/inventoryForm/ProductForm";
+import InventoryForm from "@/components/inventoryForms/InventoryForm";
 
-export default function NewProductsPage() {
+
+
+export default function NewInventoryPage() {
   return (
     <div >
-      <ProductForm type="create" />
+      <InventoryForm type="create" />
     </div>
   );
 }

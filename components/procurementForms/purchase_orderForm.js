@@ -70,6 +70,7 @@ const PoForm = ({ type, data }) => {
     defaultValues: data || {},
   });
 
+
   // Fetch suppliers and populate initial form data
   useEffect(() => {
     async function fetchSuppliers() {
@@ -83,7 +84,7 @@ const PoForm = ({ type, data }) => {
           reset({
             ...data,
             supplier: data.supplier?._id || data.supplier || "",
-            pr_date: format(new Date(data.po_date), "yyyy-MM-dd"),
+            po_date: format(new Date(data.po_date), "yyyy-MM-dd"),
             order_type: data.order_type || "",
             owner: data.po_owner || "",
             purchase_type: data.purchase_type || "",
@@ -227,7 +228,7 @@ const PoForm = ({ type, data }) => {
 
               <Input
                 {...register("po_id")}
-                placeholder="Purchase Request ID"
+                placeholder="Purchase order ID"
                 className="w-36 border border-gray-50 rounded-md p-4 mt-5"
               />
             </div>
@@ -426,13 +427,13 @@ const PoForm = ({ type, data }) => {
       </div>
 
       {/* Selected Products */}
-      <div className="mt-20">
-        <h3 className="font-medium mb-5">Selected Products:</h3>
-        <Button type="button" onClick={handleOpenModal} className="mb-5">
+      <div>
+        <h3 className="font-medium">Selected Products:</h3>
+        <Button type="button" onClick={handleOpenModal}>
           Select Product
         </Button>
         {selectedProducts.map((product) => (
-          <div key={product.product._id} className="flex items-center gap-4 mt-2 w-96">
+          <div key={product.product._id} className="flex items-center gap-4 mt-2">
             <img
               src={product.product.image || "/placeholder.png"}
               alt={product.product.product_name}
@@ -463,12 +464,14 @@ const PoForm = ({ type, data }) => {
       </div>
 
         {/* Form Actions */}
-        <div className="flex justify-end gap-4 mt-20">
-          <Button onClick={() => router.push("/procurement/purchase_order")}>Cancel</Button>
-          <Button type="submit" className="bg-blue-500 text-white">
-            {type === "create" ? "Create" : "Update"}
-          </Button>
-        </div>
+        <div className="flex justify-end gap-4">
+        <Button onClick={() => router.push("/procurement/purchase_order")}>
+          Cancel
+        </Button>
+        <Button type="submit" className="bg-blue-500 text-white">
+          {type === "create" ? "Create" : "Update"}
+        </Button>
+      </div>
   
         <ProductSelectionModal
           isOpen={isProductModalOpen}

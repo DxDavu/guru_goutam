@@ -1,34 +1,31 @@
-// @/app/(admin)/settings/lead-checklist/[id]/page.jsx
-
+// @/app/(admin)/procurement/inventory/[id]/page.jsx
 
 "use client";
 
 import { useEffect, useState } from "react";
-import ProductForm from "@/components/inventoryForm/ProductForm";
-import { getProductById } from "@/actions/Inventory/productActions"; // Corrected import path
 
-export default function UpdateProductPage({
-  params }) {
-    const { id } = params;
-    const [productData, setProductData] = useState(null);
-    const [loading, setLoading] = useState(true);
-  
-    useEffect(() => {
-      async function fetchProduct() {
-        const product = await getProductById(id);
-        setProductData(product);
-        setLoading(false);
-      }
-      fetchProduct();
-    }, [id]);
+import { getInventoryById } from "@/actions/inventory/inventoryActions";
+import InventoryForm from "@/components/inventoryForms/InventoryForm";
 
+export default function EditInventoryPage({ params }) {
+  const { id } = params;
+  const [inventoryData, setInventoryData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  
-    if (loading) return <div className="text-center p-6">Loading...</div>;
-  
-    return (
-      <div className="">
-        <ProductForm type="edit" data={productData} />
-      </div>
-    );
-  }
+  useEffect(() => {
+    async function fetchInventory() {
+      const inventory = await getInventoryById(id);
+      setInventoryData(inventory);
+      setLoading(false);
+    }
+    fetchInventory();
+  }, [id]);
+
+  if (loading) return <div>Loading...</div>;
+
+  return (
+    <div >
+      <InventoryForm type="edit" data={inventoryData} />
+    </div>
+  );
+}
