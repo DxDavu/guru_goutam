@@ -318,5 +318,3 @@ const ProductForm = ({ type, data }) => {
 };
 
 export default ProductForm;    
-
-
