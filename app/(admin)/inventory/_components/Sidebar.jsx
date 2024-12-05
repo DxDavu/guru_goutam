@@ -12,11 +12,8 @@ import {
 } from 'react-icons/fa';
 
 const sidebarLinks = [
-  { name: 'Purchase Request', href: '/procurement/purchase-requests', icon: <FaUser /> },
-  // { name: 'PO Quotations', href: '/procurement/po-quotations', icon: <FaRegAddressCard /> },
-  // { name: 'Purchage Orders', href: '/procurement/purchage-orders', icon: <FaRegBuilding /> },
-  // { name: 'Payments', href: '/procurement/payments', icon: <FaRegBuilding /> },
-  { name: 'Suppliers', href: '/procurement/suppliers', icon: <FaCity /> },  
+  { name: 'Products', href: '/inventory/products', icon: <FaRegAddressCard /> },
+  { name: 'Group', href: '/inventory/group', icon: <FaCity /> },  
 ];
 
 export default function Sidebar() {
@@ -25,7 +22,7 @@ export default function Sidebar() {
   return (
     <aside className="w-64 bg-gray-100 border-r h-full">
       <div className="bg-orange-700 text-white text-center p-4">
-        <h1 className="text-lg font-bold">Procurement</h1>
+        <h1 className="text-lg font-bold">Inventory</h1>
       </div>
       <nav className="flex flex-col py-4 space-y-2">
         {/* Loop through the sidebarLinks array to render each link */}
