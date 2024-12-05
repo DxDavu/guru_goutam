@@ -106,6 +106,8 @@ export const createPurchaseOrder = async (currentState, templateData) => {
 
 // Update a Purchase Order
 export const updatePurchaseOrder = async (id, updateData) => {
+  console.log("updateeeeee", id);
+  
   try {
     await connectToDatabase();
     const updatedPurchaseOrder = await PurchaseOrder.findByIdAndUpdate(

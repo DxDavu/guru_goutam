@@ -180,6 +180,9 @@ const PoForm = ({ type, data }) => {
   
 
   const onSubmit = handleSubmit(async (formData) => {
+    console.log("all data coming from...", formData);
+    
+    
     try {
       const stagesToUpdate = stages.map((stage) => ({
         ...stage,

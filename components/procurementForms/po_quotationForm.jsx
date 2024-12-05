@@ -306,7 +306,7 @@ useEffect(() => {
               <h3 className="font-semibold mb-2 text-center">Workflow Stages:</h3>
               {stages.map((stage) => (
                 <li key={stage.stage_name} className="p-2 rounded border">
-                  <div className="flex justify-between items-center grid grid-cols-2">
+                  <div className="flex justify-between items-center grid-cols-2">
                     <span>{stage.stage_name}</span>
                     <Select
                       value={updatedStages[stage.stage_name] || stage.status}

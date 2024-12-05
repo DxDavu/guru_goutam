@@ -2,7 +2,7 @@
 
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { deletePo } from '@/actions/procurement/purchase_orderAction';
+import { deletePurchaseOrder } from '@/actions/procurement/purchase_orderAction';
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useState } from "react";
@@ -22,7 +22,7 @@ export const columns = [
   { accessorKey: "po_owner", header: "Po Owner" },
   // { accessorKey: "supplier", header: "Supplier  " },
   // { accessorKey: "supplier_number", header: "Supplier Number  " },
-  { accessorKey: "total_cost", header: "Total Total Cost " },
+  { accessorKey: "total_price", header: "Total Cost " },
   // { accessorKey: "product_qty", header: "Product Qty" },
   {
     accessorKey: "move_to_next",
@@ -54,7 +54,7 @@ export const columns = [
       const onEdit = () => router.push(`/procurement/purchase_order/${row.original._id}`);
       const onDelete = async () => {
         try {
-          await deletePo(row.original._id);
+          await deletePurchaseOrder(row.original._id);
           toast.success("Purchase deleted successfully!");
           setIsDeleteConfirmOpen(false);
           router.refresh();
