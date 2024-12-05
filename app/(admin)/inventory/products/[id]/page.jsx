@@ -24,7 +24,7 @@ export default function EditInventoryPage({ params }) {
   if (loading) return <div>Loading...</div>;
 
   return (
-    <div className="bg-white p-6 rounded-md max-w-2xl mx-auto mt-8">
+    <div >
       <InventoryForm type="edit" data={inventoryData} />
     </div>
   );

@@ -10,8 +10,14 @@ export default async function ProductPage() {
 
   return (
     <div>
+<<<<<<< .merge_file_xjr3ha
       <CreateNewPOButton />
       <DataTable columns={columns} data={products} />
+=======
+      Purchase Order...Comming Soon
+>>>>>>> .merge_file_a4c4e3
     </div>
-  );
+  )
 }
+
+export default page

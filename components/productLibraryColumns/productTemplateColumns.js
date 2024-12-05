@@ -1,5 +1,3 @@
-// @/components/productLibraryColumns/productTemplateColumns.js
-
 "use client";
 
 import { MoreHorizontal } from "lucide-react";
@@ -152,6 +150,7 @@ console.log(row.origina,'hi hekkol')
   },
 ];
 
+// Create New Product Template Button
 export const CreateNewProductTemplateButton = () => {
   const router = useRouter();
 

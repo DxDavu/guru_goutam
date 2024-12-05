@@ -1,13 +1,13 @@
+// @/app/(admin)/inventory/products/page.jsx
+
 "use server";
 
-import { getProducts} from '@/actions/Inventory/productActions'
+import { getProducts } from "@/actions/inventory/productActions";
 import { DataTable } from "@/components/DataTable";
-import {columns,CreateNewProductButton} from '@/components/InventoryColumns/ProductColumn';
+import { columns, CreateNewProductButton } from "@/components/inventoryColumns/productColumn";
 
-
-export default async function ProductPage() {
+export default async function ProductsPage() {
   const products = await getProducts();
-  console.log(products)
 
   return (
     <div className="bg-white p-1 rounded-md mt-0 flex-1">
@@ -16,10 +16,3 @@ export default async function ProductPage() {
     </div>
   );
 }
-
-
-
-
-
-
-

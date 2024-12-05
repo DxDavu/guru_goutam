@@ -13,8 +13,8 @@ import {
 import { ArrowUpDown } from "lucide-react"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import LeadForm from "@/components/settingsForms/LeadForm"
-import { deleteLead } from "@/actions/leadActions"
+import LeadForm from "@/components/settingsForms/LeadsForm"
+import { deleteLead } from "@/actions/leadsAction"
 import { toast } from "react-toastify"
 
 export const columns = [

@@ -121,131 +121,89 @@ export default function BranchForm({ type, data }) {
         {type === "create" ? "Add Branch" : "Edit Branch"}
       </h1>
 
-      {/* <div className="flex flex-wrap gap-8 justify-between mb-3"> */}
-      <div className=" bg-gray-200 p-6 border rounded-1g shadow-1g mb-6 flex  gap-8">
-
-       
-        <div className="bg-white p-6 rounded-lg shadow border w-full max-w-md flex-1">
-          <h2 className="text-lg font-semibold mb-4">Branch Details</h2>
-          <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium">Branch ID</label>
-              <Input {...register("branch_id")} placeholder="Enter branch ID"    className="w-full max-w-xs border border-gray-300 rounded-md p-2"/>
-              {errors.branch_id && (
-                <p className="text-red-500 text-xs">
-                  {errors.branch_id.message}
-                </p>
-              )}
-            </div>
-            <div>
-              <label className="text-sm font-medium">Branch Name</label>
-              <Input
-                {...register("branch_name")}
-                placeholder="Enter branch name"
-                   className="w-full max-w-xs border border-gray-300 rounded-md p-2"
-              />
-              {errors.branch_name && (
-                <p className="text-red-500 text-xs">
-                  {errors.branch_name.message}
-                </p>
-              )}
-            </div>
-          </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="text-sm font-medium">Branch ID</label>
+          <Input {...register("branch_id")} placeholder="Enter branch ID" />
+          {errors.branch_id && <p className="text-red-500 text-xs">{errors.branch_id.message}</p>}
         </div>
 
-        
-        <div className="bg-white p-6 rounded-lg shadow border w-full max-w-md flex-1">
-          <h2 className="text-lg font-semibold mb-4">Address</h2>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="text-sm font-medium">Pincode</label>
-              <Input {...register("pincode")} placeholder="Enter pincode"    className="w-full max-w-xs border border-gray-300 rounded-md p-2" />
-              {errors.pincode && (
-                <p className="text-red-500 text-xs">{errors.pincode.message}</p>
-              )}
-            </div>
-            <div>
-              <label className="text-sm font-medium">Country</label>
-              <Select
-                 className="w-full max-w-xs border border-gray-300 rounded-md p-2"
-                onValueChange={(value) => setValue("country", value)}
-                value={watch("country") || ""}
-              >
-                <SelectTrigger    className="w-full max-w-xs border border-gray-300 rounded-md p-2">
-                  <SelectValue placeholder="Select Country" />
-                </SelectTrigger>
-                <SelectContent>
-                  {countries.map((country) => (
-                    <SelectItem key={country._id} value={country._id}>
-                      {country.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {errors.country && (
-                <p className="text-red-500 text-xs">{errors.country.message}</p>
-              )}
-            </div>
-            <div>
-              <label className="text-sm font-medium">State</label>
-              <Select
-                onValueChange={(value) => setValue("state", value)}
-                value={watch("state") || ""}
-              >
-                <SelectTrigger    className="w-full max-w-xs border border-gray-300 rounded-md p-2">
-                  <SelectValue placeholder="Select State" />
-                </SelectTrigger>
-                <SelectContent>
-                  {states.map((state) => (
-                    <SelectItem key={state._id} value={state._id}>
-                      {state.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {errors.state && (
-                <p className="text-red-500 text-xs">{errors.state.message}</p>
-              )}
-            </div>
-            <div>
-              <label className="text-sm font-medium">City</label>
-              <Select
-                onValueChange={(value) => setValue("city", value)}
-                value={watch("city") || ""}
-              >
-                <SelectTrigger    className="w-full max-w-xs border border-gray-300 rounded-md p-2">
-                  <SelectValue placeholder="Select City" />
-                </SelectTrigger >
-                <SelectContent>
-                  {cities.map((city) => (
-                    <SelectItem key={city._id} value={city._id}>
-                      {city.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {errors.city && (
-                <p className="text-red-500 text-xs">{errors.city.message}</p>
-              )}
-            </div>
-            <div className="col-span-2">
-              <label className="text-sm font-medium">Address</label>
-              <Input {...register("address")} placeholder="Enter address"    className="w-full max-w-xs border border-gray-300 rounded-md p-2" />
-              {errors.address && (
-                <p className="text-red-500 text-xs">{errors.address.message}</p>
-              )}
-            </div>
-          </div>
+        <div>
+          <label className="text-sm font-medium">Branch Name</label>
+          <Input {...register("branch_name")} placeholder="Enter branch name" />
+          {errors.branch_name && <p className="text-red-500 text-xs">{errors.branch_name.message}</p>}
         </div>
 
-        
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 w-80 h-28">
-            <h3 className="text-lg font-semibold mb-4">Control</h3>
-            <div className="flex items-center gap-2">
-              <Checkbox checked={watch("active_status")} onCheckedChange={(checked) => setValue("active_status", checked)} />
-              <label className="text-sm font-medium">Active Status</label>
-            </div>
-          </div>
+        <div>
+          <label className="text-sm font-medium">Address</label>
+          <Input {...register("address")} placeholder="Enter address" />
+          {errors.address && <p className="text-red-500 text-xs">{errors.address.message}</p>}
+        </div>
+
+        <div>
+          <label className="text-sm font-medium">Pincode</label>
+          <Input {...register("pincode")} placeholder="Enter pincode" />
+          {errors.pincode && <p className="text-red-500 text-xs">{errors.pincode.message}</p>}
+        </div>
+
+        <div>
+          <label className="text-sm font-medium">Country</label>
+          <Select onValueChange={(value) => setValue("country", value)} value={watch("country") || ""}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select Country" />
+            </SelectTrigger>
+            <SelectContent>
+              {countries.map((country) => (
+                <SelectItem key={country._id} value={country._id}>
+                  {country.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {errors.country && <p className="text-red-500 text-xs">{errors.country.message}</p>}
+        </div>
+
+        <div>
+          <label className="text-sm font-medium">State</label>
+          <Select onValueChange={(value) => setValue("state", value)} value={watch("state") || ""}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select State" />
+            </SelectTrigger>
+            <SelectContent>
+              {states.map((state) => (
+                <SelectItem key={state._id} value={state._id}>
+                  {state.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {errors.state && <p className="text-red-500 text-xs">{errors.state.message}</p>}
+        </div>
+
+        <div>
+          <label className="text-sm font-medium">City</label>
+          <Select onValueChange={(value) => setValue("city", value)} value={watch("city") || ""}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select City" />
+            </SelectTrigger>
+            <SelectContent>
+              {cities.map((city) => (
+                <SelectItem key={city._id} value={city._id}>
+                  {city.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {errors.city && <p className="text-red-500 text-xs">{errors.city.message}</p>}
+        </div>
+      </div>
+
+      <div className="flex items-center gap-2 mt-4">
+        <Checkbox
+          checked={watch("active_status")}
+          onCheckedChange={(checked) => setValue("active_status", checked)}
+        />
+        <label className="text-sm font-medium">Active Status</label>
       </div>
 
       <div className="flex justify-center mt-5 gap-4">

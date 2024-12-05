@@ -203,12 +203,14 @@ useEffect(() => {
 
   return (
     <form onSubmit={onSubmit} className="w-full max-w-screen-2xl mx-auto p-8 bg-white shadow-md rounded-lg">
-      <h3 className="text-lg font-semibold mb-4">Choose Product Category</h3>
 
-      <div className=" bg-gray-200 p-6 border rounded-1g shadow-1g mb-6   gap-9  grid  grid-cols-3">
+      <div className=" bg-gray-200 p-6 border rounded-1g shadow-1g mb-6 flex  gap-9">
+
 
         {/* Product Category Section */}
-        <div className="bg-gray-200 p-6 border rounded-lg shadow-lg w-full md:w-1/3 ">
+        <div className="bg-gray-50 p-6 border rounded-lg shadow-lg w-full md:w-1/3">
+        <h3 className="text-lg font-semibold mb-4">Chose  po quotation details</h3>
+
           <div className="mb-4">       
                <Input
             {...register("quotation_id")}
@@ -254,7 +256,7 @@ useEffect(() => {
         </div>
 
         {/* Supplier Selection */}
-        <div className="mt-4">
+        <div className="bg-gray-50 p-6 border rounded-lg shadow-lg w-full md:w-1/3">
           <h3 className="text-lg font-semibold text-gray-700">Supplier</h3>
           <Select
             onValueChange={(value) => setValue("supplier", value)}
@@ -288,7 +290,7 @@ useEffect(() => {
 
 
         {/* Description */}
-        <div>
+        <div className="bg-gray-50 p-6 border rounded-lg shadow-lg w-full md:w-1/3">
           <h3 className="text-lg font-semibold text-gray-700">Price Detsils</h3>
           <textarea
             {...register("description")}
