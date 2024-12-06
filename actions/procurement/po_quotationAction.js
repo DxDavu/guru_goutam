@@ -23,7 +23,7 @@ export const getSuppliers = async () => {
 export const getPurchaseRequest = async () => {
   await connectToDatabase();
   const purchaseRequests = await PurchaseRequest.find({ active_status: true }).lean();
-  console.log(purchaseRequests,"hjjjjjjjjjjjjjjj");
+  
   return purchaseRequests.map((request) => ({
     _id: request._id.toString(), // Ensure ObjectId is converted to string
     pr_id: request.pr_id,       // Assuming `pr_id` is a field in your schema
