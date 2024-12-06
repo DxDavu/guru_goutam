@@ -237,11 +237,12 @@ const AddContactForm = () => {
       onSubmit={handleSubmit(onSubmit)}
       className="w-full max-w-screen-2xl mx-auto p-8 bg-gray-50 rounded-lg shadow-md"
     >
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6  bg-gray-200 p-6 border rounded-1g shadow-1g">
         {/* Personal Details */}
         <div className="bg-white p-6 border rounded-lg shadow">
           <h3 className="text-lg font-semibold mb-4">Personal Details:</h3>
           <div className="grid gap-4">
+            <div className="grid grid-cols-2">
             <Input
               label="Customer ID"
               placeholder="Enter Customer ID"
@@ -254,6 +255,8 @@ const AddContactForm = () => {
               {...register("date", { required: "Date is required!" })}
               error={errors.date?.message}
             />
+            </div>
+
             <Input
               label="Customer Type"
               placeholder="Enter Customer Type"
@@ -265,6 +268,7 @@ const AddContactForm = () => {
               placeholder="Enter Company Name"
               {...register("companyName")}
             />
+            <div className="grid grid-cols-2">
             <Input
               label="First Name"
               placeholder="Enter First Name"
@@ -277,6 +281,9 @@ const AddContactForm = () => {
               {...register("lastName", { required: "Last Name is required!" })}
               error={errors.lastName?.message}
             />
+            </div>
+            <div className="grid grid-cols-2">
+
             <Input
               label="Email ID"
               type="email"
@@ -291,18 +298,22 @@ const AddContactForm = () => {
               error={errors.phone?.message}
             />
           </div>
+          </div>
         </div>
 
         {/* Address */}
         <div className="bg-white p-6 border rounded-lg shadow">
           <h3 className="text-lg font-semibold mb-4">Address:</h3>
           <div className="grid gap-4">
+            <div className="grid grid-cols-2">
             <Input label="Pincode" placeholder="Enter Pincode" {...register("pincode")} />
             <Input label="Country" placeholder="Select Country" {...register("country")} />
             <Input label="State" placeholder="Select State" {...register("state")} />
             <Input label="City" placeholder="Select City" {...register("city")} />
+            </div>
             <Input label="Street" placeholder="Enter Street" {...register("street")} />
             <Input label="Landmark" placeholder="Enter Landmark" {...register("landmark")} />
+            <Input label="Address" placeholder="Enter Address" {...register("Address")} />
           </div>
         </div>
 
