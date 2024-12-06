@@ -26,7 +26,7 @@ export const getPurchaseRequest = async () => {
   
   return purchaseRequests.map((request) => ({
     _id: request._id.toString(), // Ensure ObjectId is converted to string
-    pr_id: request.pr_id,       // Assuming `pr_id` is a field in your schema
+    pr_id: request.pr_id,       
   }));
 };
 
