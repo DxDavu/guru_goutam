@@ -10,7 +10,7 @@ export default async function GroupPage() {
   const groups = await getGroups();
 
   return (
-    <div className="bg-white p-1 rounded-md mt-0 flex-1">
+    <div>
       <CreateNewGroupButton />
       <DataTable columns={columns} data={groups} />
     </div>

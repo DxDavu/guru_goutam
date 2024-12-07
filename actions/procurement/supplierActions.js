@@ -4,9 +4,9 @@
 
 import { connectToDatabase } from "@/lib/database";
 import Supplier from "@/lib/database/models/procurement/Supplier.model";
-import Country from "@/lib/database/models/Country.model";
-import State from "@/lib/database/models/State.model";
-import City from "@/lib/database/models/City.model";
+import Country from "@/lib/database/models/setting/Country.model";
+import State from "@/lib/database/models/setting/State.model";
+import City from "@/lib/database/models/setting/City.model";
 
 // Fetch active countries
 export const getActiveCountries = async () => {

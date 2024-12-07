@@ -16,7 +16,7 @@ export default async function PurchaseRequestsPage() {
   
 
   return (
-    <div className="bg-white p-6 rounded-md mt-0 flex-1">
+    <div>
       <CreateNewPurchaseRequestButton />
       <DataTable columns={columns} data={purchaseRequests} />
     </div>

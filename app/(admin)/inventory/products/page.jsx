@@ -10,7 +10,7 @@ export default async function InventoryPage() {
   const inventories = await getInventories();
 
   return (
-    <div className="bg-white p-6 rounded-md mt-4">
+    <div>
       <CreateNewInventoryButton />
       <DataTable columns={columns} data={inventories} />
     </div>
