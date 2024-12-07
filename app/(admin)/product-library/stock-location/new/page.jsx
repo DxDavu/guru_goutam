@@ -6,11 +6,7 @@ import StockLocationForm from "@/components/productLibraryForms/StockLocationFor
 
 export default function NewStockLocationPage() {
   return (
-<<<<<<< HEAD
     <div className="">
-=======
-    <div>
->>>>>>> guru/main
       <StockLocationForm type="create" />
     </div>
   );

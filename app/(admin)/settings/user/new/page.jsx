@@ -4,11 +4,7 @@ import UsersForm from "@/components/settingsForms/UsersForm";
 
 export default function NewUserPage() {
   return (
-<<<<<<< HEAD
     <div >
-=======
-    <div className="bg-white rounded-md max-w-2xl mx-auto mt-3">
->>>>>>> guru/main
       <UsersForm type="create" />
     </div>
   );

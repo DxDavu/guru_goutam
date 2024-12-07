@@ -1,21 +1,21 @@
 // @/actions/userActions.js
-"use server"
+"use server";
 
-import { connectToDatabase } from '@/lib/database';
-import User from '@/lib/database/models/User.model';
-import Role from '@/lib/database/models/Role.model';
-import Department from '@/lib/database/models/Department.model';
-import Branch from '@/lib/database/models/Branch.model';
-import { clerkClient } from '@clerk/nextjs/server';
-import mongoose from 'mongoose';
+import { connectToDatabase } from "@/lib/database";
+import User from "@/lib/database/models/User.model";
+import Role from "@/lib/database/models/Role.model";
+import Department from "@/lib/database/models/Department.model";
+import Branch from "@/lib/database/models/Branch.model";
+import { clerkClient } from "@clerk/nextjs/server";
+import mongoose from "mongoose";
 
 export const getUserById = async (id) => {
-  await connectToDatabase()
+  await connectToDatabase();
 
   try {
-    const user = await User.findById(id).populate('roles departments branches')
+    const user = await User.findById(id).populate("roles departments branches");
     if (!user) {
-      return null
+      return null;
     }
 
     // Convert MongoDB data to a plain JavaScript object
@@ -34,12 +34,12 @@ export const getUserById = async (id) => {
         _id: branch._id.toString(),
         branch_name: branch.branch_name,
       })),
-    }
+    };
   } catch (error) {
-    console.error("Failed to fetch user:", error)
-    return null
+    console.error("Failed to fetch user:", error);
+    return null;
   }
-}
+};
 
 // New function to get user by username with populated fields
 export const getUserByUsername = async (username) => {
@@ -48,13 +48,13 @@ export const getUserByUsername = async (username) => {
   try {
     const user = await User.findOne({ login_id: username })
       .populate({
-        path: 'roles',
+        path: "roles",
         populate: {
-          path: 'department',
-          model: 'Department',
+          path: "department",
+          model: "Department",
         },
       })
-      .populate('departments branches')
+      .populate("departments branches")
       .lean(); // Convert to plain JavaScript object
 
     if (!user) {
@@ -65,30 +65,34 @@ export const getUserByUsername = async (username) => {
     return {
       ...user,
       _id: user._id?.toString(),
-      roles: user.roles?.map((role) => ({
-        _id: role._id?.toString(),
-        role_name: role.role_name,
-        department: role.department
-          ? {
-              _id: role.department._id?.toString(),
-              department_name: role.department.department_name,
-            }
-          : null,
-        // Directly include module_access as-is
-        module_access: role.module_access?.map((module) => ({
-          module_name: module.module_name,
-          ...module, // Spread operator to include all fields in module_access as-is
+      roles:
+        user.roles?.map((role) => ({
+          _id: role._id?.toString(),
+          role_name: role.role_name,
+          department: role.department
+            ? {
+                _id: role.department._id?.toString(),
+                department_name: role.department.department_name,
+              }
+            : null,
+          // Directly include module_access as-is
+          module_access:
+            role.module_access?.map((module) => ({
+              module_name: module.module_name,
+              ...module, // Spread operator to include all fields in module_access as-is
+            })) || [],
+          active_status: role.active_status,
         })) || [],
-        active_status: role.active_status,
-      })) || [],
-      departments: user.departments?.map((dept) => ({
-        _id: dept._id?.toString(),
-        department_name: dept.department_name,
-      })) || [],
-      branches: user.branches?.map((branch) => ({
-        _id: branch._id?.toString(),
-        branch_name: branch.branch_name,
-      })) || [],
+      departments:
+        user.departments?.map((dept) => ({
+          _id: dept._id?.toString(),
+          department_name: dept.department_name,
+        })) || [],
+      branches:
+        user.branches?.map((branch) => ({
+          _id: branch._id?.toString(),
+          branch_name: branch.branch_name,
+        })) || [],
     };
   } catch (error) {
     console.error("Failed to fetch user by username:", error);
@@ -96,28 +100,27 @@ export const getUserByUsername = async (username) => {
   }
 };
 
-
 export const getUsers = async () => {
   await connectToDatabase();
   const users = await User.find({})
-    .populate('roles')
-    .populate('departments')
-    .populate('branches')
+    .populate("roles")
+    .populate("departments")
+    .populate("branches")
     .lean(); // Convert to plain JavaScript objects
 
   // Convert ObjectId fields to string
-  return users.map(user => ({
+  return users.map((user) => ({
     ...user,
     _id: user._id.toString(),
-    roles: user.roles.map(role => ({
+    roles: user.roles.map((role) => ({
       ...role,
       _id: role._id.toString(),
     })),
-    departments: user.departments.map(dept => ({
+    departments: user.departments.map((dept) => ({
       ...dept,
       _id: dept._id.toString(),
     })),
-    branches: user.branches.map(branch => ({
+    branches: user.branches.map((branch) => ({
       ...branch,
       _id: branch._id.toString(),
     })),
@@ -128,13 +131,11 @@ export const getUsers = async () => {
 export const createUser = async (currentState, userData) => {
   await connectToDatabase();
 
-  console.log('==userData==server actions===');
+  console.log("==userData==server actions===");
   console.log(userData);
-  console.log('==userData==server actions==');
+  console.log("==userData==server actions==");
 
-  
   try {
-   
     // Proceed with creating the user in Clerk if no existing user is found
     const clerkUser = await clerkClient.users.createUser({
       emailAddress: [userData.emailid],
@@ -142,9 +143,9 @@ export const createUser = async (currentState, userData) => {
       username: userData.login_id,
     });
 
-    console.log('==clerkUser=====');
+    console.log("==clerkUser=====");
     console.log(clerkUser);
-    console.log('==clerkUser====');
+    console.log("==clerkUser====");
 
     // Add Clerk ID to userData
     userData.clerkid = clerkUser.id;
@@ -152,9 +153,15 @@ export const createUser = async (currentState, userData) => {
     // Create a new user in MongoDB
     const newUser = new User({
       ...userData,
-      roles: userData.roles.map(roleId => new mongoose.Types.ObjectId(roleId)),
-      departments: userData.departments.map(deptId => new mongoose.Types.ObjectId(deptId)),
-      branches: userData.branches.map(branchId => new mongoose.Types.ObjectId(branchId)),
+      roles: userData.roles.map(
+        (roleId) => new mongoose.Types.ObjectId(roleId)
+      ),
+      departments: userData.departments.map(
+        (deptId) => new mongoose.Types.ObjectId(deptId)
+      ),
+      branches: userData.branches.map(
+        (branchId) => new mongoose.Types.ObjectId(branchId)
+      ),
     });
 
     const savedUser = await newUser.save();
@@ -180,7 +187,12 @@ export const createUser = async (currentState, userData) => {
   } catch (error) {
     console.log(error.errors);
     // Provide a user-friendly error message
-    return { success: false, error: true, message: error?.errors[0]?.message || 'Failed to create user. Please try again.' };
+    return {
+      success: false,
+      error: true,
+      message:
+        error?.errors[0]?.message || "Failed to create user. Please try again.",
+    };
   }
 };
 
@@ -189,17 +201,17 @@ export const updateUser = async (currentState, updateData) => {
   await connectToDatabase();
 
   const id = updateData.id;
-  
-  console.log('==updateData==server actions===');
+
+  console.log("==updateData==server actions===");
   // console.log(id);
   console.log(updateData);
-  console.log('==updateData==server actions==');
-  
+  console.log("==updateData==server actions==");
 
   try {
     // Find and update the user in the database
-    const updatedUser = await User.findByIdAndUpdate(id, updateData, { new: true })
-      .populate('roles departments branches');
+    const updatedUser = await User.findByIdAndUpdate(id, updateData, {
+      new: true,
+    }).populate("roles departments branches");
 
     // Update Clerk metadata if Clerk ID is available
     if (updatedUser.clerkid) {
@@ -211,9 +223,9 @@ export const updateUser = async (currentState, updateData) => {
       });
     }
 
-    console.log('===updatedUser==SA==');
+    console.log("===updatedUser==SA==");
     console.log(updatedUser);
-    console.log('===updatedUser==SA===');
+    console.log("===updatedUser==SA===");
 
     // Return a plain object instead of the Mongoose document
     return {
@@ -227,28 +239,31 @@ export const updateUser = async (currentState, updateData) => {
     };
   } catch (error) {
     // Handle the error and return a plain object
-    return { success: false, error: true, message: error.message || 'Failed to update user. Please try again.' };
+    return {
+      success: false,
+      error: true,
+      message: error.message || "Failed to update user. Please try again.",
+    };
   }
 };
 
 // Delete a user
 export const deleteUser = async (id) => {
   await connectToDatabase();
-  
-  console.log('==id=SA==');
+
+  console.log("==id=SA==");
   console.log(id);
-  console.log('==id=SA=');
+  console.log("==id=SA=");
 
   try {
     // Find and delete the user in the database
     const deletedUser = await User.findByIdAndDelete(id);
 
     console.log(deletedUser);
-    
 
     if (!deletedUser) {
       // Return a plain object indicating failure
-      return { success: false, error: true, message: 'User not found' };
+      return { success: false, error: true, message: "User not found" };
     }
 
     // Remove the user from Clerk if Clerk ID is available
@@ -257,9 +272,17 @@ export const deleteUser = async (id) => {
     }
 
     // Return a plain object indicating success
-    return { success: true, error: false, message: 'User deleted successfully' };
+    return {
+      success: true,
+      error: false,
+      message: "User deleted successfully",
+    };
   } catch (error) {
     // Handle the error and return a plain object
-    return { success: false, error: true, message: error.message || 'Failed to delete user. Please try again.' };
+    return {
+      success: false,
+      error: true,
+      message: error.message || "Failed to delete user. Please try again.",
+    };
   }
 };

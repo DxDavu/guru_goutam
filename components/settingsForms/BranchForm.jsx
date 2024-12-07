@@ -248,7 +248,6 @@ export default function BranchForm({ type, data }) {
           </div>
       </div>
 
-<<<<<<< HEAD
       <div className="flex items-center gap-2 mt-4">
         <Checkbox
           checked={watch("active_status")}
@@ -257,8 +256,6 @@ export default function BranchForm({ type, data }) {
         <label className="text-sm font-medium">Active Status</label>
       </div>
 
-=======
->>>>>>> guru/main
       <div className="flex justify-center mt-5 gap-4">
         <Button
           variant="outline"

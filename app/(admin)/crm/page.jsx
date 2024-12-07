@@ -3,11 +3,7 @@
 import React from 'react'
 import { useUser  } from '@clerk/nextjs'
 
-<<<<<<< HEAD
 const Settings = () => {
-=======
-const Inventory = () => {
->>>>>>> guru/main
 
   const { isLoaded, isSignedIn, user } = useUser()
 
@@ -16,7 +12,6 @@ const Inventory = () => {
    if (!isLoaded || !isSignedIn) {
     return null
   }
-<<<<<<< HEAD
 
   console.log(user);
   
@@ -27,12 +22,3 @@ const Inventory = () => {
 }
 
 export default Settings
-=======
-  
-  return (
-    <div>Hello, {user?.username} , welcome to Guru Goutham</div>
-  )
-}
-
-export default Inventory
->>>>>>> guru/main

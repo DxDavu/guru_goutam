@@ -46,7 +46,7 @@
     client-only "^0.0.1"
     xstate "^5.15.0"
 
-"@clerk/nextjs@^5.6.3":
+"@clerk/nextjs@^5.7.5":
   version "5.7.5"
   resolved "https://registry.npmjs.org/@clerk/nextjs/-/nextjs-5.7.5.tgz"
   integrity sha512-hfH4IiKcDT9LlqSOlNHZoYfX6iF4lBqPXf/KwnILCX/0+MVYaotb30FwWXkcHI2jZgcvumlQTOq8Gv5KugnihA==

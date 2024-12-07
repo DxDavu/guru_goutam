@@ -6,11 +6,7 @@ import StateForm from "@/components/settingsForms/StateForm";
 
 export default function NewStatePage() {
   return (
-<<<<<<< HEAD
     <div >
-=======
-    <div>
->>>>>>> guru/main
       <StateForm type="create" />
     </div>
   );

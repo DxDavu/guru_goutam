@@ -23,11 +23,7 @@ export default function UpdateStockLocationPage({ params }) {
   if (loading) return <div className="text-center p-6">Loading...</div>;
 
   return (
-<<<<<<< HEAD
     <div className="">
-=======
-    <div>
->>>>>>> guru/main
       <StockLocationForm type="edit" data={locationData} />
     </div>
   );

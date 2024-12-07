@@ -5,7 +5,6 @@ import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 
 const menuItems = [
-<<<<<<< HEAD
   { label: "Dashboard", href: "/dashboard" },
   { label: "Product Library", href: "/product-library" },
   { label: "Procurement", href: "/procurement" },
@@ -14,33 +13,6 @@ const menuItems = [
   { label: "Operations", href: "/operation" },
   { label: "User Performance", href: "/user-performance" },
   { label: "Client", href: "/client" },
-=======
-  {
-    label: 'Dashboard',
-    href: '/dashboard',
-  },
-  {
-    label: 'Product Library',
-    href: '/product-library',
-  },
-  {
-    label: 'Procurement',
-    href: '/procurement',
-  },
-  {
-    label: 'Inventory',
-    href: '/inventory',
-  },
-  {
-    label: 'CRM',
-    href: '/crm',
-  },
-
-  {
-    label: 'operations',
-    href: '/operation',
-  },
->>>>>>> d899636a3fb2b1541d38ab9c13f812fc2342ee2a
 ];
 
 export default function Menu({ isOpen }) {

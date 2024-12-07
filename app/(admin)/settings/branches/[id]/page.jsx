@@ -24,11 +24,7 @@ export default function EditBranchPage({ params }) {
   if (loading) return <div className="text-center p-6">Loading...</div>;
 
   return (
-<<<<<<< HEAD
     <div >
-=======
-    <div>
->>>>>>> guru/main
       <BranchForm type="edit" data={branchData} />
     </div>
   );

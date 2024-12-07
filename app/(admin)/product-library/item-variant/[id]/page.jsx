@@ -23,11 +23,7 @@ export default function UpdateItemVariantPage({ params }) {
   if (loading) return <div className="text-center p-6">Loading...</div>;
 
   return (
-<<<<<<< HEAD
     <div className="">
-=======
-    <div >
->>>>>>> guru/main
       <ItemVariantForm type="edit" data={variantData} />
     </div>
   );

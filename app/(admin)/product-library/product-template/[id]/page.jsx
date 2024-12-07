@@ -23,11 +23,7 @@ export default function UpdateProductTemplatePage({ params }) {
   if (loading) return <div className="text-center p-6">Loading...</div>;
 
   return (
-<<<<<<< HEAD
     <div className="">
-=======
-    <div >
->>>>>>> guru/main
       <ProductTemplateForm type="edit" data={templateData} />
     </div>
   );

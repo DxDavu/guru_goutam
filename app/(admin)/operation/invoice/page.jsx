@@ -7,7 +7,7 @@
 
 import { getInvoice } from "@/actions/operation/invoiceAction";
 import { DataTable } from "@/components/DataTable";
-import { columns, CreateNewInvoiceButton } from "@/components/operationColumn/invoiceColumn";
+import { columns, CreateNewInvoiceButton } from "@/components/operationColumns/invoiceColumn";
 
 export default async function AssetPage() {
   const assets = await getInvoice();
@@ -22,8 +22,7 @@ export default async function AssetPage() {
 
 
 
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 // import React from 'react';
 
 // function Page() {
@@ -46,10 +45,7 @@ export default async function AssetPage() {
 
 // export default Page;
 
-=======
->>>>>>> guru/main
-=======
->>>>>>> d899636a3fb2b1541d38ab9c13f812fc2342ee2a
+
 
 
 

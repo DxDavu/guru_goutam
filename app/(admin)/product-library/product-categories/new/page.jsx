@@ -6,11 +6,7 @@ import ProductCategoryForm from "@/components/productLibraryForms/ProductCategor
 
 export default function NewProductCategoryPage() {
   return (
-<<<<<<< HEAD
     <div className="">
-=======
-    <div>
->>>>>>> guru/main
       <ProductCategoryForm type="create" />
     </div>
   );
