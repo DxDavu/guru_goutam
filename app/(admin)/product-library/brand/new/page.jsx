@@ -2,7 +2,7 @@
 
 "use client";
 
-import BrandForm from "@/components/productLibraryForms/BrandForm";
+import BrandForm from "@/components/productLibraryForms/brandForm";
 
 export default function NewBrandPage() {
   return (

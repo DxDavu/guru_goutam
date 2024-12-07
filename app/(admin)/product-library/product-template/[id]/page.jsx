@@ -3,8 +3,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import ProductTemplateForm from "@/components/productLibraryForms/ProductTemplateForm";
-import { getProductTemplateById } from "@/actions/productLibrary/productTemplateActions";
+import ProductTemplateForm from "@/components/productLibraryForms/product-templateForm";
+import { getProductTemplateById } from "@/actions/productLibrary/product-templateActions";
 
 export default function UpdateProductTemplatePage({ params }) {
   const { id } = params;

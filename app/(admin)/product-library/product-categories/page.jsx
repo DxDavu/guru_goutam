@@ -2,9 +2,9 @@
 
 "use server";
 
-import { getProductCategories } from "@/actions/productLibrary/productCategoryActions";
+import { getProductCategories } from "@/actions/productLibrary/product-categoryActions";
 import { DataTable } from "@/components/DataTable";
-import { columns, CreateNewProductCategoryButton } from "@/components/productLibraryColumns/productCategoryColumns";
+import { columns, CreateNewProductCategoryButton } from "@/components/productLibraryColumns/product-categoryColumn";
 
 export default async function ProductCategoryPage() {
   const productCategories = await getProductCategories();

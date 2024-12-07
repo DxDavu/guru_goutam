@@ -4,7 +4,7 @@
 
 import { getGrades } from "@/actions/productLibrary/gradeActions";
 import { DataTable } from "@/components/DataTable";
-import { columns, CreateNewGradeButton } from "@/components/productLibraryColumns/gradeColumns";
+import { columns, CreateNewGradeButton } from "@/components/productLibraryColumns/gradeColumn";
 
 export default async function GradePage() {
   const grades = await getGrades();

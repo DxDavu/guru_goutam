@@ -2,7 +2,7 @@
 
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { deleteProductTemplate } from "@/actions/productLibrary/productTemplateActions";
+import { deleteProductTemplate } from "@/actions/productLibrary/product-templateActions";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useState } from "react";

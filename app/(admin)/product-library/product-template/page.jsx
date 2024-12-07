@@ -2,9 +2,9 @@
 
 "use server";
 
-import { getProductTemplates } from "@/actions/productLibrary/productTemplateActions";
+import { getProductTemplates } from "@/actions/productLibrary/product-templateActions";
 import { DataTable } from "@/components/DataTable";
-import { columns, CreateNewProductTemplateButton } from "@/components/productLibraryColumns/productTemplateColumns";
+import { columns, CreateNewProductTemplateButton } from "@/components/productLibraryColumns/product-templateColumn";
 
 export default async function ProductTemplatePage() {
   const templates = await getProductTemplates();

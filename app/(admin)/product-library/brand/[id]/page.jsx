@@ -3,7 +3,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import BrandForm from "@/components/productLibraryForms/BrandForm";
+import BrandForm from "@/components/productLibraryForms/brandForm";
 import { getBrandById } from "@/actions/productLibrary/brandActions";
 
 export default function UpdateBrandPage({ params }) {

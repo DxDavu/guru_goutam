@@ -2,7 +2,7 @@
 
 "use client";
 
-import ProductTemplateForm from "@/components/productLibraryForms/ProductTemplateForm";
+import ProductTemplateForm from "@/components/productLibraryForms/product-templateForm";
 
 export default function NewProductTemplatePage() {
   return (
