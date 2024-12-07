@@ -1,3 +1,4 @@
+
 <<<<<<< HEAD
 // @/actions/procurement/deliveryChallanActions.js
 =======
@@ -7,6 +8,8 @@
 "use server";
 
 import { connectToDatabase } from '@/lib/database';
+import Invoice from '@/lib/database/models/operations/Invoice.model'
+
 <<<<<<< HEAD
 import Invoice from '@/lib/database/models/operations/Invoice.model';
 import { FaFileInvoiceDollar } from 'react-icons/fa';
@@ -37,6 +40,7 @@ export const getInvoiceById = async (id) => {
     _id: challan._id.toString(),
   };
 };
+
 
 <<<<<<< HEAD
 // Create a new delivery challan
@@ -84,6 +88,9 @@ export const deleteInvoice = async (id) => {
   }
   return { success: true, message: 'Delivery Challan deleted successfully' };
 };
+
+
+
 <<<<<<< HEAD
 =======
 

@@ -1,188 +1,430 @@
+// @/components/procurementForms/PurchaseRequestForm.jsx
+
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import {
-  createPurchaseRequest,
-  updatePurchaseRequest,
-} from "@/actions/procurement/purchaseRequestActions";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { toast } from "react-toastify";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import ProductSelectionModal from "@/components/procurementModals/ProductSelectionModal";
+import { useFormState } from "react-dom";
+import { getSuppliers, createPurchaseRequest, updatePurchaseRequest } from "@/actions/procurement/purchaseRequestActions";
+import { format } from "date-fns";
+import Loader from "@/components/ui/loader";
 
-// Schema for validation
 const schema = z.object({
-  purchase_request_id: z.string().min(1, { message: "Purchase Request ID is required!" }),
-  po_date: z.string().min(1, { message: "Purchase Order Date is required!" }),
-  order_type: z.enum(["Sale", "Buy"], { message: "Order Type is required!" }),
-  owner: z.string().min(1, { message: "Owner is required!" }),
-  supplier: z.object({
-    supplier_name: z.string().min(1, { message: "Supplier Name is required!" }),
-    supplier_email: z.string().email({ message: "Valid Supplier Email is required!" }),
-    supplier_number: z.string().min(1, { message: "Supplier Number is required!" }),
-  }),
-  total_quantity: z
-    .number()
-    .min(1, { message: "Total Quantity must be greater than 0!" }),
-  additional_info: z
-    .object({
-      purchase_type: z.enum(["Buy", "Sale"]).optional(),
-      description: z.string().optional(),
-    })
-    .optional(),
+  pr_id: z.string().nonempty("Purchase Request ID is required!"),
+  pr_date: z.string().nonempty("Purchase Request Date is required!"),
+  order_type: z.enum(["Sale", "Rent"]),
+  owner: z.string().nonempty("Owner is required!"),
+  supplier: z.string().nonempty("Supplier is required!"),
+  purchase_type: z.enum(["Buy", "Sell"]),
+  description: z.string().optional(),
 });
 
-export default function PurchaseRequestForm({ type, data }) {
+const PurchaseRequestForm = ({ type, data }) => {
   const router = useRouter();
+  const [suppliers, setSuppliers] = useState([]);
+  const [selectedProducts, setSelectedProducts] = useState([]);
+  const [isProductModalOpen, setIsProductModalOpen] = useState(false);
+  const [isLoadingSuppliers, setIsLoadingSuppliers] = useState(false);
+  const [updatedStages, setUpdatedStages] = useState({});
+  const [stages, setStages] = useState(data?.stages || []);
+  const [poQuotations, setPoQuotations] = useState(data?.stages?.find((stage) => stage.stage_name === "PO Quotations")?.quotations || []);
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-    reset,
-  } = useForm({
+  const [state, formAction] = useFormState(
+    type === "create" ? createPurchaseRequest : updatePurchaseRequest,
+    { success: false, error: false, message: "" }
+  );
+
+  const { register, handleSubmit, setValue, reset, watch } = useForm({
     resolver: zodResolver(schema),
-    defaultValues: {
-      purchase_request_id: data?.purchase_request_id || "",
-      po_date: data?.po_date || "",
-      order_type: data?.order_type || "Buy",
-      owner: data?.owner || "",
-      supplier: data?.supplier || {
-        supplier_name: "",
-        supplier_email: "",
-        supplier_number: "",
-      },
-      total_quantity: data?.total_quantity || 0,
-      additional_info: data?.additional_info || { purchase_type: "", description: "" },
+    defaultValues: data || {},
+  });
+
+  // Fetch suppliers and populate initial form data
+  useEffect(() => {
+    async function fetchSuppliers() {
+      setIsLoadingSuppliers(true);
+      try {
+        const supplierData = await getSuppliers();
+        setSuppliers(supplierData.filter((supplier) => supplier.supplier_name));
+        setIsLoadingSuppliers(false);
+
+        if (data) {
+          reset({
+            ...data,
+            supplier: data.supplier?._id || data.supplier || "",
+            pr_date: format(new Date(data.pr_date), "yyyy-MM-dd"),
+            order_type: data.order_type || "",
+            owner: data.owner || "",
+            purchase_type: data.purchase_type || "",
+            description: data.description || "",
+          });
+          setSelectedProducts(data.products || []);
+          setStages(data.stages || []);
+        }
+      } catch (error) {
+        console.error("Error fetching suppliers:", error);
+        setIsLoadingSuppliers(false);
+      }
+    }
+    fetchSuppliers();
+  }, [data, reset]);
+
+  const handleOpenModal = useCallback(() => {
+    setIsProductModalOpen(true);
+  }, []);
+
+  const handleCloseModal = useCallback(() => {
+    setIsProductModalOpen(false);
+  }, []);
+
+  const handleProductSelection = useCallback(
+    (products) => {
+      setSelectedProducts(products);
+      handleCloseModal();
     },
+    [handleCloseModal]
+  );
+
+  const handleQuantityChange = (productId, quantity) => {
+    setSelectedProducts((prev) =>
+      prev.map((p) =>
+        p.product._id === productId ? { ...p, quantity: Math.max(1, quantity) } : p
+      )
+    );
+  };
+
+  const handleRemoveProduct = (productId) => {
+    setSelectedProducts((prev) => prev.filter((p) => p.product._id !== productId));
+  };
+
+  const handleStageStatusChange = (stageName, newStatus) => {
+    setUpdatedStages((prev) => ({
+      ...prev,
+      [stageName]: newStatus,
+    }));
+  };
+
+  const handleAddQuotation = () => {
+    setPoQuotations((prev) => [
+      ...prev,
+      {
+        supplier: "",
+        products: selectedProducts.map((product) => ({
+          product: product.product._id,
+          quantity: product.quantity,
+          amount: 0,
+        })),
+        total_amount: 0,
+      },
+    ]);
+  };
+
+  const handleQuotationChange = (index, field, value) => {
+    setPoQuotations((prev) =>
+      prev.map((q, i) => (i === index ? { ...q, [field]: value } : q))
+    );
+  };
+
+  const handleProductQuotationChange = (quotationIndex, productIndex, field, value) => {
+    setPoQuotations((prev) =>
+      prev.map((q, i) =>
+        i === quotationIndex
+          ? {
+            ...q,
+            products: q.products.map((p, j) =>
+              j === productIndex ? { ...p, [field]: value } : p
+            ),
+          }
+          : q
+      )
+    );
+  };
+
+  const handleRemoveQuotation = (index) => {
+    setPoQuotations((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const onSubmit = handleSubmit(async (formData) => {
+    try {
+      const stagesToUpdate = stages.map((stage) => ({
+        ...stage,
+        status: updatedStages[stage.stage_name] || stage.status,
+        quotations: stage.stage_name === "PO Quotations" ? poQuotations : stage.quotations,
+      }));
+
+      await formAction({
+        ...formData,
+        products: selectedProducts.map((p) => ({
+          product: p.product._id,
+          quantity: p.quantity,
+        })),
+        stages: stagesToUpdate,
+        id: data?._id,
+      });
+    } catch (error) {
+      console.error(error.message || "An unexpected error occurred.");
+      toast.error(error.message || "An unexpected error occurred.");
+    }
   });
 
   useEffect(() => {
-    if (type === "edit" && data) {
-      reset(data);
-    }
-  }, [type, data, reset]);
-
-  const onSubmit = handleSubmit(async (formData) => {
-    const response = await (type === "create"
-      ? createPurchaseRequest
-      : updatePurchaseRequest)({
-      ...formData,
-      id: data?._id,
-    });
-
-    if (response && !response.success) {
-      toast.error(response.message);
-    } else {
-      toast.success(
-        `${
-          type === "create" ? "Created" : "Updated"
-        } purchase request successfully!`
-      );
-      router.push("/purchase");
+    if (state?.success) {
+      toast.success(`Purchase Request ${type === "create" ? "created" : "updated"} successfully!`);
+      router.push("/procurement/purchase-requests");
       router.refresh();
+    } else if (state?.error) {
+      toast.error(state.message);
     }
-  });
+  }, [state, router, type]);
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4">
-      {/* Purchase Request ID */}
-      <div>
-        <label>Purchase Request ID</label>
-        <Input
-          {...register("purchase_request_id")}
-          placeholder="Enter Purchase Request ID"
-        />
-        {errors.purchase_request_id && <p>{errors.purchase_request_id.message}</p>}
+    <form onSubmit={onSubmit} className="w-full max-w-screen-2xl mx-auto p-8 bg-white shadow-md rounded-lg">
+      <div className=" bg-gray-200 p-6 border rounded-1g shadow-1g mb-6 flex  gap-9">
+
+        {/* Product Category Section */}
+        <div className="bg-gray-50 p-6 border rounded-lg shadow-lg w-full md:w-1/3">
+          <div>
+            <h3 className="font-medium">Purchase Request Details:</h3>
+            <Input {...register("pr_id")} placeholder="Purchase Request ID" />
+            <Input {...register("pr_date")} type="date" placeholder="Purchase Request Date" />
+            <Select
+              onValueChange={(value) => setValue("order_type", value)}
+              value={watch("order_type") || ""}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Order Type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="Sale">Sale</SelectItem>
+                  <SelectItem value="Rent">Rent</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            <Input {...register("owner")} placeholder="Owner" />
+          </div>
+        </div>
+
+        {/* Supplier Details */}
+        <div className="bg-gray-50 p-6 border rounded-lg shadow-lg w-full md:w-1/3">
+          <h3 className="font-medium">Supplier Details:</h3>
+          {isLoadingSuppliers ? (
+            <Loader />
+          ) : (
+            <Select
+              onValueChange={(value) => setValue("supplier", value)}
+              value={watch("supplier") || ""}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select Supplier" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {suppliers.map((supplier) => (
+                    <SelectItem key={supplier._id} value={supplier._id}>
+                      {supplier.supplier_name}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          )}
+        </div>
+
+        {/* Additional Information */}
+        <div className="bg-gray-50 p-6 border rounded-lg shadow-lg w-full md:w-1/3">
+          <h3 className="font-medium">Additional Information:</h3>
+          <Select
+            onValueChange={(value) => setValue("purchase_type", value)}
+            value={watch("purchase_type") || ""}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Purchase Type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value="Buy">Buy</SelectItem>
+                <SelectItem value="Sell">Sell</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
-      {/* Purchase Order Date */}
+      {/* Workflow Stages */}
       <div>
-        <label>Purchase Order Date</label>
-        <Input type="date" {...register("po_date")} />
-        {errors.po_date && <p>{errors.po_date.message}</p>}
+        <h3 className="font-medium mb-2">Workflow Stages:</h3>
+        {stages.length > 0 ? (
+          <ul className="space-y-2">
+            {stages.map((stage) => (
+              <li key={stage.stage_name} className="p-2 rounded border">
+                <div className="flex justify-between items-center">
+                  <span>{stage.stage_name}</span>
+                  <Select
+                    value={updatedStages[stage.stage_name] || stage.status}
+                    onValueChange={(value) =>
+                      handleStageStatusChange(stage.stage_name, value)
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select Status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectItem value="Pending">Pending</SelectItem>
+                        <SelectItem value="Approved">Approved</SelectItem>
+                        <SelectItem value="Rejected">Rejected</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No stages available.</p>
+        )}
       </div>
 
-      {/* Order Type */}
+      {/* PO Quotations */}
       <div>
-        <label>Order Type</label>
-        <select {...register("order_type")}>
-          <option value="Buy">Buy</option>
-          <option value="Sale">Sale</option>
-        </select>
-        {errors.order_type && <p>{errors.order_type.message}</p>}
+        <h3 className="font-medium">PO Quotations:</h3>
+        <Button type="button" onClick={handleAddQuotation}>
+          Add Quotation
+        </Button>
+        {poQuotations.map((quotation, index) => (
+          <div key={index} className="border p-4 mt-4 rounded-lg">
+            <Select
+              value={quotation.supplier}
+              onValueChange={(value) => handleQuotationChange(index, "supplier", value)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select Supplier" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {suppliers.map((supplier) => (
+                    <SelectItem key={supplier._id} value={supplier._id}>
+                      {supplier.supplier_name}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            {quotation.products.map((product, productIndex) => {
+              // Match the product with selectedProducts or fallback to fetch data
+              const matchedProduct =
+                selectedProducts.find((p) => p.product._id === product.product) || product;
+
+              return (
+                <div key={product.product} className="flex items-center gap-4 mt-2">
+                  <img
+                    src={matchedProduct.product.image || "/placeholder.png"}
+                    alt={matchedProduct.product.product_name}
+                    className="w-12 h-12 object-cover rounded"
+                  />
+                  <div className="flex-grow">
+                    <p className="font-medium">{matchedProduct.product.product_name}</p>
+                    <p className="text-sm text-gray-500">{matchedProduct.product.category}</p>
+                  </div>
+                  <Input
+                    type="number"
+                    placeholder="Amount"
+                    value={product.amount || ""}
+                    onChange={(e) =>
+                      handleProductQuotationChange(
+                        index,
+                        productIndex,
+                        "amount",
+                        parseFloat(e.target.value)
+                      )
+                    }
+                  />
+                </div>
+              );
+            })}
+
+            <Button
+              type="button"
+              onClick={() => handleRemoveQuotation(index)}
+              className="mt-4 bg-red-500 text-white"
+            >
+              Remove
+            </Button>
+          </div>
+        ))}
       </div>
 
-      {/* Owner */}
-      {/* <div>
-        <label>Owner</label>
-        <Input {...register("owner")} placeholder="Enter Owner ID" />
-        {errors.owner && <p>{errors.owner.message}</p>}
-      </div> */}
-
-      {/* Supplier Details */}
+      {/* Selected Products */}
       <div>
-        <label>Supplier Name</label>
-        <Input
-          {...register("supplier.supplier_name")}
-          placeholder="Enter Supplier Name"
-        />
-        {errors.supplier?.supplier_name && <p>{errors.supplier.supplier_name.message}</p>}
-      </div>
-      <div>
-        <label>Supplier Email</label>
-        <Input
-          type="email"
-          {...register("supplier.supplier_email")}
-          placeholder="Enter Supplier Email"
-        />
-        {errors.supplier?.supplier_email && <p>{errors.supplier.supplier_email.message}</p>}
-      </div>
-      <div>
-        <label>Supplier Number</label>
-        <Input
-          {...register("supplier.supplier_number")}
-          placeholder="Enter Supplier Number"
-        />
-        {errors.supplier?.supplier_number && <p>{errors.supplier.supplier_number.message}</p>}
-      </div>
-
-      {/* Total Quantity */}
-      <div>
-        <label>Total Quantity</label>
-        <Input
-          type="number"
-          {...register("total_quantity", {setValueAs: (value) => (value === "" ? undefined : Number(value)),})}
-          placeholder="Enter Total Quantity"
-        />
-        {errors.total_quantity && <p>{errors.total_quantity.message}</p>}
+        <h3 className="font-medium">Selected Products:</h3>
+        <Button type="button" onClick={handleOpenModal}>
+          Select Product
+        </Button>
+        {selectedProducts.map((product) => (
+          <div key={product.product._id} className="flex items-center gap-4 mt-2">
+            <img
+              src={product.product.image || "/placeholder.png"}
+              alt={product.product.product_name}
+              className="w-12 h-12 object-cover rounded"
+            />
+            <div className="flex-grow">
+              <p className="font-medium">{product.product.product_name}</p>
+              <p className="text-sm text-gray-500">{product.product.category}</p>
+            </div>
+            <Input
+              type="number"
+              min="1"
+              value={product.quantity}
+              onChange={(e) =>
+                handleQuantityChange(product.product._id, parseInt(e.target.value, 10))
+              }
+              className="w-16"
+            />
+            <Button
+              type="button"
+              onClick={() => handleRemoveProduct(product.product._id)}
+              className="bg-red-500 text-white"
+            >
+              Remove
+            </Button>
+          </div>
+        ))}
       </div>
 
-      {/* Additional Info */}
-      <div>
-        <label>Purchase Type</label>
-        <select {...register("additional_info.purchase_type")}>
-          <option value="">Select Type</option>
-          <option value="Buy">Buy</option>
-          <option value="Sale">Sale</option>
-        </select>
-      </div>
-      <div>
-        <label>Description</label>
-        <Textarea
-          {...register("additional_info.description")}
-          placeholder="Optional Description"
-        />
+      {/* Form Actions */}
+      <div className="flex justify-end gap-4">
+        <Button onClick={() => router.push("/procurement/purchase-requests")}>
+          Cancel
+        </Button>
+        <Button type="submit" className="bg-blue-500 text-white">
+          {type === "create" ? "Create" : "Update"}
+        </Button>
       </div>
 
-      <Button type="submit">
-        {type === "create" ? "Create" : "Update"} Request
-      </Button>
+      <ProductSelectionModal
+        isOpen={isProductModalOpen}
+        onClose={handleCloseModal}
+        onSelect={handleProductSelection}
+      />
     </form>
   );
-}
+
+};
+
+export default PurchaseRequestForm;
