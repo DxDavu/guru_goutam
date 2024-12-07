@@ -3,9 +3,9 @@
 "use server";
 
 import { connectToDatabase } from '@/lib/database';
-import Contact from '@/lib/database/models/Contacts.model';
+import Contact from '@/lib/database/models/crm/Contact.model';
 
-import fs from "fs/promises";
+// import fs from "fs/promises";
 
 // Fetch all contacts
 export const getContacts = async () => {
