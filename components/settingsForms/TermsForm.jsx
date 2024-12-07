@@ -114,38 +114,6 @@ export default function TermsForm({ type, data }) {
       </h1>
       {/* bg-gray-50 p-6 border rounded-lg shadow-lg mb-6 */}
       <div className=" bg-gray-200 p-6 border rounded-1g shadow-1g mb-6 flex  gap-40">
-<<<<<<< HEAD
-    <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 max-w-md flex-1">
-      <div className="grid grid-cols-1 gap-4">
-        <div>
-          <label className="text-sm font-medium">Type</label>
-          <Input {...register("type")} placeholder="Select Type" 
-             className="w-full max-w-xs border border-gray-300 rounded-md p-2"/>
-          {errors.type && (
-            <p className="text-red-500 text-xs">{errors.type.message}</p>
-          )}
-        </div>
-
-        <div>
-          <label className="text-sm font-medium">Transaction Type</label>
-          <Input {...register("transactionType")} placeholder="Select Transaction Type" 
-             className="w-full max-w-xs border border-gray-300 rounded-md p-2"/>
-          {errors.transactionType && (
-            <p className="text-red-500 text-xs">{errors.transactionType.message}</p>
-          )}
-        </div>
-      </div>
-
-      <div className="mt-4">
-        <label className="text-sm font-medium">Points</label>
-        {points.map((_, index) => (
-          <div key={index} className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <div>
-              <Textarea
-                {...register(`points.${index}.point`)}
-                placeholder="Enter Point"
-                   className="w-full max-w-xs border border-gray-300 rounded-md p-2"
-=======
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 max-w-md flex-1">
           <div className="grid grid-cols-1 gap-4">
             <div>
@@ -154,7 +122,6 @@ export default function TermsForm({ type, data }) {
                 {...register("type")}
                 placeholder="Select Type"
                 className="w-full max-w-xs border border-gray-300 rounded-md p-2"
->>>>>>> guru/main
               />
               {errors.type && (
                 <p className="text-red-500 text-xs">{errors.type.message}</p>
@@ -162,18 +129,11 @@ export default function TermsForm({ type, data }) {
             </div>
 
             <div>
-<<<<<<< HEAD
-              <Textarea
-                {...register(`points.${index}.description`)}
-                placeholder="Enter Description"
-                   className="w-full max-w-xs border border-gray-300 rounded-md p-2"
-=======
               <label className="text-sm font-medium">Transaction Type</label>
               <Input
                 {...register("transactionType")}
                 placeholder="Select Transaction Type"
                 className="w-full max-w-xs border border-gray-300 rounded-md p-2"
->>>>>>> guru/main
               />
               {errors.transactionType && (
                 <p className="text-red-500 text-xs">
@@ -186,58 +146,85 @@ export default function TermsForm({ type, data }) {
           <div className="mt-4">
             <label className="text-sm font-medium">Points</label>
             {points.map((_, index) => (
-              <div
-                key={index}
-                className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"
-              >
-                <div>
-                  <Textarea
-                    {...register(`points.${index}.point`)}
-                    placeholder="Enter Point"
-                    className="w-full max-w-xs border border-gray-300 rounded-md p-2"
-                  />
-                  {errors.points?.[index]?.point && (
-                    <p className="text-red-500 text-xs">
-                      {errors.points[index].point.message}
-                    </p>
-                  )}
-                </div>
-                <div>
-                  <Textarea
-                    {...register(`points.${index}.description`)}
-                    placeholder="Enter Description"
-                    className="w-full max-w-xs border border-gray-300 rounded-md p-2"
-                  />
-                </div>
-                <Button
-                  variant="ghost"
-                  onClick={() => removePoint(index)}
-                  className="text-red-500"
+              <>
+                <div
+                  key={index}
+                  className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"
                 >
-                  Remove
-                </Button>
-              </div>
+                  <div>
+                    <Textarea
+                      {...register(`points.${index}.point`)}
+                      placeholder="Enter Point"
+                      className="w-full max-w-xs border border-gray-300 rounded-md p-2"
+                    />
+                    {errors.type && (
+                      <p className="text-red-500 text-xs">
+                        {errors.type.message}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <Textarea
+                      {...register(`points.${index}.description`)}
+                      placeholder="Enter Description"
+                      className="w-full max-w-xs border border-gray-300 rounded-md p-2"
+                    />
+                    {errors.transactionType && (
+                      <p className="text-red-500 text-xs">
+                        {errors.transactionType.message}
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <div className="mt-4">
+                  <label className="text-sm font-medium">Points</label>
+                  {points.map((_, index) => (
+                    <div
+                      key={index}
+                      className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"
+                    >
+                      <div>
+                        <Textarea
+                          {...register(`points.${index}.point`)}
+                          placeholder="Enter Point"
+                          className="w-full max-w-xs border border-gray-300 rounded-md p-2"
+                        />
+                        {errors.points?.[index]?.point && (
+                          <p className="text-red-500 text-xs">
+                            {errors.points[index].point.message}
+                          </p>
+                        )}
+                      </div>
+                      <div>
+                        <Textarea
+                          {...register(`points.${index}.description`)}
+                          placeholder="Enter Description"
+                          className="w-full max-w-xs border border-gray-300 rounded-md p-2"
+                        />
+                      </div>
+                      <Button
+                        variant="ghost"
+                        onClick={() => removePoint(index)}
+                        className="text-red-500"
+                      >
+                        Remove
+                      </Button>
+                    </div>
+                  ))}
+                  <Button
+                    onClick={addPoint}
+                    className="bg-blue-500 text-white mt-2"
+                  >
+                    Add Point
+                  </Button>
+                </div>
+              </>
             ))}
             <Button onClick={addPoint} className="bg-blue-500 text-white mt-2">
               Add Point
             </Button>
           </div>
-<<<<<<< HEAD
-        ))}
-        <Button onClick={addPoint} className="bg-blue-500 text-white mt-2">Add Point</Button>
-        </div>
-      </div>
-   
-
-       {/* Control Section */}
-       <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 w-80 h-28">
-            <h3 className="text-lg font-semibold mb-4">Control</h3>
-            <div className="flex items-center gap-2">
-              <Checkbox checked={watch("active_status")} onCheckedChange={(checked) => setValue("active_status", checked)} />
-              <label className="text-sm font-medium">Active Status</label>
-            </div>
-          </div>
-=======
         </div>
 
         {/* Control Section */}
@@ -251,7 +238,6 @@ export default function TermsForm({ type, data }) {
             <label className="text-sm font-medium">Active Status</label>
           </div>
         </div>
->>>>>>> guru/main
       </div>
 
       <div className="flex justify-center mt-5 gap-4">
@@ -269,13 +255,8 @@ export default function TermsForm({ type, data }) {
           {state.loading
             ? "Submitting..."
             : type === "create"
-<<<<<<< HEAD
-              ? "Create"
-              : "Update"}
-=======
             ? "Create"
             : "Update"}
->>>>>>> guru/main
         </Button>
       </div>
     </form>
