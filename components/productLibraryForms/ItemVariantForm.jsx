@@ -93,7 +93,11 @@ const ItemVariantForm = ({ type, data }) => {
 
   return (
     <form className="w-full max-w-1xl mx-auto p-8 bg-white shadow-md rounded-lg" onSubmit={onSubmit}>
+<<<<<<< HEAD
     <div className="bg-gray-200 p-8 px-6 border rounded-lg shadow-lg mb-6">  
+=======
+    <div className="bg-gray-50 p-8 px-6 border rounded-lg shadow-lg mb-6">  
+>>>>>>> guru/main
         <h1 className="text-xl font-semibold">
       {type === "create" ? "Add  item varient" : "Edit Product Category"}
     </h1>

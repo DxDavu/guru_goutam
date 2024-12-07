@@ -24,7 +24,11 @@ export default function EditLeadStatusPage({ params }) {
   if (loading) return <div className="text-center p-6">Loading...</div>;
 
   return (
+<<<<<<< HEAD
     <div >
+=======
+    <div>
+>>>>>>> guru/main
       <LeadStatusForm type="edit" data={leadStatusData} />
     </div>
   );

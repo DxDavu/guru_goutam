@@ -1,18 +1,18 @@
-// @/app/(admin)/inventory/products/page.jsx
+// @/app/(admin)/inventory/inventory/page.jsx
 
 "use server";
 
-import { getProducts } from "@/actions/inventory/productActions";
+import { getInventories } from "@/actions/inventory/inventoryActions";
 import { DataTable } from "@/components/DataTable";
-import { columns, CreateNewProductButton } from "@/components/inventoryColumns/productColumn";
+import { columns, CreateNewInventoryButton } from "@/components/inventoryColumns/inventoryColumns";
 
-export default async function ProductsPage() {
-  const products = await getProducts();
+export default async function InventoryPage() {
+  const inventories = await getInventories();
 
   return (
-    <div className="bg-white p-1 rounded-md mt-0 flex-1">
-      <CreateNewProductButton />
-      <DataTable columns={columns} data={products} />
+    <div className="bg-white p-6 rounded-md mt-4">
+      <CreateNewInventoryButton />
+      <DataTable columns={columns} data={inventories} />
     </div>
   );
 }

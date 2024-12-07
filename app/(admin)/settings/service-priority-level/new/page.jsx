@@ -6,7 +6,11 @@ import ServicePriorityLevelForm from "@/components/settingsForms/ServicePriority
 
 export default function NewServicePriorityLevelPage() {
   return (
+<<<<<<< HEAD
     <div >
+=======
+    <div>
+>>>>>>> guru/main
       <ServicePriorityLevelForm type="create" />
     </div>
   );

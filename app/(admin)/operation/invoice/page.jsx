@@ -22,6 +22,7 @@ export default async function AssetPage() {
 
 
 
+<<<<<<< HEAD
 // import React from 'react';
 
 // function Page() {
@@ -44,6 +45,8 @@ export default async function AssetPage() {
 
 // export default Page;
 
+=======
+>>>>>>> guru/main
 
 
 

@@ -23,7 +23,11 @@ export default function UpdateAssetPage({ params }) {
   if (loading) return <div className="text-center p-6">Loading...</div>;
 
   return (
+<<<<<<< HEAD
     <div className="">
+=======
+    <div>
+>>>>>>> guru/main
       <AssetForm type="edit" data={assetData} />
     </div>
   );

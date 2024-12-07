@@ -6,7 +6,11 @@ import BranchForm from "@/components/settingsForms/BranchForm";
 
 export default function NewBranchPage() {
   return (
+<<<<<<< HEAD
     <div >
+=======
+    <div>
+>>>>>>> guru/main
       <BranchForm type="create" />
     </div>
   );

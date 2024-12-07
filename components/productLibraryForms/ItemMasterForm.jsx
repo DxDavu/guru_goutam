@@ -63,13 +63,21 @@ const ItemMasterForm = ({ type, data }) => {
 
   return (
     <form className="w-full max-w-1xl mx-auto p-8 bg-white shadow-md rounded-lg" onSubmit={onSubmit}>
+<<<<<<< HEAD
       <div className="bg-gray-200 p-6 border rounded-lg shadow-lg mb-6 ">  
+=======
+      <div className="bg-gray-50 p-6 border rounded-lg shadow-lg mb-6 ">  
+>>>>>>> guru/main
           <h1 className="text-xl font-semibold">
         {type === "create" ? "Add item " : "Edit item "}
       </h1>
 
         {/* Category Information and Active Status Side by Side */}
+<<<<<<< HEAD
         <div className="flex flex-col md:flex-row gap-6 h-52">
+=======
+        <div className="flex flex-col md:flex-row gap-28 h-52 ">
+>>>>>>> guru/main
 
           {/* Category Information Fields */}
           <div className="bg-gray-50 flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -23,7 +23,11 @@ export default function UpdateBrandPage({ params }) {
   if (loading) return <div className="text-center p-6">Loading...</div>;
 
   return (
+<<<<<<< HEAD
     <div >
+=======
+    <div>
+>>>>>>> guru/main
       <BrandForm type="edit" data={brandData} />
     </div>
   );

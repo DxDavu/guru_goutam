@@ -24,7 +24,11 @@ export default function EditOrderChecklistPage({ params }) {
   if (loading) return <div className="text-center p-6">Loading...</div>;
 
   return (
+<<<<<<< HEAD
     <div >
+=======
+    <div>
+>>>>>>> guru/main
       <OrderChecklistForm type="edit" data={checklistData} />
     </div>
   );

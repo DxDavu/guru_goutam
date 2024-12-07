@@ -1,10 +1,19 @@
+<<<<<<< HEAD
 // @/actions/procurement/deliveryChallanActions.js
+=======
+
+>>>>>>> guru/main
 
 "use server";
 
 import { connectToDatabase } from '@/lib/database';
+<<<<<<< HEAD
 import Invoice from '@/lib/database/models/operations/Invoice.model';
 import { FaFileInvoiceDollar } from 'react-icons/fa';
+=======
+import Invoice from '@/lib/database/models/operations/Invoice.model'
+
+>>>>>>> guru/main
 
 // Get all delivery challans
 export const getInvoice = async () => {
@@ -29,7 +38,11 @@ export const getInvoiceById = async (id) => {
   };
 };
 
+<<<<<<< HEAD
 // Create a new delivery challan
+=======
+
+>>>>>>> guru/main
 // Create a new delivery challan
 export const createInvoice = async (currentState, challanData) => {
     await connectToDatabase();
@@ -71,3 +84,9 @@ export const deleteInvoice = async (id) => {
   }
   return { success: true, message: 'Delivery Challan deleted successfully' };
 };
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> guru/main

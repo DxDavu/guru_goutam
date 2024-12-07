@@ -6,7 +6,11 @@ import LeadStatusForm from "@/components/settingsForms/LeadStatusForm";
 
 export default function NewLeadStatusPage() {
   return (
+<<<<<<< HEAD
     <div >
+=======
+    <div>
+>>>>>>> guru/main
       <LeadStatusForm type="create" />
     </div>
   );

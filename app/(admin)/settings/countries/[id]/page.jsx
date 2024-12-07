@@ -24,7 +24,11 @@ export default function EditCountryPage({ params }) {
   if (loading) return <div className="text-center p-6">Loading...</div>;
 
   return (
+<<<<<<< HEAD
     <div>
+=======
+    <div >
+>>>>>>> guru/main
       <CountryForm type="edit" data={countryData} />
     </div>
   );

@@ -24,7 +24,11 @@ export default function EditServiceStatusPage({ params }) {
   if (loading) return <div className="text-center p-6">Loading...</div>;
 
   return (
+<<<<<<< HEAD
     <div >
+=======
+    <div>
+>>>>>>> guru/main
       <ServiceStatusForm type="edit" data={statusData} />
     </div>
   );

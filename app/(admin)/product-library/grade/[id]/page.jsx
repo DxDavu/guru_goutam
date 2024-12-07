@@ -23,7 +23,11 @@ export default function UpdateGradePage({ params }) {
   if (loading) return <div className="text-center p-6">Loading...</div>;
 
   return (
+<<<<<<< HEAD
     <div className="">
+=======
+    <div>
+>>>>>>> guru/main
       <GradeForm type="edit" data={gradeData} />
     </div>
   );

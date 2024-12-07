@@ -6,7 +6,11 @@ import BrandForm from "@/components/productLibraryForms/BrandForm";
 
 export default function NewBrandPage() {
   return (
+<<<<<<< HEAD
     <div >
+=======
+    <div>
+>>>>>>> guru/main
       <BrandForm type="create" />
     </div>
   );

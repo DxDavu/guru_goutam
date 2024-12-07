@@ -24,7 +24,11 @@ export default function EditTaxListPage({ params }) {
   if (loading) return <div className="text-center p-6">Loading...</div>;
 
   return (
+<<<<<<< HEAD
     <div >
+=======
+    <div>
+>>>>>>> guru/main
       <TaxListForm type="edit" data={taxListData} />
     </div>
   );
