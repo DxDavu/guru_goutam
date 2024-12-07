@@ -3,7 +3,7 @@
 "use server";
 
 import { connectToDatabase } from '@/lib/database';
-import ServiceStatus from '@/lib/database/models/ServiceStatus.model';
+import ServiceStatus from '@/lib/database/models/setting/ServiceStatus.model';
 
 // Get all service statuses
 export const getServiceStatuses = async () => {

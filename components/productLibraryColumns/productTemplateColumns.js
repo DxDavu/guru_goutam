@@ -16,6 +16,20 @@ import {
 import Image from "next/image";
 import { useUserPermissions } from "@/context/UserPermissionsContext";
 
+// Permission check function
+const checkPermissions = (roles, moduleName, permissionKey) => {
+  for (const role of roles) {
+    // Renaming 'module' to 'foundModule' to avoid reassignment issues
+    const foundModule = role.module_access?.find(
+      (mod) => mod.module_name === moduleName
+    );
+    if (foundModule && foundModule.permissions[permissionKey]) {
+      return true;
+    }
+  }
+  return false;
+};
+
 export const columns = [
   {
     accessorKey: "z",

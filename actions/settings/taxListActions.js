@@ -3,7 +3,7 @@
 "use server";
 
 import { connectToDatabase } from '@/lib/database';
-import TaxList from '@/lib/database/models/TaxList.model';
+import TaxList from '@/lib/database/models/setting/TaxList.model';
 
 // Get all tax lists
 export const getTaxLists = async () => {

@@ -1,12 +1,12 @@
 // app/api/role/route.js
-import { connectToDatabase } from '@/lib/database';
-import Role from '@/lib/database/models/Role.model';
+import { connectToDatabase } from "@/lib/database";
+import Role from "@/lib/database/models/setting/Role.model";
 
 // GET all roles
 export async function GET() {
   try {
     await connectToDatabase();
-    const roles = await Role.find().populate('department');
+    const roles = await Role.find().populate("department");
 
     // Format the roles to send proper structure in response
     const formattedRoles = roles.map((role) => {
@@ -14,18 +14,21 @@ export async function GET() {
         const { module_name, ...permissions } = module;
         return {
           module_name,
-          permissions,  // Return permissions as an object
+          permissions, // Return permissions as an object
         };
       });
       return {
-        ...role._doc,  // Spread the other fields
-        module_access: formattedModuleAccess,  // Return the formatted module access
+        ...role._doc, // Spread the other fields
+        module_access: formattedModuleAccess, // Return the formatted module access
       };
     });
 
     return new Response(JSON.stringify(formattedRoles), { status: 200 });
   } catch (error) {
-    return new Response(JSON.stringify({ message: 'Error fetching roles', error }), { status: 500 });
+    return new Response(
+      JSON.stringify({ message: "Error fetching roles", error }),
+      { status: 500 }
+    );
   }
 }
 
@@ -35,7 +38,7 @@ export async function POST(req) {
     await connectToDatabase();
     const roleData = await req.json();
 
-    console.log('Role data received:', roleData);
+    console.log("Role data received:", roleData);
 
     // Unpack permissions and reformat them properly for saving
     const formattedModuleAccess = roleData.module_access.map((module) => {
@@ -44,22 +47,28 @@ export async function POST(req) {
       // Explicitly extract the permission fields
       return {
         module_name,
-        ...permissions,  // Spread permissions to separate keys like can_add, can_edit, etc.
+        ...permissions, // Spread permissions to separate keys like can_add, can_edit, etc.
       };
     });
 
     // Create a new role with the unpacked module access
     const newRole = new Role({
       ...roleData,
-      module_access: formattedModuleAccess,  // Assign the formatted module access
+      module_access: formattedModuleAccess, // Assign the formatted module access
     });
 
     await newRole.save();
 
-    return new Response(JSON.stringify({ message: 'Role created successfully!', role: newRole }), { status: 201 });
+    return new Response(
+      JSON.stringify({ message: "Role created successfully!", role: newRole }),
+      { status: 201 }
+    );
   } catch (error) {
-    console.error('Error creating role:', error);
-    return new Response(JSON.stringify({ message: 'Error creating role', error }), { status: 500 });
+    console.error("Error creating role:", error);
+    return new Response(
+      JSON.stringify({ message: "Error creating role", error }),
+      { status: 500 }
+    );
   }
 }
 
@@ -76,16 +85,32 @@ export async function PUT(req) {
       // Explicitly extract the permission fields
       return {
         module_name,
-        ...permissions,  // Spread permissions to separate keys like can_add, can_edit, etc.
+        ...permissions, // Spread permissions to separate keys like can_add, can_edit, etc.
       };
     });
 
-    const updatedRole = await Role.findByIdAndUpdate(id, { ...updateData, module_access: formattedModuleAccess }, { new: true });
-    if (!updatedRole) return new Response(JSON.stringify({ message: 'Role not found' }), { status: 404 });
+    const updatedRole = await Role.findByIdAndUpdate(
+      id,
+      { ...updateData, module_access: formattedModuleAccess },
+      { new: true }
+    );
+    if (!updatedRole)
+      return new Response(JSON.stringify({ message: "Role not found" }), {
+        status: 404,
+      });
 
-    return new Response(JSON.stringify({ message: 'Role updated successfully!', role: updatedRole }), { status: 200 });
+    return new Response(
+      JSON.stringify({
+        message: "Role updated successfully!",
+        role: updatedRole,
+      }),
+      { status: 200 }
+    );
   } catch (error) {
-    return new Response(JSON.stringify({ message: 'Error updating role', error }), { status: 500 });
+    return new Response(
+      JSON.stringify({ message: "Error updating role", error }),
+      { status: 500 }
+    );
   }
 }
 
@@ -96,10 +121,19 @@ export async function DELETE(req) {
     const { id } = await req.json();
 
     const deletedRole = await Role.findByIdAndDelete(id);
-    if (!deletedRole) return new Response(JSON.stringify({ message: 'Role not found' }), { status: 404 });
+    if (!deletedRole)
+      return new Response(JSON.stringify({ message: "Role not found" }), {
+        status: 404,
+      });
 
-    return new Response(JSON.stringify({ message: 'Role deleted successfully!' }), { status: 200 });
+    return new Response(
+      JSON.stringify({ message: "Role deleted successfully!" }),
+      { status: 200 }
+    );
   } catch (error) {
-    return new Response(JSON.stringify({ message: 'Error deleting role', error }), { status: 500 });
+    return new Response(
+      JSON.stringify({ message: "Error deleting role", error }),
+      { status: 500 }
+    );
   }
 }

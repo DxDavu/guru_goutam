@@ -3,7 +3,7 @@
 "use server";
 
 import { connectToDatabase } from '@/lib/database';
-import TermsandConditions from '@/lib/database/models/TermsandConditions.model';
+import TermsandConditions from '@/lib/database/models/setting/TermsandConditions.model';
 
 // Fetch all terms and conditions
 export const getTermsAndConditions = async () => {

@@ -2,10 +2,10 @@
 "use server";
 
 import { connectToDatabase } from "@/lib/database";
-import User from "@/lib/database/models/User.model";
-import Role from "@/lib/database/models/Role.model";
-import Department from "@/lib/database/models/Department.model";
-import Branch from "@/lib/database/models/Branch.model";
+import User from "@/lib/database/models/setting/User.model";
+import Role from "@/lib/database/models/setting/Role.model";
+import Department from "@/lib/database/models/setting/Department.model";
+import Branch from "@/lib/database/models/setting/Branch.model";
 import { clerkClient } from "@clerk/nextjs/server";
 import mongoose from "mongoose";
 

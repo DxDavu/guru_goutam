@@ -1,10 +1,6 @@
 {
   "compilerOptions": {
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -22,9 +18,7 @@
       }
     ],
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@/*": ["./*"]
     },
     "target": "ES2017"
   },
@@ -34,10 +28,10 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "app/api/user/route.nkp",
-    "lib/database/models/User.model.js",
-    "lib/database/models/Branch.model.js",
-    "lib/database/models/Department.model.js",
-    "lib/database/models/Role.model.js",
+    "lib/database/models/setting/User.model.js",
+    "lib/database/models/setting/Branch.model.js",
+    "lib/database/models/setting/Department.model.js",
+    "lib/database/models/setting/Role.model.js",
     "components/BranchTable.jsx",
     "components/CreateBranchForm.jsx",
     "components/CreateDepartmentForm.jsx",
@@ -66,9 +60,9 @@
     "components/Table.jsx",
     "components/settingsForms/FormModal.jsx",
     "components/settingsForms/InputField.jsx",
-    "components/Pagination.jsx"
-, "app/(admin)/layout.jsx", "app/(admin)/inventory/page.jsx"  ],
-  "exclude": [
-    "node_modules"
-  ]
+    "components/Pagination.jsx",
+    "app/(admin)/layout.jsx",
+    "app/(admin)/inventory/page.jsx"
+  ],
+  "exclude": ["node_modules"]
 }

@@ -3,7 +3,7 @@
 "use server";
 
 import { connectToDatabase } from '@/lib/database';
-import LeadStatus from '@/lib/database/models/LeadStatus.model';
+import LeadStatus from '@/lib/database/models/setting/LeadStatus.model';
 
 // Get all lead statuses
 export const getLeadStatuses = async () => {

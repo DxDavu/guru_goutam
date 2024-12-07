@@ -3,7 +3,7 @@
 "use server";
 
 import { connectToDatabase } from "@/lib/database";
-import Department from "@/lib/database/models/Department.model";
+import Department from "@/lib/database/models/setting/Department.model";
 
 // Get all departments
 export const getDepartments = async () => {
@@ -28,16 +28,26 @@ export const getDepartmentById = async (id) => {
 // Create a new department
 export const createDepartment = async (currentState, departmentData) => {
   await connectToDatabase();
-  const existingDept = await Department.findOne({ department_name: departmentData.department_name });
+  const existingDept = await Department.findOne({
+    department_name: departmentData.department_name,
+  });
   if (existingDept) {
-    return { success: false, error: true, message: "Department name already exists" };
+    return {
+      success: false,
+      error: true,
+      message: "Department name already exists",
+    };
   }
   try {
     const newDept = new Department(departmentData);
     const savedDept = await newDept.save();
     return { success: true, department: savedDept.toObject() };
   } catch (error) {
-    return { success: false, error: true, message: error.message || "Failed to create department" };
+    return {
+      success: false,
+      error: true,
+      message: error.message || "Failed to create department",
+    };
   }
 };
 
@@ -45,18 +55,24 @@ export const createDepartment = async (currentState, departmentData) => {
 export const updateDepartment = async (currentState, updateData) => {
   const id = updateData.id;
 
-  console.log('====updateData==sa===');
+  console.log("====updateData==sa===");
   console.log(updateData);
-  console.log('=====updateData====');
+  console.log("=====updateData====");
   await connectToDatabase();
   try {
-    const updatedDept = await Department.findByIdAndUpdate(id, updateData, { new: true });
+    const updatedDept = await Department.findByIdAndUpdate(id, updateData, {
+      new: true,
+    });
     if (!updatedDept) {
       return { success: false, error: true, message: "Department not found" };
     }
     return { success: true, department: updatedDept.toObject() };
   } catch (error) {
-    return { success: false, error: true, message: error.message || "Failed to update department" };
+    return {
+      success: false,
+      error: true,
+      message: error.message || "Failed to update department",
+    };
   }
 };
 
@@ -70,6 +86,10 @@ export const deleteDepartment = async (id) => {
     }
     return { success: true, message: "Department deleted successfully" };
   } catch (error) {
-    return { success: false, error: true, message: "Failed to delete department" };
+    return {
+      success: false,
+      error: true,
+      message: "Failed to delete department",
+    };
   }
 };

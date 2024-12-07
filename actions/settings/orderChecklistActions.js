@@ -3,7 +3,7 @@
 "use server";
 
 import { connectToDatabase } from '@/lib/database';
-import OrderChecklist from '@/lib/database/models/OrderChecklist.model';
+import OrderChecklist from '@/lib/database/models/setting/OrderChecklist.model';
 
 // Get all order checklists
 export const getOrderChecklists = async () => {

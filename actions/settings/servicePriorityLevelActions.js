@@ -3,7 +3,7 @@
 "use server";
 
 import { connectToDatabase } from '@/lib/database';
-import ServicePriorityLevel from '@/lib/database/models/ServicePriorityLevel.model';
+import ServicePriorityLevel from '@/lib/database/models/setting/ServicePriorityLevel.model';
 
 // Create a new service priority level
 export const createServicePriorityLevel = async (currentStatus, levelData) => {
