@@ -13,7 +13,6 @@ const ProductLibrary = () => {
     return null
   }
 
-  console.log(user);
   
 
   return (

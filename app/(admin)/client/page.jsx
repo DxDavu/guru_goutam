@@ -1,5 +1,9 @@
-import ComingSoonPage from '@/components/ComingSoonPage';
+import React from 'react'
 
-export default function ProductLibrary() {
-  return <ComingSoonPage currentPage="Client" />;
+function page() {
+  return (
+    <div>Working on this</div>
+  )
 }
+
+export default page

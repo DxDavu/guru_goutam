@@ -7,7 +7,7 @@ import ProductTemplate from '@/lib/database/models/productLibrary/Product-templa
 import ProductCategory from '@/lib/database/models/productLibrary/Product-category.model';
 import Brand from '@/lib/database/models/productLibrary/Brand.model';
 import ItemVariant from '@/lib/database/models/productLibrary/Item-variant.model';
-import fs from "fs/promises";
+
 
 
 // Fetch active Product Categories

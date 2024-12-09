@@ -3,9 +3,9 @@
   
   import { connectToDatabase } from "@/lib/database";
   import Product from "@/lib/database/models/inventory/Products.model";
-  import ProductCategory from "@/lib/database/models/productLibrary/ProductCategory.model";
+  import ProductCategory from "@/lib/database/models/productLibrary/Product-category.model";
   import Brand from "@/lib/database/models/productLibrary/Brand.model";
-  import ItemVariant from "@/lib/database/models/productLibrary/ItemVariant.model";
+  import ItemVariant from "@/lib/database/models/productLibrary/Item-variant.model";
   
   
   
