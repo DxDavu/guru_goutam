@@ -3,7 +3,7 @@
 "use server";
 
 import { connectToDatabase } from '@/lib/database';
-import ItemMaster from '@/lib/database/models/productLibrary/ItemMaster.model';
+import ItemMaster from '@/lib/database/models/productLibrary/Item-master.model';
 
 // Get all items
 export const getItemMasters = async () => {

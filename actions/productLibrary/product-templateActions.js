@@ -3,10 +3,10 @@
 "use server";
 
 import { connectToDatabase } from '@/lib/database';
-import ProductTemplate from '@/lib/database/models/productLibrary/ProductTemplate.model';
-import ProductCategory from '@/lib/database/models/productLibrary/ProductCategory.model';
+import ProductTemplate from '@/lib/database/models/productLibrary/Product-template.model';
+import ProductCategory from '@/lib/database/models/productLibrary/Product-category.model';
 import Brand from '@/lib/database/models/productLibrary/Brand.model';
-import ItemVariant from '@/lib/database/models/productLibrary/ItemVariant.model';
+import ItemVariant from '@/lib/database/models/productLibrary/Item-variant.model';
 import fs from "fs/promises";
 
 

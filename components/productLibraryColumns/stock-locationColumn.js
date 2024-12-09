@@ -2,7 +2,7 @@
 
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { deleteStockLocation } from "@/actions/productLibrary/stockLocationActions";
+import { deleteStockLocation } from "@/actions/productLibrary/stock-locationActions";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useUserPermissions } from "@/context/UserPermissionsContext";

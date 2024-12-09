@@ -2,7 +2,7 @@
 
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { deleteProductCategory } from "@/actions/productLibrary/productCategoryActions";
+import { deleteProductCategory } from "@/actions/productLibrary/product-categoryActions";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useUserPermissions } from "@/context/UserPermissionsContext";

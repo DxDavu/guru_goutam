@@ -3,7 +3,7 @@
 "use server";
 
 import { connectToDatabase } from '@/lib/database';
-import StockLocation from '@/lib/database/models/productLibrary/StockLocation.model';
+import StockLocation from '@/lib/database/models/productLibrary/Stock-location.model';
 
 // Get all stock locations
 export const getStockLocations = async () => {

@@ -3,8 +3,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import StockLocationForm from "@/components/productLibraryForms/StockLocationForm";
-import { getStockLocationById } from "@/actions/productLibrary/stockLocationActions";
+import StockLocationForm from "@/components/productLibraryForms/stock-locationForm";
+import { getStockLocationById } from "@/actions/productLibrary/stock-locationActions";
 
 export default function UpdateStockLocationPage({ params }) {
   const { id } = params;

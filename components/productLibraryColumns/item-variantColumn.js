@@ -2,7 +2,7 @@
 
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { deleteItemVariant } from "@/actions/productLibrary/itemVariantActions";
+import { deleteItemVariant } from "@/actions/productLibrary/item-variantActions";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useUserPermissions } from "@/context/UserPermissionsContext";

@@ -24,7 +24,7 @@ import {
   getActiveProductCategories,
   getActiveBrands,
   getActiveItemVariants,
-} from "@/actions/productLibrary/productTemplateActions";
+} from "@/actions/productLibrary/product-templateActions";
 import { useFormState } from "react-dom";
 import { CldUploadWidget } from "next-cloudinary";
 import Image from "next/image";
@@ -89,21 +89,9 @@ const ProductTemplateForm = ({ type, data }) => {
       if (data) {
         reset({
           ...data,
-<<<<<<< HEAD
-<<<<<<< HEAD
-          category: data.category?._id.toString(),
-          brand: data.brand?._id.toString(),
-          specifications: data.specifications || {},
-=======
           category: data.category?._id || data.category || "",
           brand: data.brand?._id || data.brand || "",
           specifications: data.specifications || {}
->>>>>>> d773bc32bccc9f1d887ddd77b10d51a2310cfe8c
-=======
-          category: data.category?._id.toString(),
-          brand: data.brand?._id.toString(),
-          specifications: data.specifications || {},
->>>>>>> guru/main
         });
       }
     }
@@ -203,17 +191,9 @@ const ProductTemplateForm = ({ type, data }) => {
               {/* Image Preview Section */}
               {imagePreview ? (
                 <div className="relative">
-<<<<<<< HEAD
                   <img
                     src={imagePreview}
                     alt="Preview"
-=======
-                  <Image
-                    src={imagePreview}
-                    alt="Preview"
-                    width={64}
-                    height={64}
->>>>>>> guru/main
                     className="w-24 h-24 object-cover rounded-lg border border-gray-300 shadow-sm"
                   />
                   <button
