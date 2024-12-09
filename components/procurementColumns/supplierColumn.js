@@ -92,13 +92,13 @@ const ActionsCell = ({ row }) => {
 
 // Columns definition
 export const columns = [
-  { accessorKey: "supplier", header: "Supplier ID" },
+  { accessorKey: "supplier_id", header: "Supplier ID" },
   { accessorKey: "website", header: "Website" },
-  { accessorKey: "emp_name", header: "Employee Name" },
-  { accessorKey: "e_mail", header: "Email" },
-  { accessorKey: "emp_mobile", header: "Mobile Number" },
-  { accessorKey: "emp_office_num", header: "Office Number" },
-  { accessorKey: "executive", header: "Executive" },
+  { accessorKey: "supplier_name", header: "Employee Name" },
+  { accessorKey: "email", header: "Email" },
+  { accessorKey: "telephone_1", header: "Mobile Number" },
+  { accessorKey: "telephone_2", header: "Office Number" },
+  { accessorKey: "supplier_owner", header: "Executive" },
   {
     id: "actions",
     cell: ActionsCell, // Reference the component here
