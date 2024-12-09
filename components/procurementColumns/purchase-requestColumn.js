@@ -174,7 +174,7 @@ export const CreateNewPurchaseRequestButton = () => {
     <div className="flex justify-end mb-4">
       <Button
         className="bg-blue-500 text-white"
-        onClick={() => router.push("/procurement/purchase-request/new")}
+        onClick={() => router.push("/procurement/purchase-requests/new")}
       >
         + Create Purchase Request
       </Button>
