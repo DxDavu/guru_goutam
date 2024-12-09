@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import SupplierForm from "@/components/procurementForm/supplierForm";
-import { getSupplierById } from '@/actions/procurement/supplierAction';
+import SupplierForm from "@/components/procurementForms/supplierForm";
+import { getSupplierById } from '@/actions/procurement/supplierActions';
 import { useRouter } from "next/navigation";
 
 export default function EditSupplierPage({ params }) {

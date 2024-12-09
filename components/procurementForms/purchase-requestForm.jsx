@@ -20,7 +20,7 @@ import {
 import { Button } from "@/components/ui/button";
 import ProductSelectionModal from "@/components/procurementModals/ProductSelectionModal";
 import { useFormState } from "react-dom";
-import { getSuppliers, createPurchaseRequest, updatePurchaseRequest } from "@/actions/procurement/purchaseRequestActions";
+import { getSuppliers, createPurchaseRequest, updatePurchaseRequest } from "@/actions/procurement/purchase-requestActions";
 import { format } from "date-fns";
 import Loader from "@/components/ui/loader";
 

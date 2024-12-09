@@ -6,7 +6,7 @@ import PurchaseRequestForm from "@/components/procurementForms/purchase-requestF
 
 export default function NewPurchaseRequestPage() {
   return (
-    <div className="bg-white p-6 rounded-md mx-auto mt-8 lg:max-w-full">
+    <div className="">
       <PurchaseRequestForm type="create" />
     </div>
   );

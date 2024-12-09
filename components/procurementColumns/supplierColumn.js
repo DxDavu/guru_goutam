@@ -2,7 +2,7 @@
 
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { deleteSupplier } from "@/actions/procurement/supplierAction";
+import { deleteSupplier } from "@/actions/procurement/supplierActions";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useState } from "react";
