@@ -3,7 +3,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import ProductCategoryForm from "@/components/productLibraryForms/Product-categoryForm";
+import ProductCategoryForm from "@/components/productLibraryForms/product-categoryForm";
 import { getProductCategoryById } from "@/actions/productLibrary/product-categoryActions";
 
 export default function UpdateProductCategoryPage({ params }) {
