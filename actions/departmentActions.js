@@ -3,7 +3,7 @@
 "use server";
 
 import { connectToDatabase } from '@/lib/database';
-import Department from '@/lib/database/models/Department.model';
+import Department from '@/lib/database/models/setting/Department.model';
 
 // Create a new department
 export const createDepartment = async (currentStatus, departmentData) => {
