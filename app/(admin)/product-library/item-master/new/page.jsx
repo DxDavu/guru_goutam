@@ -2,7 +2,7 @@
 
 "use client";
 
-import ItemMasterForm from "@/components/productLibraryForms/ItemMasterForm";
+import ItemMasterForm from "@/components/productLibraryForms/item-masterForm";
 
 export default function NewItemMasterPage() {
   return (

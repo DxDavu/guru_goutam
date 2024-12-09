@@ -114,11 +114,7 @@ const AssetForm = ({ type, data }) => {
 
   return (
     <form className="w-full max-w-screen-2xl mx-auto p-8 bg-white shadow-md rounded-lg" onSubmit={onSubmit}>
-<<<<<<< HEAD
-    <div className="bg-gray-200 flex justify-between gap-8">
-=======
     <div className="bg-gray-200 flex justify-between gap-8 p-5">
->>>>>>> guru/main
   
       {/* Asset Information Section */}
       <div className="bg-gray-50 p-6 border rounded-lg shadow-lg w-full md:w-1/3">

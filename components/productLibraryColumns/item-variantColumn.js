@@ -2,7 +2,7 @@
 
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { deleteStockLocation } from "@/actions/productLibrary/stockLocationActions";
+import { deleteItemVariant } from "@/actions/productLibrary/item-variantActions";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useUserPermissions } from "@/context/UserPermissionsContext";
@@ -15,46 +15,39 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-// Function to check module access permissions
+// Permission check function
 const checkPermissions = (roles, moduleName, permissionKey) => {
   for (const role of roles) {
-    const mod = role.module_access?.find(
+    // Renaming 'module' to 'foundModule' to avoid reassignment issues
+    const foundModule = role.module_access?.find(
       (mod) => mod.module_name === moduleName
     );
-    if (mod && mod.permissions[permissionKey]) {
-      return true; // Return true immediately if any role has the permission
+    if (foundModule && foundModule.permissions[permissionKey]) {
+      return true;
     }
   }
-  return false; // Return false only if no role has the permission
+  return false;
 };
 
-// ActionsCell component for handling edit and delete actions
-const ActionsCell = ({ row }) => {
+// Actions component for Edit and Delete
+const Actions = ({ row }) => {
   const router = useRouter();
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const userPermissions = useUserPermissions();
-  const canEdit = checkPermissions(
-    userPermissions,
-    "Stock Location",
-    "can_edit"
-  );
-  const canDelete = checkPermissions(
-    userPermissions,
-    "Stock Location",
-    "can_delete"
-  );
+  const canEdit = checkPermissions(userPermissions, "Item Variant", "can_edit");
+  const canDelete = checkPermissions(userPermissions, "Item Variant", "can_delete");
 
   const onEdit = () => {
-    router.push(`/product-library/stock-location/${row.original._id}`);
+    router.push(`/product-library/item-variant/${row.original._id}`);
   };
 
   const onDelete = async () => {
     try {
-      await deleteStockLocation(row.original._id);
-      toast.success("Stock Location deleted successfully!");
+      await deleteItemVariant(row.original._id);
+      toast.success("Item Variant deleted successfully!");
       router.refresh();
     } catch {
-      toast.error("Failed to delete stock location.");
+      toast.error("Failed to delete item variant.");
     }
   };
 
@@ -80,6 +73,7 @@ const ActionsCell = ({ row }) => {
         </DropdownMenuContent>
       </DropdownMenu>
 
+      {/* Render Delete Confirmation Popup */}
       {isDeleteConfirmOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded-md max-w-sm mx-auto">
@@ -105,25 +99,15 @@ const ActionsCell = ({ row }) => {
   );
 };
 
-// Column definition with the new ActionsCell component
 export const columns = [
+  { id: "sl_no", header: "Sl. No", cell: ({ row }) => row.index + 1 },
   {
-    accessorKey: "stock_location_id",
-    header: "Location ID",
+    accessorKey: "type",
+    header: "Item Type",
   },
   {
-    accessorKey: "stock_name",
-    header: "Stock Name",
-  },
-  {
-    accessorKey: "phone_number",
-    header: "Phone Number",
-  },
-  {
-    accessorKey: "address",
-    header: "Address",
-    cell: ({ row }) =>
-      `${row.original.address.street}, ${row.original.address.city}, ${row.original.address.state}`,
+    accessorKey: "item_name",
+    header: "Item/Specification Name",
   },
   {
     accessorKey: "active_status",
@@ -135,14 +119,14 @@ export const columns = [
   {
     header: "Actions",
     id: "actions",
-    cell: ActionsCell, // Use the ActionsCell component here
+    cell: ({ row }) => <Actions row={row} />,
   },
 ];
 
-// CreateNewStockLocationButton component with permission check
-export const CreateNewStockLocationButton = () => {
+// Create New Item Variant Button with permission check
+export const CreateNewItemVariantButton = () => {
   const userPermissions = useUserPermissions();
-  const canAdd = checkPermissions(userPermissions, "Stock Location", "can_add");
+  const canAdd = checkPermissions(userPermissions, "Item Variant", "can_add");
   const router = useRouter();
 
   if (!canAdd) {
@@ -153,9 +137,9 @@ export const CreateNewStockLocationButton = () => {
     <div className="flex justify-end mb-1">
       <Button
         className="bg-blue-500 text-white"
-        onClick={() => router.push("/product-library/stock-location/new")}
+        onClick={() => router.push("/product-library/item-variant/new")}
       >
-        Create New Stock Location
+        Create New Item Variant
       </Button>
     </div>
   );

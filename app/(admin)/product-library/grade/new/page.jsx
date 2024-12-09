@@ -2,7 +2,7 @@
 
 "use client";
 
-import GradeForm from "@/components/productLibraryForms/GradeForm";
+import GradeForm from "@/components/productLibraryForms/gradeForm";
 
 export default function NewGradePage() {
   return (

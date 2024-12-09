@@ -4,7 +4,7 @@
 
 import { getAssets } from "@/actions/productLibrary/assetActions";
 import { DataTable } from "@/components/DataTable";
-import { columns, CreateNewAssetButton } from "@/components/productLibraryColumns/assetColumns";
+import { columns, CreateNewAssetButton } from "@/components/productLibraryColumns/assetColumn";
 
 export default async function AssetPage() {
   const assets = await getAssets();

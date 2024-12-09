@@ -2,9 +2,9 @@
 
 "use server";
 
-import { getStockLocations } from "@/actions/productLibrary/stockLocationActions";
+import { getStockLocations } from "@/actions/productLibrary/stock-locationActions";
 import { DataTable } from "@/components/DataTable";
-import { columns, CreateNewStockLocationButton } from "@/components/productLibraryColumns/stockLocationColumns";
+import { columns, CreateNewStockLocationButton } from "@/components/productLibraryColumns/stock-locationColumn";
 
 export default async function StockLocationPage() {
   const stockLocations = await getStockLocations();

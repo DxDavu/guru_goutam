@@ -3,8 +3,8 @@
 "use server";
 
 import { connectToDatabase } from '@/lib/database';
-import ItemVariant from '@/lib/database/models/productLibrary/ItemVariant.model';
-import ItemMaster from '@/lib/database/models/productLibrary/ItemMaster.model';
+import ItemVariant from '@/lib/database/models/productLibrary/Item-variant.model';
+import ItemMaster from '@/lib/database/models/productLibrary/Item-master.model';
 
 // Get all item variants
 export const getItemVariants = async () => {

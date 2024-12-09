@@ -4,7 +4,7 @@
 
 import { getBrands } from "@/actions/productLibrary/brandActions";
 import { DataTable } from "@/components/DataTable";
-import { columns, CreateNewBrandButton } from "@/components/productLibraryColumns/brandColumns";
+import { columns, CreateNewBrandButton } from "@/components/productLibraryColumns/brandColumn";
 
 export default async function BrandPage() {
   const brands = await getBrands();

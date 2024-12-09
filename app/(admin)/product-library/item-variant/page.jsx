@@ -2,9 +2,9 @@
 
 "use server";
 
-import { getItemVariants } from "@/actions/productLibrary/itemVariantActions";
+import { getItemVariants } from "@/actions/productLibrary/item-variantActions";
 import { DataTable } from "@/components/DataTable";
-import { columns, CreateNewItemVariantButton } from "@/components/productLibraryColumns/itemVariantColumns";
+import { columns, CreateNewItemVariantButton } from "@/components/productLibraryColumns/item-variantColumn";
 
 export default async function ItemVariantPage() {
   const itemVariants = await getItemVariants();

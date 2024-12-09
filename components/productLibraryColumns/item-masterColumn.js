@@ -2,9 +2,10 @@
 
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { deletePro } from "@/actions/productLibrary/proActions";
+import { deleteItemMaster } from "@/actions/productLibrary/item-masterActions";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { useUserPermissions } from "@/context/UserPermissionsContext";
 import { useState } from "react";
 import {
   DropdownMenu,
@@ -13,30 +14,40 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import Image from 'next/image';
 
-// Reusable button styles
-const buttonClass = "bg-blue-500 text-white hover:bg-blue-600";
+// Permission check function
+const checkPermissions = (roles, moduleName, permissionKey) => {
+  for (const role of roles) {
+    // Renaming 'module' to 'foundModule' to avoid reassignment issues
+    const foundModule = role.module_access?.find(
+      (mod) => mod.module_name === moduleName
+    );
+    if (foundModule && foundModule.permissions[permissionKey]) {
+      return true;
+    }
+  }
+  return false;
+};
 
 // Actions component for Edit and Delete
 const Actions = ({ row }) => {
   const router = useRouter();
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+  const userPermissions = useUserPermissions();
+  const canEdit = checkPermissions(userPermissions, "Item Master", "can_edit");
+  const canDelete = checkPermissions(userPermissions, "Item Master", "can_delete");
 
   const onEdit = () => {
-    router.push(`/product-library/pro/${row.original._id}`);
+    router.push(`/product-library/item-master/${row.original._id}`);
   };
 
   const onDelete = async () => {
     try {
-      await deletePro(row.original._id);
-      toast.success("Product  deleted successfully!");
-      setIsDeleteConfirmOpen(false);
+      await deleteItemMaster(row.original._id);
+      toast.success("Item deleted successfully!");
       router.refresh();
-    } catch (error) {
-      toast.error(
-        `Failed to delete product template: ${error.message || error}`
-      );
+    } catch {
+      toast.error("Failed to delete item.");
     }
   };
 
@@ -51,20 +62,23 @@ const Actions = ({ row }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem onClick={onEdit}>Edit</DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setIsDeleteConfirmOpen(true)}>
-            Delete
-          </DropdownMenuItem>
+          {canEdit && (
+            <DropdownMenuItem onClick={onEdit}>Edit</DropdownMenuItem>
+          )}
+          {canDelete && (
+            <DropdownMenuItem onClick={() => setIsDeleteConfirmOpen(true)}>
+              Delete
+            </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* Render Delete Confirmation Popup */}
       {isDeleteConfirmOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded-md max-w-sm mx-auto">
             <h3 className="text-lg font-medium">Delete Confirmation</h3>
             <p className="mt-2 text-sm">
-              Are you sure you want to delete this product template?
+              Are you sure you want to delete this record?
             </p>
             <div className="flex justify-end gap-4 mt-4">
               <Button
@@ -85,39 +99,14 @@ const Actions = ({ row }) => {
 };
 
 export const columns = [
-  // {
-  //   id: "sl_no",
-  //   header: "Sl. No",
-  //   cell: ({ row }) => row.index + 1,
-  // },
-  // {
-  //   id: "product_image",
-  //   header: "Product Image",
-  //   cell: () => (
-  //     <img
-  //       src="https://c8.alamy.com/comp/W7R7YN/modern-desktop-computer-with-vivid-wallpaper-3d-illustration-W7R7YN.jpg" // replace this with your dummy image URL
-  //       alt="Product"
-  //       className="w-12 h-12 object-cover rounded-md"
-  //     />
-  //   ),
-  // },
   {
-    id: "product_image",
-    header: "Product Image",
-    cell: () => (
-      <div className="relative w-12 h-12">
-        <Image
-          src="/download.jpg" // your image URL
-          alt="Product"
-          layout="fill" // fill the parent container
-          objectFit="cover" // similar to object-cover in Tailwind
-          // className="rounded-md"
-        />
-      </div>
-    ),
+    accessorKey: "item_name",
+    header: "Item Name",
   },
-  { accessorKey: "name", header: " Name" },
-  { accessorKey: "brand", header: "Brand" },
+  {
+    accessorKey: "description",
+    header: "Description",
+  },
   {
     accessorKey: "active_status",
     header: "Status",
@@ -126,22 +115,27 @@ export const columns = [
     ),
   },
   {
+    header: "Action",
     id: "actions",
     cell: ({ row }) => <Actions row={row} />,
   },
 ];
 
-// Create New Product Template Button
-export const CreateNewProductTemplateButton = () => {
+// Create New Item Button with permission check
+export const CreateNewItemButton = () => {
+  const userPermissions = useUserPermissions();
+  const canAdd = checkPermissions(userPermissions, "Item Master", "can_add");
   const router = useRouter();
+
+  if (!canAdd) return null;
 
   return (
     <div className="flex justify-end mb-1">
       <Button
-        className={buttonClass}
-        onClick={() => router.push("/product-library/pro/new")}
+        className="bg-blue-500 text-white"
+        onClick={() => router.push("/product-library/item-master/new")}
       >
-        Create New Product Template
+        Create New Item
       </Button>
     </div>
   );

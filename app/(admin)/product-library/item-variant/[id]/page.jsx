@@ -3,8 +3,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import ItemVariantForm from "@/components/productLibraryForms/ItemVariantForm";
-import { getItemVariantById } from "@/actions/productLibrary/itemVariantActions";
+import ItemVariantForm from "@/components/productLibraryForms/item-variantForm";
+import { getItemVariantById } from "@/actions/productLibrary/item-variantActions";
 
 export default function UpdateItemVariantPage({ params }) {
   const { id } = params;

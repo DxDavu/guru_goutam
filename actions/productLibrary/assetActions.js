@@ -4,8 +4,8 @@
 
 import { connectToDatabase } from '@/lib/database';
 import Asset from '@/lib/database/models/productLibrary/Asset.model';
-import ItemMaster from '@/lib/database/models/productLibrary/ItemMaster.model';
-import ItemVariant from '@/lib/database/models/productLibrary/ItemVariant.model';
+import ItemMaster from '@/lib/database/models/productLibrary/Item-master.model';
+import ItemVariant from '@/lib/database/models/productLibrary/Item-variant.model';
 import Brand from '@/lib/database/models/productLibrary/Brand.model';
 
 // Fetch active Item Masters

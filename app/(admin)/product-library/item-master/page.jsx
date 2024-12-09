@@ -2,9 +2,9 @@
 
 "use server";
 
-import { getItemMasters } from "@/actions/productLibrary/itemMasterActions";
+import { getItemMasters } from "@/actions/productLibrary/item-masterActions";
 import { DataTable } from "@/components/DataTable";
-import { columns, CreateNewItemButton } from "@/components/productLibraryColumns/itemMasterColumns";
+import { columns, CreateNewItemButton } from "@/components/productLibraryColumns/item-masterColumn";
 
 export default async function ItemMasterPage() {
   const items = await getItemMasters();

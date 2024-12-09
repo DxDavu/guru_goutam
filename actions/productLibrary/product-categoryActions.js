@@ -3,7 +3,7 @@
 "use server";
 
 import { connectToDatabase } from '@/lib/database';
-import ProductCategory from '@/lib/database/models/productLibrary/ProductCategory.model';
+import ProductCategory from '@/lib/database/models/productLibrary/Product-category.model';
 
 // Get all product categories
 export const getProductCategories = async () => {

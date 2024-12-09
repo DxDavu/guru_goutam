@@ -2,7 +2,7 @@
 
 "use client";
 
-import StockLocationForm from "@/components/productLibraryForms/StockLocationForm";
+import StockLocationForm from "@/components/productLibraryForms/stock-locationForm";
 
 export default function NewStockLocationPage() {
   return (

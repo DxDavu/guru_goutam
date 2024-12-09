@@ -62,11 +62,7 @@ const BrandForm = ({ type, data }) => {
     <form className="w-full max-w-1xl mx-auto p-8 bg-white shadow-md rounded-lg" onSubmit={onSubmit}>
       <h1 className="text-xl font-semibold">{type === "create" ? "Add New Brand" : "Edit Brand"}</h1>
 
-<<<<<<< HEAD
       <div className=" bg-gray-200 p-6 border rounded-1g shadow-1g mb-6 flex  gap-40">
-=======
-      <div className=" bg-gray-50 p-6 border rounded-1g shadow-1g mb-6 flex  gap-40">
->>>>>>> guru/main
 
           <div className="bg-gray-50 flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>

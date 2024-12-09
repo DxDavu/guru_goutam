@@ -3,7 +3,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import GradeForm from "@/components/productLibraryForms/GradeForm";
+import GradeForm from "@/components/productLibraryForms/gradeForm";
 import { getGradeById } from "@/actions/productLibrary/gradeActions";
 
 export default function UpdateGradePage({ params }) {

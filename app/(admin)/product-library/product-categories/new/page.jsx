@@ -2,7 +2,7 @@
 
 "use client";
 
-import ProductCategoryForm from "@/components/productLibraryForms/ProductCategoryForm";
+import ProductCategoryForm from "@/components/productLibraryForms/product-categoryForm";
 
 export default function NewProductCategoryPage() {
   return (

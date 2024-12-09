@@ -2,7 +2,7 @@
 
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { deleteItemVariant } from "@/actions/productLibrary/itemVariantActions";
+import { deleteProductCategory } from "@/actions/productLibrary/product-categoryActions";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useUserPermissions } from "@/context/UserPermissionsContext";
@@ -34,20 +34,20 @@ const Actions = ({ row }) => {
   const router = useRouter();
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const userPermissions = useUserPermissions();
-  const canEdit = checkPermissions(userPermissions, "Item Variant", "can_edit");
-  const canDelete = checkPermissions(userPermissions, "Item Variant", "can_delete");
+  const canEdit = checkPermissions(userPermissions, "Product Category", "can_edit");
+  const canDelete = checkPermissions(userPermissions, "Product Category", "can_delete");
 
   const onEdit = () => {
-    router.push(`/product-library/item-variant/${row.original._id}`);
+    router.push(`/product-library/product-categories/${row.original._id}`);
   };
 
   const onDelete = async () => {
     try {
-      await deleteItemVariant(row.original._id);
-      toast.success("Item Variant deleted successfully!");
+      await deleteProductCategory(row.original._id);
+      toast.success("Product Category deleted successfully!");
       router.refresh();
     } catch {
-      toast.error("Failed to delete item variant.");
+      toast.error("Failed to delete product category.");
     }
   };
 
@@ -79,7 +79,7 @@ const Actions = ({ row }) => {
           <div className="bg-white p-6 rounded-md max-w-sm mx-auto">
             <h3 className="text-lg font-medium">Delete Confirmation</h3>
             <p className="mt-2 text-sm">
-              Are you sure you want to delete this record?
+              Are you sure you want to delete this category?
             </p>
             <div className="flex justify-end gap-4 mt-4">
               <Button
@@ -100,18 +100,21 @@ const Actions = ({ row }) => {
 };
 
 export const columns = [
-  { id: "sl_no", header: "Sl. No", cell: ({ row }) => row.index + 1 },
   {
-    accessorKey: "type",
-    header: "Item Type",
+    accessorKey: "category_code",
+    header: "Category Code",
   },
   {
-    accessorKey: "item_name",
-    header: "Item/Specification Name",
+    accessorKey: "category_name",
+    header: "Category",
+  },
+  {
+    accessorKey: "description",
+    header: "Description",
   },
   {
     accessorKey: "active_status",
-    header: "Status",
+    header: "Active Status",
     cell: ({ row }) => (
       <span>{row.original.active_status ? "Active" : "Inactive"}</span>
     ),
@@ -123,24 +126,22 @@ export const columns = [
   },
 ];
 
-// Create New Item Variant Button with permission check
-export const CreateNewItemVariantButton = () => {
+// Create New Product Category Button with permission check
+export const CreateNewProductCategoryButton = () => {
   const userPermissions = useUserPermissions();
-  const canAdd = checkPermissions(userPermissions, "Item Variant", "can_add");
+  const canAdd = checkPermissions(userPermissions, "Product Category", "can_add");
   const router = useRouter();
-
-  if (!canAdd) {
-    return null; // Hide button if user lacks can_add permission
-  }
 
   return (
     <div className="flex justify-end mb-1">
-      <Button
-        className="bg-blue-500 text-white"
-        onClick={() => router.push("/product-library/item-variant/new")}
-      >
-        Create New Item Variant
-      </Button>
+      {canAdd && (
+        <Button
+          className="bg-blue-500 text-white"
+          onClick={() => router.push("/product-library/product-categories/new")}
+        >
+          Create New Category
+        </Button>
+      )}
     </div>
   );
 };

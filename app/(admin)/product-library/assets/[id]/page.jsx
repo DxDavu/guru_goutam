@@ -3,7 +3,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import AssetForm from "@/components/productLibraryForms/AssetForm";
+import AssetForm from "@/components/productLibraryForms/assetForm";
 import { getAssetById } from "@/actions/productLibrary/assetActions";
 
 export default function UpdateAssetPage({ params }) {

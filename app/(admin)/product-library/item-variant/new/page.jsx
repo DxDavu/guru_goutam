@@ -2,7 +2,7 @@
 
 "use client";
 
-import ItemVariantForm from "@/components/productLibraryForms/ItemVariantForm";
+import ItemVariantForm from "@/components/productLibraryForms/item-variantForm";
 
 export default function NewItemVariantPage() {
   return (

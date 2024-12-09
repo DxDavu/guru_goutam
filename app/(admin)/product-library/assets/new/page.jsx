@@ -2,7 +2,7 @@
 
 "use client";
 
-import AssetForm from "@/components/productLibraryForms/AssetForm";
+import AssetForm from "@/components/productLibraryForms/assetForm";
 
 export default function NewAssetPage() {
   return (

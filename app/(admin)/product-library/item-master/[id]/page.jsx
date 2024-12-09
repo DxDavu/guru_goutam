@@ -3,8 +3,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import ItemMasterForm from "@/components/productLibraryForms/ItemMasterForm";
-import { getItemMasterById } from "@/actions/productLibrary/itemMasterActions";
+import ItemMasterForm from "@/components/productLibraryForms/item-masterForm";
+import { getItemMasterById } from "@/actions/productLibrary/item-masterActions";
 
 export default function UpdateItemMasterPage({ params }) {
   const { id } = params;

@@ -6,7 +6,7 @@ import { z } from "zod";
 import { useFormState } from "react-dom";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { createStockLocation, updateStockLocation } from "@/actions/productLibrary/stockLocationActions";
+import { createStockLocation, updateStockLocation } from "@/actions/productLibrary/stock-locationActions";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
