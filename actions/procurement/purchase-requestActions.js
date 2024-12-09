@@ -3,7 +3,7 @@
 "use server";
 
 import { connectToDatabase } from "@/lib/database";
-import PurchaseRequest from "@/lib/database/models/procurement/PurchaseRequest.model";
+import PurchaseRequest from "@/lib/database/models/procurement/purchase-request.model";
 import Supplier from "@/lib/database/models/procurement/Supplier.model";
 
 // Fetch active suppliers

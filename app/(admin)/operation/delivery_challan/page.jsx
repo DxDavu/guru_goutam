@@ -6,7 +6,7 @@
 
 import { getDeliveryChallans } from "@/actions/operation/delivery_challanAction";
 import { DataTable } from "@/components/DataTable";
-import { columns, CreateNewDeliveryChallanButton } from "@/components/operationColumn/delivery_challanColumn";
+import { columns, CreateNewDeliveryChallanButton } from "@/components/operationColumns/delivery-challanColumn";
 
 export default async function AssetPage() {
   const assets = await getDeliveryChallans();

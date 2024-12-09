@@ -3,7 +3,7 @@
 "use server";
 
 import { connectToDatabase } from '@/lib/database';
-import Country from '@/lib/database/models/Country.model';
+import Country from '@/lib/database/models/setting/Country.model';
 
 // Get all countries
 export const getCountries = async () => {

@@ -2,11 +2,11 @@
 
 "use client";
 
-import GroupForm from "@/components/inventoryForm/GroupForm";
+import GroupForm from "@/components/inventoryForm/groupForm";
 
 export default function NewGroupPage() {
   return (
-    <div className="bg-white p-6 rounded-md max-w-2xl mx-auto mt-8">
+    <div className="">
       <GroupForm type="create" />
     </div>
   );

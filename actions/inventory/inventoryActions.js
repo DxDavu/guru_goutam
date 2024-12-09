@@ -6,7 +6,7 @@ import { connectToDatabase } from "@/lib/database";
 import Inventory from "@/lib/database/models/inventory/Inventory.model";
 import Supplier from "@/lib/database/models/procurement/Supplier.model";
 
-import "@/lib/database/models/productLibrary/ProductTemplate.model.js";
+import "@/lib/database/models/productLibrary/Product-template.model.js";
 import "@/lib/database/models/procurement/Supplier.model.js";
 
 // Fetch all inventories

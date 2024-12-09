@@ -3,8 +3,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import PurchaseRequestForm from "@/components/procurementForms/PurchaseRequestForm";
-import { getPurchaseRequestById } from "@/actions/procurement/purchaseRequestActions";
+import PurchaseRequestForm from "@/components/procurementForms/purchase-requestForm";
+import { getPurchaseRequestById } from "@/actions/procurement/purchase-requestActions";
 
 export default function UpdatePurchaseRequestPage({ params }) {
   const { id } = params;

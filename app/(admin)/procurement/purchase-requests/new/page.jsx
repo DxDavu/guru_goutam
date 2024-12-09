@@ -2,7 +2,7 @@
 
 "use client";
 
-import PurchaseRequestForm from "@/components/procurementForms/PurchaseRequestForm";
+import PurchaseRequestForm from "@/components/procurementForms/purchase-requestForm";
 
 export default function NewPurchaseRequestPage() {
   return (

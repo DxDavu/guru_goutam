@@ -3,7 +3,7 @@
 "use server";
 
 import { connectToDatabase } from '@/lib/database';
-import LeadChecklist from '@/lib/database/models/LeadChecklist.model';
+import LeadChecklist from '@/lib/database/models/setting/LeadChecklist.model';
 
 // Get all lead checklists
 export const getLeadChecklists = async () => {

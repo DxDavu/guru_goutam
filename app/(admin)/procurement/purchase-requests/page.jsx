@@ -2,12 +2,12 @@
 
 "use server";
 
-import { getPurchaseRequests } from "@/actions/procurement/purchaseRequestActions";
+import { getPurchaseRequests } from "@/actions/procurement/purchase-requestActions";
 import { DataTable } from "@/components/DataTable";
 import {
   columns,
   CreateNewPurchaseRequestButton,
-} from "@/components/procurementColumns/purchaseRequestColumns";
+} from "@/components/procurementColumns/purchase-requestColumn";
 
 export default async function PurchaseRequestsPage() {
   const purchaseRequests = await getPurchaseRequests();
@@ -16,7 +16,7 @@ export default async function PurchaseRequestsPage() {
   
 
   return (
-    <div className="bg-white p-6 rounded-md mt-0 flex-1">
+    <div>
       <CreateNewPurchaseRequestButton />
       <DataTable columns={columns} data={purchaseRequests} />
     </div>

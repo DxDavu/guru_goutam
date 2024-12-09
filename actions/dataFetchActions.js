@@ -2,10 +2,10 @@
 "use server"
 
 import { connectToDatabase } from '@/lib/database';
-import Role from '@/lib/database/models/Role.model';
-import Department from '@/lib/database/models/Department.model';
-import Branch from '@/lib/database/models/Branch.model';
-import User from '@/lib/database/models/User.model';
+import Role from '@/lib/database/models/setting/Role.model';
+import Department from '@/lib/database/models/setting/Department.model';
+import Branch from '@/lib/database/models/setting/Branch.model';
+import User from '@/lib/database/models/setting/User.model';
 
 export const getUsersByLoginId = async (loginId) => {
   await connectToDatabase();

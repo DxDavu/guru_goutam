@@ -174,14 +174,4 @@ export default function CityForm({ type, data }) {
     </form>
 
   );
-<<<<<<< HEAD
 }
-
-
-
-
-
-
-=======
-}
->>>>>>> guru/main

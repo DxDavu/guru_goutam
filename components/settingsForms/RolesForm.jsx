@@ -8,7 +8,7 @@ import { z } from "zod";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { createRole, updateRole } from "@/actions/roleActions";
-import { getDepartments } from "@/actions/departmentActions";
+import { getDepartments } from "@/actions/settings/departmentActions";
 import { Button } from "@/components/ui/button";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { useEffect, useState } from "react";

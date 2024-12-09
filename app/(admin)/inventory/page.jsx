@@ -17,7 +17,7 @@ const Inventory = () => {
   
 
   return (
-    <div>Hello, {user?.username} , welcome to Guru Gowtham</div>
+    <div>Hello, {user?.username} , welcome to Inventory</div>
   )
 }
 

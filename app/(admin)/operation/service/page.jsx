@@ -7,7 +7,7 @@
 
 import { getService } from "@/actions/operation/serviceAction";
 import { DataTable } from "@/components/DataTable";
-import { columns, CreateNewServiceButton } from "@/components/operationColumn/serviceColumn";
+import { columns, CreateNewServiceButton } from "@/components/operationColumns/serviceColumn";
 
 export default async function ServicePage() {
   const assets = await getService();

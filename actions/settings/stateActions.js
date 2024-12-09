@@ -4,7 +4,7 @@
 
 import { connectToDatabase } from "@/lib/database";
 import State from "@/lib/database/models/setting/State.model";
-import Country from "@/lib/database/models/Country.model";
+import Country from "@/lib/database/models/setting/Country.model";
 
 // Get all states
 export const getStates = async () => {

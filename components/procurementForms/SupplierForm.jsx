@@ -92,7 +92,7 @@ const SupplierForm = ({ type, data }) => {
   useEffect(() => {
     if (state?.success) {
       toast.success(`Supplier ${type === "create" ? "created" : "updated"} successfully!`);
-      router.push("/procurement/suppliers");
+      router.push("/procurement/supplier");
       router.refresh();
     } else if (state?.error) {
       toast.error(state.message);
@@ -201,7 +201,7 @@ const SupplierForm = ({ type, data }) => {
       </div>
 
       <div className="flex justify-end gap-4">
-        <Button onClick={() => router.push("/procurement/suppliers")}>Cancel</Button>
+        <Button onClick={() => router.push("/procurement/supplier")}>Cancel</Button>
         <Button type="submit" className="bg-blue-500 text-white">
           {type === "create" ? "Create" : "Update"}
         </Button>

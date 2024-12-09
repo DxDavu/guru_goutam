@@ -4,7 +4,7 @@
 
 import { connectToDatabase } from "@/lib/database";
 import Branch from "@/lib/database/models/setting/Branch.model";
-import Country from "@/lib/database/models/Country.model";
+import Country from "@/lib/database/models/setting/Country.model";
 import State from "@/lib/database/models/setting/State.model";
 import City from "@/lib/database/models/setting/City.model";
 

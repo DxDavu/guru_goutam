@@ -113,11 +113,7 @@ export default function StateForm({ type, data }) {
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 w-80 h-28">
             <h3 className="text-lg font-semibold mb-4">Control</h3>
             <div className="flex items-center gap-2">
-<<<<<<< HEAD
-              <Checkbox checked={watch("active_status")} onCheckedChange={(checked) => setValue("active_status", checked)} />
-=======
               <Checkbox checked={setValue("active_status")} onCheckedChange={(checked) => setValue("active_status", checked)} />
->>>>>>> guru/main
               <label className="text-sm font-medium">Active Status</label>
             </div>
           </div>

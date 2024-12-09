@@ -14,7 +14,7 @@ import {
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useState } from "react";
-import { deleteInventory } from "@/actions/inventory/inventoryActions";
+import { deleteInventory } from "@/actions/Inventory/inventoryActions";
 
 export const columns = [
   { accessorKey: "inventory_name", header: "Inventory Name" },

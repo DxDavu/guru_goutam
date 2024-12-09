@@ -2,7 +2,7 @@
 
 "use client";
 
-import InventoryForm from "@/components/inventoryForms/InventoryForm";
+import InventoryForm from "@/components/inventoryForms/inventoryForm";
 
 
 

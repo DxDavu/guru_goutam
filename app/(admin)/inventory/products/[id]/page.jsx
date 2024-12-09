@@ -4,8 +4,8 @@
 
 import { useEffect, useState } from "react";
 
-import { getInventoryById } from "@/actions/inventory/inventoryActions";
-import InventoryForm from "@/components/inventoryForms/InventoryForm";
+import { getInventoryById } from "@/actions/Inventory/inventoryActions";
+import InventoryForm from "@/components/inventoryForms/inventoryForm";
 
 export default function EditInventoryPage({ params }) {
   const { id } = params;

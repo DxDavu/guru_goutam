@@ -9,7 +9,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useFormState } from "react-dom";
-import { getActiveSuppliers, createInventory, updateInventory } from "@/actions/inventory/inventoryActions";
+import { getActiveSuppliers, createInventory, updateInventory } from "@/actions/Inventory/inventoryActions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {

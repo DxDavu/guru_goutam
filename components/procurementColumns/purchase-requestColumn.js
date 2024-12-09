@@ -2,7 +2,7 @@
 
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { deletePurchaseRequest } from "@/actions/procurement/purchaseRequestActions";
+import { deletePurchaseRequest } from "@/actions/procurement/purchase-requestActions";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useState } from "react";

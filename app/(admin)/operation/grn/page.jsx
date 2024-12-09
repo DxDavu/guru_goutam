@@ -1,5 +1,5 @@
 import { getGrn } from "@/actions/operation/grnAction"
-import {columns, CreateNewGrnButton } from "@/components/operationColumn/grnColumn";
+import {columns, CreateNewGrnButton } from "@/components/operationColumns/grnColumn";
 import { DataTable } from "@/components/DataTable";
 
 

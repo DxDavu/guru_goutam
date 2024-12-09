@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { createGroup, updateGroup } from "@/actions/inventory/groupActions";
+import { createGroup, updateGroup } from "@/actions/Inventory/groupActions";
 import axios from 'axios';
 
 
@@ -41,8 +41,8 @@ const GroupForm = ({ type, data }) => {
       if (file) {
         const uploadData = new FormData();
         uploadData.append('image', file);
-          
-            
+
+
         const res = await axios.post('/api/upload', uploadData, {
           headers: {
             'Content-Type': 'multipart/form-data',
@@ -70,25 +70,42 @@ const GroupForm = ({ type, data }) => {
   });
 
   return (
-    <form onSubmit={onSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <h1 className="text-xl font-semibold col-span-2">{type === "create" ? "Add Group" : "Edit Group"}</h1>
+    <form className="w-full max-w-screen-2xl mx-auto p-8 bg-white shadow-md rounded-lg">
+      <div className=" flex bg-gray-200 p-6 border rounded-1g shadow-1g mb-6   gap-6 mt-5 w-full">
 
-      <div className="col-span-2">
-        <label className="text-sm font-medium">Group Name</label>
-        <Input {...register("group_name")} placeholder="Enter Group Name" />
-        {errors.group_name && <p className="text-red-500 text-xs">{errors.group_name.message}</p>}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-6 w-full">
+
+
+          <div className=" bg-gray-50 p-6 border rounde-dlg shadow-lg">
+            <h3 className="font-semibold ">Product Details :</h3>
+            <div className=" grid grid-cols-2 gap-4   bg-gray-50 p-6 border rounde-dlg  w-full">
+
+              <div className="col-span-2">
+                <label className="text-sm font-medium">Group Name</label>
+                <Input {...register("group_name")} placeholder="Enter Group Name" />
+                {errors.group_name && <p className="text-red-500 text-xs">{errors.group_name.message}</p>}
+              </div>
+
+              <div className="col-span-2">
+                <label className="text-sm font-medium">Description</label>
+                <Input {...register("description")} placeholder="Enter Description" />
+                {errors.description && <p className="text-red-500 text-xs">{errors.description.message}</p>}
+              </div>
+            </div>
+          </div>
+
+          <div className=" bg-gray-50 p-6 border rounde-dlg shadow-lg">
+
+            <div className="gap-4   bg-gray-50 p-6 border rounde-dlg  w-full">
+
+              <label className="text-sm font-medium mr-2">Active Status</label>
+              <Checkbox checked={watch("active_status")} onCheckedChange={(checked) => setValue(checked, "active_status", checked)} />
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div className="col-span-2">
-        <label className="text-sm font-medium">Description</label>
-        <Input {...register("description")} placeholder="Enter Description" />
-        {errors.description && <p className="text-red-500 text-xs">{errors.description.message}</p>}
-      </div>
 
-      <div className="flex items-center gap-2 col-span-2">
-        <Checkbox checked={watch("active_status")} onCheckedChange={(checked) => setValue("active_status", checked)} />
-        <label className="text-sm font-medium">Active Status</label>
-      </div>
 
       <div className="col-span-2 flex justify-end">
         <Button
@@ -99,6 +116,7 @@ const GroupForm = ({ type, data }) => {
         </Button>
         <Button type="submit" className="bg-blue-500 text-white mx-2">{type === "create" ? "Create" : "Update"}</Button>
       </div>
+
     </form>
   );
 };

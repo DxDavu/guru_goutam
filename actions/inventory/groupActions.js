@@ -4,7 +4,7 @@
 
 import { connectToDatabase } from '@/lib/database';
 import Group from '@/lib/database/models/inventory/Group.model';
-import ProductCategory from '@/lib/database/models/productLibrary/ProductCategory.model';
+import ProductCategory from '@/lib/database/models/productLibrary/Product-category.model';
 import Brand from '@/lib/database/models/productLibrary/Brand.model';
 import { upload } from '@/lib/middleware/uploadMiddleware'; // Import multer upload middleware
 

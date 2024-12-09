@@ -9,7 +9,6 @@ import { columns, CreateNewUserPerformanceButton } from "@/components/userPerfor
 export default async function UserPerformancePage() {
   const userPerformances = await getUserPerformances();
 
-  console.log(userPerformances,"Main page data sendinggggg");
   
 
   return (
