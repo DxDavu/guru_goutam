@@ -12,7 +12,7 @@ const menuItems = [
   { label: "CRM", href: "/crm" },
   { label: "Operations", href: "/operation" },
   { label: "User Performance", href: "/user-performance" },
-  { label: "Client", href: "/client" },
+  { label: "Client", href: "/clients" },
 ];
 
 export default function Menu({ isOpen }) {
