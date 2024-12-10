@@ -146,18 +146,18 @@ const InventoryForm = ({ type, data }) => {
 
   return (
     <form onSubmit={onSubmit} className="w-full max-w-screen-2xl mx-auto p-8 bg-white shadow-md rounded-lg">
-      <div className=" flex bg-gray-200 p-6 border rounded-1g shadow-1g mb-6   gap-6 mt-5">
+      <div className=" flex bg-gray-200 p-6 border rounded-1g shadow-1g mb-6   gap-6 mt-5 w-full">
 
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-6 w-full">
 
 
           <div className="mr-12 w-max max-w-[500px]	">
 
 
             <div className=" bg-gray-50 p-6 border rounde-dlg shadow-lg">
-              <h3 className="font-semibold ">Product Details :</h3>
-              <div className=" grid grid-cols-2 gap-4   bg-gray-50 p-6 border rounde-dlg  w-full">
+              <h3 className="font-semibold ">Product Details:</h3>
+              <div className=" grid grid-cols-2 gap-4   bg-gray-50 p-6 border rounde-dlg  w-96">
                 <div className="">
                   <h3>owner</h3>
                   <Input {...register("owner")} placeholder="Owner" className="border border-gray-300 rounded-md p-4  " />
@@ -203,7 +203,7 @@ const InventoryForm = ({ type, data }) => {
 
 
 
-          <div className=" bg-gray-50 p-6 border rounde-dlg shadow-lg ml-20 w-max">
+          <div className=" bg-gray-50 p-6 border rounde-dlg shadow-lg ml-20 w-96">
             <h3 className="font-semibold ">Price Details :</h3>
             <div className="grid grid-cols-2 gap-4    bg-gray-50 p-6 border rounde-dlg  w-full">
               <div>
@@ -236,7 +236,7 @@ const InventoryForm = ({ type, data }) => {
             </div>
           </div>
           
-          <div className="mt-2 w-60  ml-48	">
+          <div className="mt-2 w-64  ml-28	">
             <div className="    bg-gray-50 p-6 border rounde-dlg shadow-lg ">
 
               <h1 className="	font-extrabold		">Control</h1>

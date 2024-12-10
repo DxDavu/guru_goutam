@@ -4,7 +4,7 @@
 
 import { useEffect, useState } from "react";
 import DeliveryChallanForm from "@/components/operationForm/delivery_challanForm";
-import { getDeliveryChallanById } from "@/actions/operation/delivery_challanAction";
+import { getDeliveryChallanById } from "@/actions/operation/delivery-challanActions";
 import { useRouter } from "next/navigation";
 
 export default function EditDepartmentPage({ params }) {

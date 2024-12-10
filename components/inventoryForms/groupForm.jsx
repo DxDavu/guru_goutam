@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { createGroup, updateGroup } from "@/actions/Inventory/groupActions";
+import { createGroup, updateGroup } from "@/actions/inventory/groupActions";
 import axios from 'axios';
 
 

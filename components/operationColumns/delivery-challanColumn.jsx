@@ -2,7 +2,7 @@
 
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { deleteDeliveryChallan } from '@/actions/operation/delivery_challanAction';
+import { deleteDeliveryChallan } from '@/actions/operation/delivery-challanActions';
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useState } from "react";

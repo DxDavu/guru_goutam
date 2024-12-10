@@ -79,7 +79,7 @@ export default function ServicePriorityLevelForm({ type, data }) {
     <form onSubmit={onSubmit} className="space-y-4">
       <h1 className="text-xl font-semibold">{type === "create" ? "Add Priority Level" : "Edit Priority Level"}</h1>
 
-      <div className=" bg-gray-200 p-6 border rounded-1g shadow-1g mb-6 flex  gap-40">
+      <div className=" bg-gray-200 p-6 border rounded-1g shadow-1g mb-6 flex  gap-40 ">
         {/* Department Form Section */}
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 max-w-md flex-1">
           <div className="grid grid-cols-1 gap-4">
@@ -98,13 +98,13 @@ export default function ServicePriorityLevelForm({ type, data }) {
         </div>
 
         {/* Control Section */}
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 w-80 h-28">
-            <h3 className="text-lg font-semibold mb-4">Control</h3>
-            <div className="flex items-center gap-2">
-              <Checkbox checked={watch("active_status")} onCheckedChange={(checked) => setValue("active_status", checked)} />
-              <label className="text-sm font-medium">Active Status</label>
-            </div>
+        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 w-80 h-28 mr-20">
+          <h3 className="text-lg font-semibold mb-4">Control</h3>
+          <div className="flex items-center gap-2">
+            <Checkbox checked={watch("active_status")} onCheckedChange={(checked) => setValue("active_status", checked)} />
+            <label className="text-sm font-medium">Active Status</label>
           </div>
+        </div>
       </div>
 
       <div className="flex justify-center mt-5 gap-4">

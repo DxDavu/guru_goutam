@@ -64,7 +64,7 @@ const BrandForm = ({ type, data }) => {
 
       <div className=" bg-gray-200 p-6 border rounded-1g shadow-1g mb-6 flex  gap-40">
 
-          <div className="bg-gray-50 flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="bg-gray-50 flex-1 grid grid-cols-1 md:grid-cols-2 gap-4 p-3">
             <div>
               <label className="text-sm font-medium">Brand Number</label>
               <Input {...register("brand_number")} placeholder="Enter Brand Number" className="w-full max-w-xs border border-gray-300 rounded-md p-2" />

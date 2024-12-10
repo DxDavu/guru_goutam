@@ -160,6 +160,8 @@ const PurchaseRequestForm = ({ type, data }) => {
   };
 
   const onSubmit = handleSubmit(async (formData) => {
+    // debugger
+
     try {
       const stagesToUpdate = stages.map((stage) => ({
         ...stage,
@@ -199,9 +201,16 @@ const PurchaseRequestForm = ({ type, data }) => {
         {/* Product Category Section */}
         <div className="bg-gray-50 p-6 border rounded-lg shadow-lg w-full md:w-1/3">
           <div>
+            
             <h3 className="font-medium">Purchase Request Details:</h3>
-            <Input {...register("pr_id")} placeholder="Purchase Request ID" />
+            <div className="mt-4">
+              <Input {...register("pr_id")} placeholder="Purchase Request ID" />
+            </div>
+            <div className="mt-4">
             <Input {...register("pr_date")} type="date" placeholder="Purchase Request Date" />
+
+            </div>
+            <div className="mt-4">
             <Select
               onValueChange={(value) => setValue("order_type", value)}
               value={watch("order_type") || ""}
@@ -216,7 +225,10 @@ const PurchaseRequestForm = ({ type, data }) => {
                 </SelectGroup>
               </SelectContent>
             </Select>
+            </div>
+            <div className="mt-4">
             <Input {...register("owner")} placeholder="Owner" />
+            </div>
           </div>
         </div>
 

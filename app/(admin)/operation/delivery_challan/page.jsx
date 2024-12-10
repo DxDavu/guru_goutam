@@ -4,7 +4,7 @@
 
 "use server";
 
-import { getDeliveryChallans } from "@/actions/operation/delivery_challanAction";
+import { getDeliveryChallans } from "@/actions/operation/delivery-challanActions";
 import { DataTable } from "@/components/DataTable";
 import { columns, CreateNewDeliveryChallanButton } from "@/components/operationColumns/delivery-challanColumn";
 

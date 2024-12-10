@@ -102,7 +102,7 @@ const ItemVariantForm = ({ type, data }) => {
       <div className="flex flex-col md:flex-row gap-6">
 
         {/* Category Information Fields */}
-        <div className="bg-gray-50 flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="bg-gray-50 flex-1 grid grid-cols-1 md:grid-cols-2 gap-4 p-3">
       
         <div>
           <label className="text-sm font-medium">Item/Specification Name</label>
