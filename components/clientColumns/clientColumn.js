@@ -80,25 +80,17 @@ const Actions = ({ row }) => {
 };
 
 export const columns = [
-  { id: "sl_no", header: "Sl. No", cell: ({ row }) => row.index + 1 },
-  {
-    accessorKey: "image",
-    header: "Image",
-    cell: ({ row }) => (
-      <div className="flex justify-center">
-        <Image
-          src={row.original.image || "/avatar.png"} // Placeholder if no image
-          alt="Client"
-          width={50}
-          height={50}
-          className="w-12 h-12 object-cover border rounded-full"
-        />
-      </div>
-    ),
-  },
+  
+  { accessorKey: "client_id", header: "Client ID" },
+  { accessorKey: "customer_type", header: "Customer Type" },
   { accessorKey: "client_name", header: "Client Name" },
-  { accessorKey: "email", header: "Email" },
-  { accessorKey: "phone_number", header: "Phone" },
+  { accessorKey: "phone_number", header: "Phone Number" },
+  { accessorKey: "company_name", header: "Company Name" },
+  { accessorKey: "rental_cost", header: "Rental Cost" },
+  { accessorKey: "product_cost", header: "Product Cost" },
+  { accessorKey: "client_status", header: "Client Status" },
+  { accessorKey: "rental_start_date", header: "Rental Start Date" },
+  { accessorKey: "rental_return_date", header: "Rental return Date" },
   {
     accessorKey: "active_status",
     header: "Status",
