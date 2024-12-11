@@ -23,7 +23,7 @@ import {
 } from 'react-icons/fa';
 
 const sidebarLinks = [
-  { name: ' Delivery Challan', href: '/operation/delivery_challan', icon: <FaUser /> },
+  { name: ' Delivery Challan', href: '/operation/delivery-challan', icon: <FaUser /> },
   { name: ' Invoice ', href: '/operation/invoice', icon: <FaFileInvoice /> },
   { name: ' Grn ', href: '/operation/grn', icon: <FaFileInvoice /> },
   { name: ' Service ', href: '/operation/service', icon: <FaFileInvoice /> },

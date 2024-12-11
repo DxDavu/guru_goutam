@@ -5,7 +5,7 @@
 
 "use server";
 
-import { getService } from "@/actions/operation/serviceAction";
+import { getService } from "@/actions/operation/serviceActions";
 import { DataTable } from "@/components/DataTable";
 import { columns, CreateNewServiceButton } from "@/components/operationColumns/serviceColumn";
 
