@@ -85,7 +85,7 @@ const UserPerformanceForm = ({ type, data }) => {
   });
 
   return (
-    <form className="w-full max-w-2xl mx-auto p-8 bg-white shadow-md rounded-lg" onSubmit={onSubmit}>
+    <form className="w-full max-w-2xl mx-auto p-8 bg-white shadow-2xl rounded-lg" onSubmit={onSubmit}>
       <h1 className="text-xl font-semibold">{type === "create" ? "Add New User Performance" : "Edit User Performance"}</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
