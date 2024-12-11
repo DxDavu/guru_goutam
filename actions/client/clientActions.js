@@ -96,6 +96,7 @@ export const updateClient = async (id, updateData) => {
     await connectToDatabase();
     const updatedClient = await Client.findByIdAndUpdate(id, updateData, {
       new: true, // Return the updated document
+       
       runValidators: true, // Run schema validation
     });
 
