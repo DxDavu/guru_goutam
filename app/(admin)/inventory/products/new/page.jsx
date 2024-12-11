@@ -1,4 +1,3 @@
-// @/app/(admin)/inventory/products/new/page.jsx
 
 "use client";
 
