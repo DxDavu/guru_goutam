@@ -4,7 +4,7 @@
 
 import { useEffect, useState } from "react";
 import ServiceForm from "@/components/operationForm/serviceForm";
-import { getServiceById } from "@/actions/operation/serviceAction";
+import { getServiceById } from "@/actions/operation/serviceActions";
 import { useRouter } from "next/navigation";
 
 export default function EditServicePage({ params }) {

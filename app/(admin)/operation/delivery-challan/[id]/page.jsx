@@ -3,7 +3,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import DeliveryChallanForm from "@/components/operationForm/delivery_challanForm";
+import DeliveryChallanForm from "@/components/operationForm/delivery-challanForm";
 import { getDeliveryChallanById } from "@/actions/operation/delivery-challanActions";
 import { useRouter } from "next/navigation";
 

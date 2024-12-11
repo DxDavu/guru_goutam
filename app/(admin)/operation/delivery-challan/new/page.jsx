@@ -1,7 +1,7 @@
 
 
 
-import DeliveryChallanForm from '@/components/operationForm/delivery_challanForm'
+import DeliveryChallanForm from '@/components/operationForm/delivery-challanForm'
 
 export default function NewDeliveryChallanPage() {
     return (

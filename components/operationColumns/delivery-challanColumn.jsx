@@ -105,9 +105,10 @@ export const CreateNewDeliveryChallanButton = () => {
   const router = useRouter();
   return (
     <div className="flex justify-end mb-1">
-      <Button className="bg-blue-500 text-white" onClick={() => router.push("/operation/delivery_challan/new")}>
+      <Button className="bg-blue-500 text-white" onClick={() => router.push("/operation/delivery-challan/new")}>
         Create New DC
       </Button>
     </div>
   );
 };
+

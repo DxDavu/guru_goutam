@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { useFormState } from "react-dom";
 import { CldUploadWidget } from "next-cloudinary";
 import Image from "next/image";
-import { createService, updateService } from "@/actions/operation/serviceAction";
+import { createService, updateService } from "@/actions/operation/serviceActions";
 
 const schema = z.object({
   image: z.any().optional(), // Image optional

@@ -105,7 +105,7 @@ const SupplierForm = ({ type, data }) => {
 
         <div className=" grid grid-cols-3 bg-gray-50 p-2 border rounde-dlg shadow-lg w-full gap-2">
           {/* Supplier Information */}
-          <div className="border p-4 rounded-md space-y-2">
+          <div className="border p-6 rounded-md space-y-4 bg-white-200">
             <h2 className="text-base font-semibold mb-4">Supplier Information</h2>
 
             <div className="grid grid-cols-2 w-70 mt-4 gap-6">

@@ -3,7 +3,7 @@
 "use server";
 
 import { connectToDatabase } from '@/lib/database';
-import DeliveryChallan from '@/lib/database/models/operations/Delivery_challan.model';
+import DeliveryChallan from '@/lib/database/models/operations/Delivery-challan.model';
 
 // Get all delivery challans
 export const getDeliveryChallans = async () => {
