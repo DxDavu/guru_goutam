@@ -195,22 +195,18 @@ const PurchaseRequestForm = ({ type, data }) => {
   }, [state, router, type]);
 
   return (
-    <form onSubmit={onSubmit} className="w-full max-w-screen-2xl mx-auto p-8 bg-white shadow-md rounded-lg">
-      <div className=" bg-gray-200 p-6 border rounded-1g shadow-1g mb-6 flex  gap-9">
-
+    <form onSubmit={onSubmit} className="w-full max-w-screen-2xl mx-auto p-4 sm:p-6 md:p-8 bg-white shadow-md rounded-lg">
+      <div className="bg-gray-200 p-4 sm:p-6 border rounded-lg shadow-md mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Product Category Section */}
-        <div className="bg-gray-50 p-6 border rounded-lg shadow-lg w-full md:w-1/3">
-          <div>
-            
-            <h3 className="font-medium">Purchase Request Details:</h3>
-            <div className="mt-4">
-              <Input {...register("pr_id")} placeholder="Purchase Request ID" />
-            </div>
-            <div className="mt-4">
+        <div className="bg-gray-50 p-4 sm:p-6 border rounded-lg shadow-lg">
+          <h3 className="font-medium">Purchase Request Details:</h3>
+          <div className="mt-4">
+            <Input {...register("pr_id")} placeholder="Purchase Request ID" />
+          </div>
+          <div className="mt-4">
             <Input {...register("pr_date")} type="date" placeholder="Purchase Request Date" />
-
-            </div>
-            <div className="mt-4">
+          </div>
+          <div className="mt-4">
             <Select
               onValueChange={(value) => setValue("order_type", value)}
               value={watch("order_type") || ""}
@@ -225,15 +221,14 @@ const PurchaseRequestForm = ({ type, data }) => {
                 </SelectGroup>
               </SelectContent>
             </Select>
-            </div>
-            <div className="mt-4">
+          </div>
+          <div className="mt-4">
             <Input {...register("owner")} placeholder="Owner" />
-            </div>
           </div>
         </div>
 
         {/* Supplier Details */}
-        <div className="bg-gray-50 p-6 border rounded-lg shadow-lg w-full md:w-1/3">
+        <div className="bg-gray-50 p-4 sm:p-6 border rounded-lg shadow-lg">
           <h3 className="font-medium">Supplier Details:</h3>
           {isLoadingSuppliers ? (
             <Loader />
@@ -259,7 +254,7 @@ const PurchaseRequestForm = ({ type, data }) => {
         </div>
 
         {/* Additional Information */}
-        <div className="bg-gray-50 p-6 border rounded-lg shadow-lg w-full md:w-1/3">
+        <div className="bg-gray-50 p-4 sm:p-6 border rounded-lg shadow-lg">
           <h3 className="font-medium">Additional Information:</h3>
           <Select
             onValueChange={(value) => setValue("purchase_type", value)}

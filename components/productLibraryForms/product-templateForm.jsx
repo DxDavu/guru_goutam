@@ -148,7 +148,7 @@ const ProductTemplateForm = ({ type, data }) => {
   return (
     <form
       onSubmit={onSubmit}
-      className="w-full max-w-screen-2xl mx-auto p-8 bg-white shadow-md rounded-lg"
+      className="w-full max-w-screen-2xl mx-auto p-8 md:bg-white shadow-md rounded-lg "
     >
       <div className=" bg-gray-200 p-6 border rounded-1g shadow-1g mb-6 flex  gap-9">
         {/* {/ Product Category Section /} */}
