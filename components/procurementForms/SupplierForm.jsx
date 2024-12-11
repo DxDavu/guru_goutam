@@ -103,7 +103,7 @@ const SupplierForm = ({ type, data }) => {
     <form onSubmit={onSubmit} className="space-y-6 w-full">
       <div className=" bg-gray-200 p-4 border rounded-1g shadow-1g mb-6 flex  gap-9">
 
-        <div className=" grid grid-cols-3 bg-gray-50 p-2 border rounde-dlg shadow-lg w-full">
+        <div className=" grid grid-cols-3 bg-gray-50 p-2 border rounde-dlg shadow-lg w-full gap-2">
           {/* Supplier Information */}
           <div className="border p-4 rounded-md space-y-2">
             <h2 className="text-base font-semibold mb-4">Supplier Information</h2>
@@ -184,7 +184,7 @@ const SupplierForm = ({ type, data }) => {
           </div>
 
           {/* Bank Details */}
-          <div className=" p-6 rounded-md space-y-4">
+          <div className="border p-6 rounded-md space-y-4">
             <h2 className="text-base font-semibold mb-4">Bank Details</h2>
             <Input {...register("bank_name")} placeholder="Bank Name" />
             <Input {...register("bank_address")} placeholder="Bank Address" />

@@ -144,8 +144,6 @@ export const columns = [
 export const CreateNewUserPerformanceButton = () => {
   const userPermissions = useUserPermissions();
   const canAdd = checkPermissions(userPermissions, "Users", "can_add");
-  console.log(canAdd, "aaaaadddddddddddddddddd");
-  console.log(userPermissions, "ppppppppppppppppppppp");
   
   const router = useRouter();
 
