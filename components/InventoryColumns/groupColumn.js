@@ -100,13 +100,13 @@ export const columns = [
   { accessorKey: "category", header: "Product Quantity" },
   {
     accessorKey: "active_status",
-    header: "Status",
+    header: "Active Status",
     cell: ({ row }) => (
       <span>{row.original.active_status ? "Active" : "Inactive"}</span>
     ),
   },
   {
-    id: "actions",
+    id: "action",
     cell: ({ row }) => <Actions row={row} />,
   },
 ];

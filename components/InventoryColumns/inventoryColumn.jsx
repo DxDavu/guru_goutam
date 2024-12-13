@@ -14,10 +14,27 @@ import {
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useState } from "react";
+import Image from "next/image";
 import { deleteInventory } from "@/actions/Inventory/inventoryActions";
 
 export const columns = [
-  { accessorKey: "inventory_name", header: "Inventory Name" },
+    {
+      accessorKey: "z",
+      header: "Product Image",
+      cell: ({ row }) => (
+        row.index +1,
+        <div className="flex justify-start">
+          <Image
+            src={row.original.image || "/avatar.png"} // Placeholder if no image
+            alt="Product"
+            width={60}
+            height={60}
+            // className="w-16 h-16 object-cover border rounded"
+          />
+        </div>
+      ),
+    },
+  { accessorKey: "inventory_name", header: "Product Name" },
   { accessorKey: "owner", header: "Owner" },
   { accessorKey: "supplier", header: "Supplier" },
   {

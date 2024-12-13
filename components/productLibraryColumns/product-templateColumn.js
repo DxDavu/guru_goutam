@@ -37,10 +37,12 @@ export const columns = [
     cell: ({ row }) => (
       row.index +1,
       <div className="flex justify-center">
-        <img
+        <Image
           src={row.original.image || "/avatar.png"} // Placeholder if no image
           alt="Product"
-          className="w-16 h-16 object-cover border rounded"
+          width={60}
+          height={60}
+          // className="w-16 h-16 object-cover border rounded"
         />
       </div>
     ),
@@ -120,7 +122,6 @@ export const columns = [
           toast.error("Failed to delete product template.");
         }
       };
-console.log(row.origina,'hi hekkol')
       return (
         <>
           <DropdownMenu>
