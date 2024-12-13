@@ -20,7 +20,7 @@ import { Button } from "@/components/ui/button";
 import ProductSelectionModal from "@/components/procurementModals/ProductSelectionModal";
 import { format } from "date-fns";
 import Loader from "@/components/ui/loader";
-import { getPurchaseRequest, getSuppliers, createPoQuotation, updatePoQuotation } from "@/actions/procurement/po_quotationAction";
+import { getPurchaseRequest, getSuppliers, createPoQuotation, updatePoQuotation } from "@/actions/procurement/po-quotationActions";
 import { useFormState } from "react-dom";
 
 

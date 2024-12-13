@@ -1,6 +1,6 @@
 "use client";
 
-import PoQuotationForm from "@/components/procurementForms/po_quotationForm";
+import PoQuotationForm from "@/components/procurementForms/po-quotationForm";
 
 export default function NewPrPage() {
   return (

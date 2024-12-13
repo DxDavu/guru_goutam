@@ -38,7 +38,7 @@ export const getBranchById = async (id) => {
   }
   return { ...branch, _id: branch._id.toString() };
 };
-
+ 
 // Create a new branch
 export const createBranch = async (currentState, branchData) => {
   console.log("==branchData==sa===");
@@ -57,6 +57,7 @@ export const createBranch = async (currentState, branchData) => {
   }
 
   // Check for existing branch with the same ID
+  
   const existingBranch = await Branch.findOne({
     branch_id: branchData.branch_id,
   });

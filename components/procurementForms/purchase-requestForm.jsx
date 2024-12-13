@@ -30,8 +30,12 @@ const schema = z.object({
   order_type: z.enum(["Sale", "Rent"]),
   owner: z.string().nonempty("Owner is required!"),
   supplier: z.string().nonempty("Supplier is required!"),
+  phone_number: z.number().regex(/^\+?[0-9]{10,15}$/).optional(),
+  supplier_email: z.string().email().optional(),
+
   purchase_type: z.enum(["Buy", "Sell"]),
   description: z.string().optional(),
+ 
 });
 
 const PurchaseRequestForm = ({ type, data }) => {
@@ -251,6 +255,12 @@ const PurchaseRequestForm = ({ type, data }) => {
               </SelectContent>
             </Select>
           )}
+          <div className="mt-4">
+            <Input {...register("phone_number")} placeholder=" phone_number" />
+          </div>
+          <div className="mt-4">
+            <Input {...register("supplier_email")} placeholder=" supplier email" />
+          </div>
         </div>
 
         {/* Additional Information */}
@@ -270,6 +280,9 @@ const PurchaseRequestForm = ({ type, data }) => {
               </SelectGroup>
             </SelectContent>
           </Select>
+          <div className="mt-4">
+            <Input {...register("description")} placeholder="description" />
+          </div>
         </div>
       </div>
 

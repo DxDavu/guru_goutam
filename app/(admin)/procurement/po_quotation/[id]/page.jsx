@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import PoQuotationForm from "@/components/procurementForms/po_quotationForm";
-import { getPoQuotationById } from '@/actions/procurement/po_quotationAction';
+import PoQuotationForm from "@/components/procurementForms/po-quotationForm";
+import { getPoQuotationById } from '@/actions/procurement/po-quotationActions';
 import { useRouter } from "next/navigation";
 
 export default function EditPrPage({ params }) {
