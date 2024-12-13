@@ -10,12 +10,14 @@ import {
   FaBoxOpen,      
   FaTools       
 } from 'react-icons/fa';
+import { GiJourney } from "react-icons/gi";
 
 const sidebarLinks = [
   { name: 'Delivery Challan', href: '/operation/delivery-challan', icon: <FaTruck /> },
   { name: 'Invoice', href: '/operation/invoice', icon: <FaFileInvoiceDollar /> },
   { name: 'GRN', href: '/operation/grn', icon: <FaBoxOpen /> },
   { name: 'Service', href: '/operation/service', icon: <FaTools /> },
+  { name: 'Client Journey', href: '/operation/client-journey', icon: <GiJourney /> },
 ];
 
 export default function Sidebar() {
