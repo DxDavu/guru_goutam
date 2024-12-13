@@ -97,7 +97,7 @@ export const columns = [
   // },
   { accessorKey: "group_name", header: "Group Name" },
   { accessorKey: "description", header: "Description" },
-  { accessorKey: "category", header: "Product Quantity" },
+  { accessorKey: "product_qty", header: "Product Quantity" },
   {
     accessorKey: "active_status",
     header: "Active Status",
