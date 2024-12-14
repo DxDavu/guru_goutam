@@ -101,6 +101,10 @@ const Actions = ({ row }) => {
 export const columns = [
   { id: "sl_no", header: "Sl. No", cell: ({ row }) => row.index + 1 },
   {
+    accessorKey: "category_id",
+    header: "Category details",
+  },
+  {
     accessorKey: "item_name",
     header: "Item/Specification Name",
   },
