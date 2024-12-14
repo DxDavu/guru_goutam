@@ -134,8 +134,7 @@ const ProductTemplateForm = ({ type, data }) => {
   useEffect(() => {
     if (state?.success) {
       toast.success(
-        `Product Template ${
-          type === "create" ? "created" : "updated"
+        `Product Template ${type === "create" ? "created" : "updated"
         } successfully!`
       );
       router.push("/product-library/product-template");
@@ -147,231 +146,223 @@ const ProductTemplateForm = ({ type, data }) => {
 
   return (
     <form
-      onSubmit={onSubmit}
-      className="w-full max-w-screen-2xl mx-auto p-8 bg-white shadow-md rounded-lg"
-    >
-      <div className=" bg-gray-200 p-6 border rounded-1g shadow-1g mb-6 flex  gap-9">
-        {/* {/ Product Category Section /} */}
-        <div className="bg-gray-50 p-6 border rounded-lg shadow-lg w-full md:w-1/3">
-          <h3 className="text-lg font-semibold mb-4">
-            Choose Product Category
-          </h3>
-          <div className="mb-4">
-            <label className="text-sm font-medium">Product Category</label>
-            <Select
-              onValueChange={(value) => setValue("category", value)}
-              value={watch("category") || ""}
-            >
-              <SelectTrigger className="w-full max-w-xs border border-gray-300 rounded-md p-2">
-                <SelectValue placeholder="Select Category" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  {categories.map((category) => (
-                    <SelectItem
-                      key={category._id}
-                      value={category._id.toString()}
-                    >
-                      {category.category_name}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-            {errors.category && (
-              <p className="text-red-500 text-xs">{errors.category.message}</p>
-            )}
-          </div>
-
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Upload Product Image
-            </label>
-            <div className="flex items-center gap-4">
-              {/* Image Preview Section */}
-              {imagePreview ? (
-                <div className="relative">
-                  <img
-                    src={imagePreview}
-                    alt="Preview"
-                    className="w-24 h-24 object-cover rounded-lg border border-gray-300 shadow-sm"
-                  />
-                  <button
-                    type="button"
-                    onClick={handleRemoveImage}
-                    className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full shadow hover:bg-red-600"
-                  >
-                    ✕
-                  </button>
-                </div>
-              ) : (
-                <div className="w-24 h-24 bg-gray-100 flex items-center justify-center rounded-lg border border-dashed border-gray-300">
-                  <span className="text-xs text-gray-500">
-                    {" "}
-                    <Image
-                      src="/upload.png"
-                      alt="Upload Icon"
-                      width={28}
-                      height={28}
-                    />
-                  </span>
-                </div>
-              )}
-
-              {/* Upload Button */}
-              <CldUploadWidget
-                uploadPreset="gurugoutam"
-                onSuccess={handleImageUpload}
-              >
-                {({ open }) => (
-                  <button
-                    type="button"
-                    onClick={() => open()}
-                    className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                  >
-                    Upload Image
-                  </button>
-                )}
-              </CldUploadWidget>
-            </div>
-            {/* Helper Text */}
-            <p className="mt-2 text-xs text-gray-500">
-              Supported formats: JPG, PNG (max size: 2MB)
-            </p>
-          </div>
-
-          <div>
-            <label className="text-sm font-medium mt-4">Product Name</label>
-            <Input
-              {...register("product_name")}
-              placeholder="Enter Product Name"
-              className="w-full max-w-xs border border-gray-300 rounded-md p-2"
-            />
-            {errors.product_name && (
-              <p className="text-red-500 text-xs">
-                {errors.product_name.message}
-              </p>
-            )}
-          </div>
-
-          <div className="mb-4">
-            <label className="text-sm font-medium">Brand</label>
-            <Select
-              onValueChange={(value) => setValue("brand", value)}
-              value={watch("brand") || ""}
-            >
-              <SelectTrigger className="w-full max-w-xs border border-gray-300 rounded-md p-2">
-                <SelectValue placeholder="Select Brand" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  {brands.map((brand) => (
-                    <SelectItem key={brand._id} value={brand._id.toString()}>
-                      {brand.brand_name}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-            {errors.brand && (
-              <p className="text-red-500 text-xs">{errors.brand.message}</p>
-            )}
-          </div>
-
-          <div className="mb-4">
-            <label className="text-sm font-medium">Model</label>
-            <Input
-              {...register("model")}
-              placeholder="Enter Model"
-              className="w-full max-w-xs border border-gray-300 rounded-md p-2"
-            />
-            {errors.model && (
-              <p className="text-red-500 text-xs">{errors.model.message}</p>
-            )}
-          </div>
-          <div className="mb-4">
-            <label className="text-sm font-medium">Description</label>
-            <Input
-              {...register("description")}
-              placeholder="Enter Description"
-              className="w-full max-w-xs border border-gray-300 rounded-md p-2"
-            />
-            {errors.description && (
-              <p className="text-red-500 text-xs">
-                {errors.description.message}
-              </p>
-            )}
-          </div>
+    onSubmit={onSubmit}
+    className="w-full max-w-screen-2xl mx-auto p-4 md:p-8 bg-white shadow-md rounded-lg"
+  >
+    {/* Form Container */}
+    <div className="flex flex-col md:flex-row gap-6">
+      {/* Product Category Section */}
+      <div className="bg-gray-50 p-6 border rounded-lg shadow-lg flex-1">
+        <h3 className="text-lg font-semibold mb-4">Choose Product Category</h3>
+        <div className="mb-4">
+          <label className="text-sm font-medium">Product Category</label>
+          <Select
+            onValueChange={(value) => setValue("category", value)}
+            value={watch("category") || ""}
+          >
+            <SelectTrigger className="w-full border border-gray-300 rounded-md p-2">
+              <SelectValue placeholder="Select Category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                {categories.map((category) => (
+                  <SelectItem key={category._id} value={category._id.toString()}>
+                    {category.category_name}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+          {errors.category && (
+            <p className="text-red-500 text-xs">{errors.category.message}</p>
+          )}
         </div>
-
-        {/* {/ Specifications Section /} */}
-
-        <div className="bg-gray-50 p-6 border rounded-lg shadow-lg w-full md:w-1/3">
-          <h3 className="text-lg font-semibold mb-4">Specifications</h3>
-          {["ram", "processor", "storage", "graphics", "os"].map((spec) => (
-            <div key={spec} className="mb-4">
-              <label className="text-sm font-medium capitalize">{spec}</label>
-              <div className="flex space-x-4 mt-1">
-                <Select
-                  onValueChange={(value) =>
-                    setValue(`specifications.${spec}.brand`, value)
-                  }
-                  value={watch(`specifications.${spec}.brand`) || ""}
+  
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Upload Product Image
+          </label>
+          <div className="flex items-center gap-4">
+            {imagePreview ? (
+              <div className="relative">
+                <img
+                  src={imagePreview}
+                  alt="Preview"
+                  className="w-24 h-24 object-cover rounded-lg border border-gray-300 shadow-sm"
+                />
+                <button
+                  type="button"
+                  onClick={handleRemoveImage}
+                  className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full shadow hover:bg-red-600"
                 >
-                  <SelectTrigger className="w-full max-w-xs border border-gray-300 rounded-md p-2">
-                    <SelectValue placeholder="Select Brand" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      {brands.map((brand) => (
-                        <SelectItem
-                          key={brand._id}
-                          value={brand._id.toString()}
-                        >
-                          {brand.brand_name}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-                <Select
-                  onValueChange={(value) =>
-                    setValue(`specifications.${spec}.type`, value)
-                  }
-                  value={watch(`specifications.${spec}.type`) || ""}
-                >
-                  <SelectTrigger className="w-full max-w-xs border border-gray-300 rounded-md p-2">
-                    <SelectValue placeholder="Select Type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      {variants.map((variant) => (
-                        <SelectItem
-                          key={variant._id}
-                          value={variant._id.toString()}
-                        >
-                          {variant.type}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+                  ✕
+                </button>
               </div>
-              {errors.specifications?.[spec] && (
-                <p className="text-red-500 text-xs">
-                  {errors.specifications[spec].message}
-                </p>
+            ) : (
+              <div className="w-24 h-24 bg-gray-100 flex items-center justify-center rounded-lg border border-dashed border-gray-300">
+                <span className="text-xs text-gray-500">
+                  <Image
+                    src="/upload.png"
+                    alt="Upload Icon"
+                    width={28}
+                    height={28}
+                  />
+                </span>
+              </div>
+            )}
+            <CldUploadWidget
+              uploadPreset="gurugoutam"
+              onSuccess={handleImageUpload}
+            >
+              {({ open }) => (
+                <button
+                  type="button"
+                  onClick={() => open()}
+                  className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                >
+                  Upload Image
+                </button>
               )}
-            </div>
-          ))}
-          <div className="mt-4">
-            <button type="button" className="text-blue-500 text-sm">
-              Add Custom field
-            </button>
+            </CldUploadWidget>
           </div>
+          <p className="mt-2 text-xs text-gray-500">
+            Supported formats: JPG, PNG (max size: 2MB)
+          </p>
         </div>
-        {/* {/ Active Status Section /} */}
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 w-80 h-28">
+  
+        <div className="mb-4">
+          <label className="text-sm font-medium">Product Name</label>
+          <Input
+            {...register("product_name")}
+            placeholder="Enter Product Name"
+            className="w-full border border-gray-300 rounded-md p-2"
+          />
+          {errors.product_name && (
+            <p className="text-red-500 text-xs">{errors.product_name.message}</p>
+          )}
+        </div>
+  
+        <div className="mb-4">
+          <label className="text-sm font-medium">Brand</label>
+          <Select
+            onValueChange={(value) => setValue("brand", value)}
+            value={watch("brand") || ""}
+          >
+            <SelectTrigger className="w-full border border-gray-300 rounded-md p-2">
+              <SelectValue placeholder="Select Brand" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                {brands.map((brand) => (
+                  <SelectItem key={brand._id} value={brand._id.toString()}>
+                    {brand.brand_name}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+          {errors.brand && (
+            <p className="text-red-500 text-xs">{errors.brand.message}</p>
+          )}
+        </div>
+  
+        <div className="mb-4">
+          <label className="text-sm font-medium">Model</label>
+          <Input
+            {...register("model")}
+            placeholder="Enter Model"
+            className="w-full border border-gray-300 rounded-md p-2"
+          />
+          {errors.model && (
+            <p className="text-red-500 text-xs">{errors.model.message}</p>
+          )}
+        </div>
+  
+        <div className="mb-4">
+          <label className="text-sm font-medium">Description</label>
+          <Input
+            {...register("description")}
+            placeholder="Enter Description"
+            className="w-full border border-gray-300 rounded-md p-2"
+          />
+          {errors.description && (
+            <p className="text-red-500 text-xs">{errors.description.message}</p>
+          )}
+        </div>
+      </div>
+  
+      {/* Specifications Section */}
+      <div className="bg-gray-50 p-6 border rounded-lg shadow-lg flex-1">
+        <h3 className="text-lg font-semibold mb-4">Specifications</h3>
+        {[
+          "ram",
+          "processor",
+          "storage",
+          "graphics",
+          "os",
+        ].map((spec) => (
+          <div key={spec} className="mb-4">
+            <label className="text-sm font-medium capitalize">{spec}</label>
+            <div className="flex flex-col sm:flex-row sm:gap-4 mt-1">
+              <Select
+                onValueChange={(value) =>
+                  setValue(`specifications.${spec}.brand`, value)
+                }
+                value={watch(`specifications.${spec}.brand`) || ""}
+              >
+                <SelectTrigger className="w-full sm:w-auto border border-gray-300 rounded-md p-2">
+                  <SelectValue placeholder="Select Brand" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {brands.map((brand) => (
+                      <SelectItem key={brand._id} value={brand._id.toString()}>
+                        {brand.brand_name}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              <Select
+                onValueChange={(value) =>
+                  setValue(`specifications.${spec}.type`, value)
+                }
+                value={watch(`specifications.${spec}.type`) || ""}
+              >
+                <SelectTrigger className="w-full sm:w-auto border border-gray-300 rounded-md p-2">
+                  <SelectValue placeholder="Select Type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {variants.map((variant) => (
+                      <SelectItem key={variant._id} value={variant._id.toString()}>
+                        {variant.type}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+            {errors.specifications?.[spec] && (
+              <p className="text-red-500 text-xs">
+                {errors.specifications[spec].message}
+              </p>
+            )}
+          </div>
+        ))}
+        <div className="mt-4">
+          <button type="button" className="text-blue-500 text-sm">
+            Add Custom Field
+          </button>
+        </div>
+      </div>
+  
+
+
+
+
+        {/* Active Status Section */}
+        <div className="bg-white p-6 border rounded-lg shadow-sm flex-shrink-0 w-full md:w-80">
           <h3 className="text-lg font-semibold mb-4">Control</h3>
           <div className="flex items-center gap-2">
             <Checkbox
@@ -383,6 +374,7 @@ const ProductTemplateForm = ({ type, data }) => {
         </div>
       </div>
 
+      {/* Submit and Cancel Buttons */}
       <div className="flex justify-center mt-5 gap-4">
         <Button
           variant="outline"
@@ -398,8 +390,8 @@ const ProductTemplateForm = ({ type, data }) => {
           {state.loading
             ? "Submitting..."
             : type === "create"
-            ? "Create"
-            : "Update"}
+              ? "Create"
+              : "Update"}
         </Button>
       </div>
 
@@ -408,6 +400,8 @@ const ProductTemplateForm = ({ type, data }) => {
 
 
     </form>
+
+
   );
 };
 

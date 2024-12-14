@@ -4,7 +4,7 @@
 
 import { useEffect, useState } from "react";
 import GrnForm from "@/components/operationForm/grnForm";
-import { getGrnById } from "@/actions/operation/grnAction";
+import { getGrnById } from "@/actions/operation/grnActions";
 import { useRouter } from "next/navigation";
 
 export default function EditDepartmentPage({ params }) {

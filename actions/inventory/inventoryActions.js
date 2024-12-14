@@ -26,7 +26,7 @@ export const getInventories = async () => {
 // Fetch inventory by ID
 export const getInventoryById = async (id) => {
   await connectToDatabase();
-  const inventory = await Inventory.findById(id)
+  const inventory = await Inventory.findById(id) 
     .populate("supplier", "supplier_name")
     .populate("product", "product_name category brand")
     .lean();

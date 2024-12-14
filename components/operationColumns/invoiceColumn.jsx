@@ -2,7 +2,7 @@
 
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { deleteInvoice } from '@/actions/operation/invoiceAction';
+import { deleteInvoice } from '@/actions/operation/invoiceActions';
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useState } from "react";

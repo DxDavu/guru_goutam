@@ -2,7 +2,7 @@
 'use server';
 
 import { connectToDatabase } from '@/lib/database';
-import PoQuotation from '@/lib/database/models/procurement/Po_quotation.model';
+import PoQuotation from '@/lib/database/models/procurement/Po-quotation.model';
 
 
 

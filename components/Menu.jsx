@@ -17,7 +17,7 @@ const menuItems = [
 
 export default function Menu({ isOpen }) {
   const router = useRouter();
-  const pathname = usePathname();``
+  const pathname = usePathname();
 
   return (
     <>

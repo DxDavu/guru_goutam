@@ -1,8 +1,9 @@
 "use server";
 
-import { getPoQuotation } from "@/actions/procurement/po_quotationAction"; // Adjust the path if needed
+import { getPoQuotation } from "@/actions/procurement/po-quotationActions"; 
+
 import { DataTable } from '@/components/DataTable';
-import { columns, CreateNewQuotationButton } from '@/components/procurementColumns/po_quotationColumn';
+import { columns, CreateNewQuotationButton } from '@/components/procurementColumns/po-quotationColumn';
 
 export default async function poQuotationPage() { // Make this function async
   

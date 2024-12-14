@@ -13,7 +13,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { deleteService } from "@/actions/operation/serviceAction";
+import { deleteService } from "@/actions/operation/serviceActions";
 
 const ActionsCell = ({ row }) => {
   const router = useRouter();

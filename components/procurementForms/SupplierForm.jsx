@@ -11,10 +11,12 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectI
 import { Button } from "@/components/ui/button";
 import { createSupplier, updateSupplier, getActiveCountries, getActiveStates, getActiveCities } from "@/actions/procurement/supplierActions";
 import { useFormState } from "react-dom";
+import { format } from "date-fns";
+
 
 const schema = z.object({
   supplier_id: z.string().nonempty("Supplier ID is required!"),
-  regd_date: z.string().nonempty("Registration Date is required!"),
+  regd_date: z.string().date(),
   supplier_name: z.string().optional(),
   supplier_owner: z.string().optional(),
   vat_number: z.string().optional(),
@@ -39,6 +41,16 @@ const schema = z.object({
   contact_person_in_bank: z.string().optional(),
   contact_person_phone: z.string().optional(),
   active_status: z.boolean().default(true),
+  contact_name: z.string().optional(),
+  designation: z.string().optional(),
+  memo: z.string().optional(),
+  contact_email: z.string().email().optional(),
+  contact_number: z.string().regex(/^\+?[0-9]{10,15}$/).optional(),
+  contact_landline: z.string().regex(/^\+?[0-9]{10,15}$/).optional(),
+  landline_executive: z.string().regex(/^\+?[0-9]{10,15}$/).optional(),
+  
+
+
 });
 
 const SupplierForm = ({ type, data }) => {
@@ -72,6 +84,8 @@ const SupplierForm = ({ type, data }) => {
         reset({
           ...data,
           country: data.country?._id || data.country || "",
+          regd_date: format(new Date(data.regd_date), "yyyy-MM-dd"),
+
           state: data.state?._id || data.state || "",
           city: data.city?._id || data.city || "",
         });
@@ -105,7 +119,7 @@ const SupplierForm = ({ type, data }) => {
 
         <div className=" grid grid-cols-3 bg-gray-50 p-2 border rounde-dlg shadow-lg w-full">
           {/* Supplier Information */}
-          <div className="border p-4 rounded-md space-y-2">
+          <div className="border p-6 rounded-md space-y-4 bg-white-200">
             <h2 className="text-base font-semibold mb-4">Supplier Information</h2>
 
             <div className="grid grid-cols-2 w-70 mt-4 gap-6">
@@ -127,7 +141,7 @@ const SupplierForm = ({ type, data }) => {
             <Input {...register("address_line_2")} placeholder="Address Line 2" />
 
             <div className="grid grid-cols-2  mt-4 gap-6 w-70">
-             
+
               <Input {...register("pincode")} placeholder="Pincode" />
 
               <Select onValueChange={(value) => setValue("country", value)} value={watch("country") || ""}>
@@ -177,9 +191,15 @@ const SupplierForm = ({ type, data }) => {
 
               <Input {...register("telephone_1")} placeholder="Telephone 1" />
               <Input {...register("telephone_2")} placeholder="Telephone 2" />
-              <Input {...register("fax")} placeholder="Fax" />
               <Input {...register("website")} placeholder="Website" />
-              <Input {...register("email")} placeholder="Email Address" />
+              <Input {...register("fax")} placeholder="Fax" />
+
+
+
+            </div>
+            <div>
+              <Input {...register("email")} placeholder="Emaildsdfgh " />
+
             </div>
           </div>
 
@@ -189,13 +209,30 @@ const SupplierForm = ({ type, data }) => {
             <Input {...register("bank_name")} placeholder="Bank Name" />
             <Input {...register("bank_address")} placeholder="Bank Address" />
             <div className="grid grid-cols-2 w-80 gap-4">
-            <Input {...register("account_number")} placeholder="Account Number" />
-            <Input {...register("pan_number")} placeholder="PAN Number" />
+              <Input {...register("account_number")} placeholder="Account Number" />
+              <Input {...register("pan_number")} placeholder="PAN Number" />
 
             </div>
-          
+
             <Input {...register("contact_person_in_bank")} placeholder="Contact Person in Bank" />
             <Input {...register("contact_person_phone")} placeholder="Contact Person Phone" />
+          </div>
+
+          {/* Add Supplier Contact Details  */}
+          <div className=" p-6 rounded-md space-y-4">
+            <h2 className="text-base font-semibold mb-4">Add Supplier Contact Details </h2>
+            <Input {...register("contact_name")} placeholder="Contact Name" />
+            <Input {...register("designation")} placeholder="Designation " />
+            <Input {...register("memo")} placeholder="memo " />
+            <div className="grid grid-cols-2 w-80 gap-4">
+              <Input {...register("landline_executive")} placeholder="landline_executive " />
+              <Input {...register("contact_landline")} placeholder="contact_landline" />
+              <Input {...register("contact_email")} placeholder=" contact_email " />
+              <Input {...register("contact_number")} placeholder=" contact_number " />
+
+            </div>
+
+
           </div>
         </div>
       </div>

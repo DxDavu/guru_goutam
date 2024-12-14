@@ -1,4 +1,4 @@
-import { getGrn } from "@/actions/operation/grnAction"
+import { getGrn } from "@/actions/operation/grnActions"
 import {columns, CreateNewGrnButton } from "@/components/operationColumns/grnColumn";
 import { DataTable } from "@/components/DataTable";
 
@@ -12,4 +12,4 @@ export default async function NewGrnPage(){
         </div>
         
     )
-}
+}``

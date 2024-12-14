@@ -2,7 +2,7 @@
 
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { deleteDeliveryChallan } from '@/actions/operation/delivery_challanAction';
+import { deleteDeliveryChallan } from '@/actions/operation/delivery-challanActions';
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useState } from "react";
@@ -105,9 +105,10 @@ export const CreateNewDeliveryChallanButton = () => {
   const router = useRouter();
   return (
     <div className="flex justify-end mb-1">
-      <Button className="bg-blue-500 text-white" onClick={() => router.push("/operation/delivery_challan/new")}>
+      <Button className="bg-blue-500 text-white" onClick={() => router.push("/operation/delivery-challan/new")}>
         Create New DC
       </Button>
     </div>
   );
 };
+

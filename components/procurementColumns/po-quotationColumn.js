@@ -2,7 +2,7 @@
 
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { deletePoQuotation } from "@/actions/procurement/po_quotationAction";
+import { deletePoQuotation } from "@/actions/procurement/po-quotationActions";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useState } from "react";

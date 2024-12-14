@@ -93,15 +93,18 @@ const GroupForm = ({ type, data }) => {
               </div>
             </div>
           </div>
-
-          <div className=" bg-gray-50 p-6 border rounde-dlg shadow-lg">
-
-            <div className="gap-4   bg-gray-50 p-6 border rounde-dlg  w-full">
-
-              <label className="text-sm font-medium mr-2">Active Status</label>
-              <Checkbox checked={watch("active_status")} onCheckedChange={(checked) => setValue(checked, "active_status", checked)} />
-            </div>
-          </div>
+          <div className="mt-4 lg:mt-0 w-full lg:w-auto">
+        <div className="bg-gray-50 p-6 border rounded-lg shadow-lg">
+          <h1 className="font-extrabold">Control</h1>
+          <label className="font-medium">Active Status:</label>
+          <input
+            type="checkbox"
+            checked={watch("active_status")}
+            className="mt-5"
+            onChange={(e) => setValue("active_status", e.target.checked)}
+          />
+        </div>
+      </div>
         </div>
       </div>
 
