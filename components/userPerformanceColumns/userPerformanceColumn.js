@@ -113,6 +113,10 @@ export const columns = [
     cell: ({ row }) => row.original.role?.role_name || "N/A",
   },
   {
+    accessorKey: "user_name",
+    header: "Team Head",
+  },
+  {
     accessorKey: "department.department_name",
     header: "Department",
     cell: ({ row }) => row.original.department?.department_name || "N/A",
@@ -140,8 +144,6 @@ export const columns = [
 export const CreateNewUserPerformanceButton = () => {
   const userPermissions = useUserPermissions();
   const canAdd = checkPermissions(userPermissions, "Users", "can_add");
-  console.log(canAdd, "aaaaadddddddddddddddddd");
-  console.log(userPermissions, "ppppppppppppppppppppp");
   
   const router = useRouter();
 

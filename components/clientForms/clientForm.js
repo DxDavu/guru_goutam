@@ -12,9 +12,17 @@ import { Button } from "@/components/ui/button";
 import { createClient, updateClient } from "@/actions/client/clientActions";
 
 const schema = z.object({
+  client_id: z.string().nonempty("Client ID is required!"),
+  customer_type: z.string().nonempty("Customer Type is required!"),
   client_name: z.string().nonempty("Client Name is required!"),
+  phone_number: z.string().nonempty("Phone Number is required!"),
+  company_name: z.string().nonempty("Company Name is required!"),
+  rental_cost: z.number().min(0, "Rental Cost must be a positive number"),
+  product_cost: z.number().min(0, "Product Cost must be a positive number"),
+  client_status: z.string().nonempty("Client Status is required!"),
+  rental_start_date: z.string().nonempty("Rental Start Date is required!"),
+  rental_return_date: z.string().nonempty("Rental Return Date is required!"),
   email: z.string().email("Invalid email format"),
-  phone: z.string().optional(),
   address: z.string().optional(),
   country: z.string().optional(),
   state: z.string().optional(),
@@ -43,6 +51,10 @@ const ClientForm = ({ type = "create", data }) => {
   }, [data, reset]);
 
   const onSubmit = handleSubmit(async (formData) => {
+    console.log(formData, "all form dataaaa");
+    formData.rental_cost = parseFloat(formData.rental_cost);
+    formData.product_cost = parseFloat(formData.product_cost);
+    
     try {
       if (type === "create") {
         await createClient(formData);
@@ -51,7 +63,7 @@ const ClientForm = ({ type = "create", data }) => {
         await updateClient(data._id, formData);
         toast.success("Client updated successfully!");
       }
-      router.push("/clients/client");
+      router.push("/clients");
       router.refresh();
     } catch (error) {
       toast.error(error.message || "An unexpected error occurred.");
@@ -68,40 +80,39 @@ const ClientForm = ({ type = "create", data }) => {
         <div className="bg-gray-50 p-6 border rounded-lg shadow-md">
           <h3 className="font-semibold text-lg mb-4">Client Details</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium mb-1">Client Name</label>
-              <Input {...register("client_name")} placeholder="Enter Client Name" />
-              {errors.client_name && (
-                <p className="text-red-500 text-xs mt-1">{errors.client_name.message}</p>
-              )}
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Email</label>
-              <Input {...register("email")} placeholder="Enter Email" />
-              {errors.email && (
-                <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
-              )}
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Phone</label>
-              <Input {...register("phone")} placeholder="Enter Phone" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Address</label>
-              <Input {...register("address")} placeholder="Enter Address" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Country</label>
-              <Input {...register("country")} placeholder="Enter Country" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">State</label>
-              <Input {...register("state")} placeholder="Enter State" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">City</label>
-              <Input {...register("city")} placeholder="Enter City" />
-            </div>
+            {[
+              { name: "client_id", label: "Client ID", type: "text" },
+              { name: "customer_type", label: "Customer Type", type: "text" },
+              { name: "client_name", label: "Client Name", type: "text" },
+              { name: "phone_number", label: "Phone Number", type: "text" },
+              { name: "company_name", label: "Company Name", type: "text" },
+              { name: "rental_cost", label: "Rental Cost", type: "number" },
+              { name: "product_cost", label: "Product Cost", type: "number" },
+              { name: "client_status", label: "Client Status", type: "text" },
+              { name: "rental_start_date", label: "Rental Start Date", type: "date" },
+              { name: "rental_return_date", label: "Rental Return Date", type: "date" },
+              { name: "email", label: "Email", type: "email" },
+              { name: "address", label: "Address", type: "text" },
+              { name: "country", label: "Country", type: "text" },
+              { name: "state", label: "State", type: "text" },
+              { name: "city", label: "City", type: "text" },
+            ].map((field) => (
+              <div key={field.name}>
+                <label className="block text-sm font-medium mb-1">
+                  {field.label}
+                </label>
+                <Input
+                  {...register(field.name)}
+                  type={field.type}
+                  placeholder={`Enter ${field.label}`}
+                />
+                {errors[field.name] && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors[field.name].message}
+                  </p>
+                )}
+              </div>
+            ))}
           </div>
         </div>
 

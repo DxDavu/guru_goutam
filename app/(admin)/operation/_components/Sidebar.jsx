@@ -5,29 +5,19 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import {
-  FaUser,
-  FaRegBuilding,
-  FaRegAddressCard,
-  FaMapMarkerAlt,
-  FaClipboardList,
-  FaListAlt,
-  FaFileInvoice,
-  FaTasks,
-  FaClipboardCheck,
-  FaFlag,
-  FaDollarSign,
-  FaGavel,
-  FaMapSigns,
-  FaCity,
-  FaGlobe,
+  FaTruck,        
+  FaFileInvoiceDollar, 
+  FaBoxOpen,      
+  FaTools       
 } from 'react-icons/fa';
+import { GiJourney } from "react-icons/gi";
 
 const sidebarLinks = [
-  { name: ' Delivery Challan', href: '/operation/delivery-challan', icon: <FaUser /> },
-  { name: ' Invoice ', href: '/operation/invoice', icon: <FaFileInvoice /> },
-  { name: ' Grn ', href: '/operation/grn', icon: <FaFileInvoice /> },
-  { name: ' Service ', href: '/operation/service', icon: <FaFileInvoice /> },
-
+  { name: 'Delivery Challan', href: '/operation/delivery-challan', icon: <FaTruck /> },
+  { name: 'Invoice', href: '/operation/invoice', icon: <FaFileInvoiceDollar /> },
+  { name: 'GRN', href: '/operation/grn', icon: <FaBoxOpen /> },
+  { name: 'Service', href: '/operation/service', icon: <FaTools /> },
+  { name: 'Client Journey', href: '/operation/client-journey', icon: <GiJourney /> },
 ];
 
 export default function Sidebar() {

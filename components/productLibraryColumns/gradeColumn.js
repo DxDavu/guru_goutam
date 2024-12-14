@@ -101,7 +101,7 @@ const Actions = ({ row }) => {
 export const columns = [
   {
     accessorKey: "grade_id",
-    header: "Grade ID",
+    header: "Sl. No",
   },
   {
     accessorKey: "grade_name",
@@ -119,7 +119,7 @@ export const columns = [
     ),
   },
   {
-    header: "Actions",
+    header: "Action",
     id: "actions",
     cell: ({ row }) => <Actions row={row} />,
   },

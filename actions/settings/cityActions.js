@@ -33,14 +33,18 @@ export const getCityById = async (id) => {
 
 // Create a new city with duplicate check
 export const createCity = async (currentState, cityData) => {
+  console.log(cityData, "cityyyyyg");
+
   await connectToDatabase();
 
   // Check if the city name already exists in the specified state and country
   const existingCity = await City.findOne({
     name: cityData.name,
-    state: cityData.state,
-    country: cityData.country,
-  });
+    state: cityData.state.name,
+    country: cityData.country.name,
+  }).populate('state name').populate('country name'); // Populate state and country
+console.log(existingCity, "after formmmaaa");
+
   if (existingCity) {
     return {
       success: false,
@@ -53,8 +57,15 @@ export const createCity = async (currentState, cityData) => {
   try {
     const newCity = new City(cityData);
     const savedCity = await newCity.save();
-    return { success: true, city: savedCity.toObject() };
+
+    // Populate state and country fields for the response
+    const populatedCity = await City.findById(savedCity._id)
+      .populate('state')
+      .populate('country');
+
+    return { success: true, city: populatedCity.toObject() };
   } catch (error) {
+    console.error("Error creating city:", error);
     return {
       success: false,
       error: true,
@@ -62,6 +73,7 @@ export const createCity = async (currentState, cityData) => {
     };
   }
 };
+
 
 // Update an existing city with duplicate check
 export const updateCity = async (currentState, updateData) => {

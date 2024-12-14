@@ -166,7 +166,7 @@ import { Input } from "@/components/ui/input";
 
 const ResponsiveForm = () => {
   return (
-    <form className="w-full max-w-5xl mx-auto p-8 bg-white shadow-md rounded-lg">
+    <form className="w-full  mx-auto p-8 bg-white shadow-md rounded-lg">
       <div className="w-full p-6 rounded-md shadow-md bg-gray-200">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Basic Details */}
@@ -241,7 +241,7 @@ const ResponsiveForm = () => {
 
           {/* TO Address */}
           <div className="space-y-4 bg-gray-50 p-4 rounded">
-            <h3 className="text-lg font-semibold">TO Address:</h3>
+            <h3 className="text-lg font-semibold">To Address:</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block font-medium">Company Name*</label>

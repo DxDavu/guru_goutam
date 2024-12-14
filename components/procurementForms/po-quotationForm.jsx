@@ -291,7 +291,7 @@ useEffect(() => {
 
         {/* Description */}
         <div className="bg-gray-50 p-6 border rounded-lg shadow-lg w-full md:w-1/3">
-          <h3 className="text-lg font-semibold text-gray-700">Price Detsils</h3>
+          <h3 className="text-lg font-semibold text-gray-700">Price Details</h3>
           <textarea
             {...register("description")}
             className="border border-gray-300 rounded-md p-4 mt-5 w-full"

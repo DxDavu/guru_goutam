@@ -63,6 +63,8 @@ export default function CityForm({ type, data }) {
   }, [type, data, reset]);
 
   const onSubmit = handleSubmit(async (formData) => {
+    console.log(formData, "pure formmmmmmmmmmmmmmmmmmmmm");
+    
     try {
       formAction({ ...formData, id: data?._id });
     } catch (err) {

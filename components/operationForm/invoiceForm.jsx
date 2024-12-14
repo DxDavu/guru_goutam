@@ -296,7 +296,7 @@ const CreateInvoice = () => {
 
             {/* TO Address */}
             <div className="space-y-4 bg-gray-50 p-4 rounded-lg">
-              <h3 className="text-lg font-semibold mb-4">TO Address:</h3>
+              <h3 className="text-lg font-semibold mb-4">To Address:</h3>
               <div>
                 <label className="block font-medium">Company Name*</label>
                 <Input

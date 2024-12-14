@@ -109,7 +109,7 @@ const ActionsCell = ({ row }) => {
 export const columns = [
   {
     accessorKey: "stock_location_id",
-    header: "Location ID",
+    header: "Stock Location ID",
   },
   {
     accessorKey: "stock_name",
@@ -120,7 +120,7 @@ export const columns = [
     header: "Phone Number",
   },
   {
-    accessorKey: "address",
+    accessorKey: "Stock Location",
     header: "Address",
     cell: ({ row }) =>
       `${row.original.address.street}, ${row.original.address.city}, ${row.original.address.state}`,
@@ -133,7 +133,7 @@ export const columns = [
     ),
   },
   {
-    header: "Actions",
+    header: "Action",
     id: "actions",
     cell: ActionsCell, // Use the ActionsCell component here
   },

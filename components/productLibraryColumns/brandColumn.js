@@ -101,7 +101,7 @@ const Actions = ({ row }) => {
 export const columns = [
   {
     accessorKey: "brand_number",
-    header: "Brand Number",
+    header: "Brand Code",
   },
   {
     accessorKey: "brand_name",
@@ -113,13 +113,13 @@ export const columns = [
   },
   {
     accessorKey: "active_status",
-    header: "Status",
+    header: "Active Status",
     cell: ({ row }) => (
       <span>{row.original.active_status ? "Active" : "Inactive"}</span>
     ),
   },
   {
-    header: "Actions",
+    header: "Action",
     id: "actions",
     cell: ({ row }) => <Actions row={row} />,
   },

@@ -97,16 +97,16 @@ export const columns = [
   // },
   { accessorKey: "group_name", header: "Group Name" },
   { accessorKey: "description", header: "Description" },
-  { accessorKey: "category", header: "Product Quantity" },
+  { accessorKey: "product_qty", header: "Product Quantity" },
   {
     accessorKey: "active_status",
-    header: "Status",
+    header: "Active Status",
     cell: ({ row }) => (
       <span>{row.original.active_status ? "Active" : "Inactive"}</span>
     ),
   },
   {
-    id: "actions",
+    id: "action",
     cell: ({ row }) => <Actions row={row} />,
   },
 ];
