@@ -42,7 +42,8 @@ const ProductSelectionModal = ({ isOpen, onClose, onSelect }) => {
   const filteredProducts = products.filter(
     (product) =>
       product.product_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      product.category.toLowerCase().includes(searchQuery.toLowerCase())
+      product.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.brand.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return isOpen ? (
