@@ -66,3 +66,20 @@
   ],
   "exclude": ["node_modules"]
 }
+
+// "baseUrl": ".",
+// "paths": {
+//   "@/*": [
+//     "*"
+//   ]
+// },
+// "target": "ES2017"
+// },
+// "include": [
+// "next-env.d.ts",
+// "**/*.ts",
+// "**/*.tsx",
+// "**/*.js",
+// "**/*.jsx",
+// ".next/types/**/*.ts"
+// ],

@@ -28,7 +28,7 @@ export default function ProductTemplatePage() {
   };
 
   return (
-    <div className="bg-white p-1 rounded-md mt-0 flex-1">
+    <div>
       {/* Dropdown Menu */}
       <div className="relative inline-block text-left mb-4">
         <div>
