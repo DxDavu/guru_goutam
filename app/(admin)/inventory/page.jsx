@@ -13,8 +13,6 @@ const Inventory = () => {
     return null
   }
 
-  console.log(user);
-  
 
   return (
     <div>Hello, {user?.username} , welcome to Inventory</div>

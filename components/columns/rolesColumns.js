@@ -109,10 +109,10 @@ export const columns = [
     cell: ({ row }) =>
       row.original.department ? row.original.department.department_name : "N/A",
   },
-  {
-    accessorKey: "description",
-    header: "Description",
-  },
+  // {
+  //   accessorKey: "description",
+  //   header: "Description",
+  // },
   {
     accessorKey: "active_status",
     header: "Status",
