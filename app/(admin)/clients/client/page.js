@@ -6,7 +6,6 @@ import { columns, CreateNewClientButton } from "@/components/clientColumns/clien
 
 export default async function ClientPage() {
   const clients = await getClients();
-console.log(clients, "all data available here");
 
   return (
     <div>
