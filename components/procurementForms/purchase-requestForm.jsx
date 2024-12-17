@@ -30,9 +30,9 @@ const schema = z.object({
   order_type: z.enum(["Sale", "Rent"]),
   owner: z.string().nonempty("Owner is required!"),
   supplier: z.string().nonempty("Supplier is required!"),
-  phone_number: z.number().optional(),
+  phone_number: z.string().regex(/^\+?[0-9]{10,15}$/).optional(),
   supplier_email: z.string().email().optional(),
-  // .regex(/^\+?[0-9]{10,15}$/)
+
   purchase_type: z.enum(["Buy", "Sell"]),
   description: z.string().optional(),
  
