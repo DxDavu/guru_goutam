@@ -25,6 +25,7 @@ const permissionKeys = [
 const schema = z.object({
   role_name: z.string().min(1, { message: "Role Name is required!" }),
   department: z.string().min(1, { message: "Department is required!" }),
+  description: z.string().optional(),
   module_access: z.array(z.object({
     module_name: z.string().min(1, { message: "Module name is required!" }),
     permissions: z.object(
@@ -106,6 +107,7 @@ const RolesForm = ({ type, data }) => {
   );
 
   const onSubmit = handleSubmit(async (formData) => {
+    
     setLoading(true);
     try {
       formAction({ ...formData, id: data?._id });
@@ -138,6 +140,12 @@ const RolesForm = ({ type, data }) => {
           <label className="text-sm font-medium">Role Name</label>
           <Input {...register("role_name")} placeholder="Enter Role Name" />
           {errors.role_name && <p className="text-red-500 text-xs">{errors.role_name.message}</p>}
+        </div>
+
+        <div>
+          <label className="text-sm font-medium">Description</label>
+          <Input {...register("description")} placeholder="Enter description" />
+          {errors.description && <p className="text-red-500 text-xs">{errors.description.message}</p>}
         </div>
 
         <div>

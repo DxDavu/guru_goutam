@@ -99,9 +99,10 @@ const ActionsCell = ({ row }) => {
 };
 
 export const columns = [
+  { id: "sl_no", header: "Sl.No.", cell: ({ row }) => row.index + 1 },
   {
     accessorKey: "role_name",
-    header: "Role Name",
+    header: "Role",
   },
   {
     accessorKey: "department",
@@ -109,10 +110,10 @@ export const columns = [
     cell: ({ row }) =>
       row.original.department ? row.original.department.department_name : "N/A",
   },
-  // {
-  //   accessorKey: "description",
-  //   header: "Description",
-  // },
+  {
+    accessorKey: "description",
+    header: "Description",
+  },
   {
     accessorKey: "active_status",
     header: "Status",
@@ -121,7 +122,7 @@ export const columns = [
     ),
   },
   {
-    id: "actions",
+    id: "action",
     cell: ({ row }) => <ActionsCell row={row} />,
   },
 ];
