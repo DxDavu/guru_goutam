@@ -48,7 +48,7 @@ const ProductSelectionModal = ({ isOpen, onClose, onSelect }) => {
 
   return isOpen ? (
     <div className="fixed inset-0  bg-black bg-opacity-50 z-50 flex items-center justify-center  max-h-full overflow-y-auto p-4	">
-      <div className="bg-white rounded-lg w-3/4 p-6 mt-96">
+      <div className="bg-white rounded-lg w-3/4 p-6 mt-90">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-semibold">Select Products</h2>
           <button onClick={onClose} className="text-gray-500 hover:text-black">

@@ -63,10 +63,11 @@ const ProductCategoryForm = ({ type, data }) => {
       className="w-full max-w-1xl mx-auto p-4 md:p-8 bg-white shadow-md rounded-lg"
       onSubmit={onSubmit}
     >
-      <div className="bg-gray-200 p-4 md:p-6 border rounded-lg shadow-lg mb-6">
-        <h1 className="text-lg md:text-xl font-semibold">
+          <h1 className="text-lg md:text-xl font-semibold">
           {type === "create" ? "Add Product Category" : "Edit Product Category"}
         </h1>
+      <div className="bg-gray-200 p-4 md:p-4 border rounded-lg shadow-lg mb-6">
+    
 
         {/* Category Information and Active Status Side by Side */}
         <div className="flex flex-col lg:flex-row gap-4 md:gap-6 p-3">

@@ -106,6 +106,11 @@ export const columns = [
     header: "Item Type",
   },
   {
+    accessorKey: "category",
+    header: "Category",
+    cell: ({ row }) => row.original.category || "N/A",
+  },
+  {
     accessorKey: "item_name",
     header: "Item/Specification Name",
   },

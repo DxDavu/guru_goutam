@@ -18,30 +18,31 @@ import Image from "next/image";
 import { deleteInventory } from "@/actions/Inventory/inventoryActions";
 
 export const columns = [
-    {
-      accessorKey: "z",
-      header: "Product Image",
-      cell: ({ row }) => (
-        row.index +1,
-        <div className="flex justify-start">
-          <Image
-            src={row.original.image || "/avatar.png"} // Placeholder if no image
-            alt="Product"
-            width={60}
-            height={60}
-            // className="w-16 h-16 object-cover border rounded"
-          />
-        </div>
-      ),
-    },
-  { accessorKey: "inventory_name", header: "Product Name" },
-  { accessorKey: "owner", header: "Owner" },
-  { accessorKey: "supplier", header: "Supplier" },
   {
-    accessorKey: "total_price",
-    header: "Total Price",
-    cell: ({ row }) => `₹${row.original.total_price}`,
+    accessorKey: "z",
+    header: "Product Image",
+    cell: ({ row }) => (
+      row.index +1,
+      <div className="flex justify-center">
+        <Image
+          src={row.original.image || "/avatar.png"} // Placeholder if no image
+          alt="Product"
+          width={60}
+          height={60}
+          // className="w-16 h-16 object-cover border rounded"
+        />
+      </div>
+    ),
   },
+  { accessorKey: "inventory_name", header: "Product Name" },
+  { accessorKey: "product_qty", header: "Product Qty" },
+  { accessorKey: "category", header: "Category " },
+  { accessorKey: "brand", header: "Brand " },
+  { accessorKey: "specifications", header: "Specifications " },
+  { accessorKey: "product_status", header: "Product status " },
+  { accessorKey: "purchase_price", header: "Purchase Price  " },
+  { accessorKey: "price/30days", header: "Price /30 days" },
+  // { accessorKey: "supplier", header: "Supplier" },
   {
     accessorKey: "active_status",
     header: "Active Status",

@@ -64,7 +64,7 @@ const BrandForm = ({ type, data }) => {
         {type === "create" ? "Add New Brand" : "Edit Brand"}
       </h1>
 
-      <div className="bg-gray-200 p-4 md:p-6 sm:p-4 border rounded-lg shadow-lg mb-6 flex flex-col lg:flex-row gap-4 md:gap-6">
+      <div className="bg-gray-200 p-8 md:p-6 sm:p-4 border rounded-lg shadow-lg mb-6 flex flex-col lg:flex-row gap-4 md:gap-6">
         {/* Brand Information Fields */}
         <div className="bg-gray-50 flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4 md:p-4">
           <div>
