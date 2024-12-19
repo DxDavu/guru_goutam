@@ -114,6 +114,11 @@ export const columns = [
     cell: ({ row }) => row.original.category || "N/A",
   },
   {
+    accessorKey: "item",
+    header: "Category item",
+    cell: ({ row }) => row.original.category || "N/A",
+  },
+  {
     accessorKey: "description",
     header: "Description",
   },

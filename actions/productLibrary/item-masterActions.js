@@ -44,6 +44,13 @@ export const getItemMasterById = async (id) => {
 // Create a new item
 export const createItemMaster = async (currentState, itemData) => {
   await connectToDatabase();
+  console.log("cccccc", currentState);
+  console.log("iiiiiiiiiiiiiiiii", itemData);
+
+  // Ensure itemData is defined and contains item_name
+  if (!itemData || !itemData.item_name) {
+    return { success: false, error: true, message: "Item data is missing or item_name is not provided" };
+  }
 
   // Check if the item_name already exists
   const existingItem = await ItemMaster.findOne({ item_name: itemData.item_name });
@@ -55,6 +62,7 @@ export const createItemMaster = async (currentState, itemData) => {
   const savedItem = await newItem.save();
   return { success: true, error: false, item: savedItem.toObject() };
 };
+
 
 // Update an existing item
 export const updateItemMaster = async (currentState, updateData) => {

@@ -5,9 +5,18 @@
 import { connectToDatabase } from "@/lib/database";
 import Inventory from "@/lib/database/models/inventory/Inventory.model";
 import Supplier from "@/lib/database/models/procurement/Supplier.model";
+import ProductCategory from "@/lib/database/models/productLibrary/Product-category.model";
 
 import "@/lib/database/models/productLibrary/Product-template.model.js";
 import "@/lib/database/models/procurement/Supplier.model.js";
+
+
+
+export const getActiveProductCategories = async () => {
+  await connectToDatabase();
+  return await ProductCategory.find({ active_status: true }, "category_name").lean();
+};
+
 
 // Fetch all inventories
 export const getInventories = async () => {

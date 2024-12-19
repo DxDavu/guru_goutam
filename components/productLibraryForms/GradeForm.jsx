@@ -63,42 +63,55 @@ const GradeForm = ({ type, data }) => {
   }, [state, router, type]);
 
   return (
-    <form className="w-full max-w-1xl mx-auto p-8 bg-white shadow-md rounded-lg" onSubmit={onSubmit}>
+    <form className="w-full max-w-1xl mx-auto p-8 bg-gray-100 shadow-md rounded-lg" onSubmit={onSubmit}>
+      <h1 className="text-lg md:text-xl font-semibold mb-4">
+        {type === "create" ? "Create Grade" : "Edit Grade"}
+      </h1>
       <div className="bg-gray-50 p-6 border rounded-lg shadow-lg mb-6">
-        <h1 className="text-xl font-semibold">
-          {type === "create" ? "Create Grade  " : "Edit Product Category"}
-        </h1>
-
         {/* Category Information and Active Status Side by Side */}
-        <div className=" flex flex-col md:flex-row gap-6">
-
+        <div className="flex flex-col gap-6 md:flex-row">
           {/* Category Information Fields */}
-          <div className="bg-gray-50 flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
-
-            <div>
-              <label className="text-sm font-medium">Grade ID</label>
-              <Input {...register("grade_id")} placeholder="Enter Grade ID" className="w-full max-w-xs border border-gray-300 rounded-md p-2" />
-              {errors.grade_id && <p className="text-red-500 text-xs">{errors.grade_id.message}</p>}
+          <div className="bg-white p-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-20 ">
+              <div>
+                <label className="text-xs sm:text-sm md:text-base font-medium w-full">Grade ID</label>
+                <Input
+                  {...register("grade_id")}
+                  placeholder="Enter Grade ID"
+                  className="w-full md:w-auto border border-gray-300 rounded-md p-2 text-sm md:text-base"
+                />
+                {errors.grade_id && <p className="text-red-500 text-xs md:text-sm">{errors.grade_id.message}</p>}
+              </div>
+              <div>
+                <label className="text-xs sm:text-sm md:text-base font-medium w-full">Grade Name</label>
+                <Input
+                  {...register("grade_name")}
+                  placeholder="Enter Grade Name"
+                  className="w-full md:w-auto border border-gray-300 rounded-md p-2 text-sm md:text-base"
+                />
+                {errors.grade_name && <p className="text-red-500 text-xs md:text-sm">{errors.grade_name.message}</p>}
+              </div>
             </div>
 
-            <div>
-              <label className="text-sm font-medium">Grade Name</label>
-              <Input {...register("grade_name")} placeholder="Enter Grade Name" className="w-full max-w-xs border border-gray-300 rounded-md p-2" />
-              {errors.grade_name && <p className="text-red-500 text-xs">{errors.grade_name.message}</p>}
-            </div>
-
-            <div className="col-span-2">
-              <label className="text-sm font-medium">Description</label>
-              <Input {...register("description")} placeholder="Enter Description" className="w-full max-w-xs border border-gray-300 rounded-md p-2" />
+            <div className="col-span-2 w-52">
+              <label className="text-xs sm:text-sm md:text-base font-medium">Description</label>
+              <Input
+                {...register("description")}
+                placeholder="Enter Description"
+                className="w-full border border-gray-300 rounded-md p-2 text-sm md:text-base"
+              />
             </div>
           </div>
 
           {/* Active Status Section */}
-          <div className="bg-gray-50 p-6 border rounded-lg  w-full md:w-1/3">
-            <h3 className="text-lg font-semibold mb-4">Control</h3>
+          <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 flex-grow md:flex-grow-0 md:w-80">
+            <h3 className="text-base md:text-lg font-semibold mb-4">Control</h3>
             <div className="flex items-center gap-2">
-              <Checkbox checked={watch("active_status")} onCheckedChange={(checked) => setValue("active_status", checked)} />
-              <label className="text-sm font-medium">Active Status</label>
+              <Checkbox
+                checked={watch("active_status")}
+                onCheckedChange={(checked) => setValue("active_status", checked)}
+              />
+              <label className="text-xs sm:text-sm md:text-base font-medium">Active Status</label>
             </div>
           </div>
         </div>
@@ -108,11 +121,12 @@ const GradeForm = ({ type, data }) => {
         <Button variant="outline" onClick={() => router.push("/product-library/grade")}>
           Cancel
         </Button>
-        <Button type="submit" className="bg-blue-500 text-white">
+        <Button type="submit" className="bg-blue-500 text-white px-4 py-2 text-sm md:text-base">
           {type === "create" ? "Create" : "Update"}
         </Button>
       </div>
     </form>
+
   );
 };
 

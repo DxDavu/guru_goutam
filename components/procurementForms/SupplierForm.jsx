@@ -198,7 +198,7 @@ const SupplierForm = ({ type, data }) => {
 
             </div>
             <div>
-              <Input {...register("email")} placeholder="Emaildsdfgh " />
+              <Input {...register("email")} placeholder="Email id " />
 
             </div>
           </div>
