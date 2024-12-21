@@ -1,6 +1,9 @@
 "use client";
 
 import { useForm } from "react-hook-form";
+import { Input } from "@/components/ui/input"; // Custom Input Component
+import { Button } from "@/components/ui/button"; // Custom Button Component
+
 
 const CreateQuotationForm = () => {
   const {
@@ -18,30 +21,18 @@ const CreateQuotationForm = () => {
       onSubmit={handleSubmit(onSubmit)}
       className="w-full max-w-6xl mx-auto p-6 bg-gray-50 rounded-lg shadow-md"
     >
-      {/* Top Button Section */}
-      <div className="flex justify-end space-x-4 mb-6">
-        <button
-          type="button"
-          className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300"
-        >
-          Preview
-        </button>
-        <button
-          type="submit"
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
-          Send Quotation
-        </button>
-      </div>
+
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Basic Details */}
-        <div className="bg-white p-6 border rounded-lg shadow">
+
+        <div className="bg-white p-6 border rounded-lg shadow  ">
           <h3 className="text-lg font-semibold mb-4">Basic Details:</h3>
-          <div className="grid gap-4">
+
+          <div className="grid grid-cols-2 gap-4 ">
             <div>
               <label className="block text-sm font-medium">Quote ID*</label>
-              <input
+              <Input
                 type="text"
                 placeholder="Enter Quote ID"
                 {...register("quoteId", { required: "Quote ID is required!" })}
@@ -52,7 +43,7 @@ const CreateQuotationForm = () => {
 
             <div>
               <label className="block text-sm font-medium">Quote Date*</label>
-              <input
+              <Input
                 type="date"
                 {...register("quoteDate", { required: "Quote Date is required!" })}
                 className="w-full mt-1 p-2 border rounded"
@@ -62,7 +53,7 @@ const CreateQuotationForm = () => {
 
             <div>
               <label className="block text-sm font-medium">Lead ID*</label>
-              <input
+              <Input
                 type="text"
                 placeholder="Enter Lead ID"
                 {...register("leadId", { required: "Lead ID is required!" })}
@@ -88,7 +79,7 @@ const CreateQuotationForm = () => {
 
             <div>
               <label className="block text-sm font-medium">Rent Start Date*</label>
-              <input
+              <Input
                 type="date"
                 {...register("rentStartDate", { required: "Rent Start Date is required!" })}
                 className="w-full mt-1 p-2 border rounded"
@@ -100,7 +91,7 @@ const CreateQuotationForm = () => {
 
             <div>
               <label className="block text-sm font-medium">Rent End Date*</label>
-              <input
+              <Input
                 type="date"
                 {...register("rentEndDate", { required: "Rent End Date is required!" })}
                 className="w-full mt-1 p-2 border rounded"
@@ -118,7 +109,7 @@ const CreateQuotationForm = () => {
           <div className="grid gap-4">
             <div>
               <label className="block text-sm font-medium">Company Name*</label>
-              <input
+              <Input
                 type="text"
                 placeholder="Enter Company Name"
                 {...register("companyName", { required: "Company Name is required!" })}
@@ -131,7 +122,7 @@ const CreateQuotationForm = () => {
 
             <div>
               <label className="block text-sm font-medium">Supplier Mail ID*</label>
-              <input
+              <Input
                 type="email"
                 placeholder="Enter Supplier Mail ID"
                 {...register("supplierMailId", { required: "Supplier Mail ID is required!" })}
@@ -144,7 +135,7 @@ const CreateQuotationForm = () => {
 
             <div>
               <label className="block text-sm font-medium">Supplier Number*</label>
-              <input
+              <Input
                 type="text"
                 placeholder="Enter Supplier Number"
                 {...register("supplierNumber", { required: "Supplier Number is required!" })}
@@ -161,30 +152,32 @@ const CreateQuotationForm = () => {
         <div className="bg-white p-6 border rounded-lg shadow">
           <h3 className="text-lg font-semibold mb-4">Person Inform:</h3>
           <div className="grid gap-4">
-            <div>
-              <label className="block text-sm font-medium">Contact Name*</label>
-              <input
-                type="text"
-                placeholder="Enter Contact Name"
-                {...register("contactName", { required: "Contact Name is required!" })}
-                className="w-full mt-1 p-2 border rounded"
-              />
-              {errors.contactName && (
-                <span className="text-red-500 text-sm">{errors.contactName.message}</span>
-              )}
-            </div>
+            <div className="grid grid-cols-2  gap-4">
+              <div>
+                <label className="block text-sm font-medium">Contact Name*</label>
+                <Input
+                  type="text"
+                  placeholder="Enter Contact Name"
+                  {...register("contactName", { required: "Contact Name is required!" })}
+                  className="w-full mt-1 p-2 border rounded"
+                />
+                {errors.contactName && (
+                  <span className="text-red-500 text-sm">{errors.contactName.message}</span>
+                )}
+              </div>
 
-            <div>
-              <label className="block text-sm font-medium">Phone Number*</label>
-              <input
-                type="tel"
-                placeholder="Enter Phone Number"
-                {...register("phoneNumber", { required: "Phone Number is required!" })}
-                className="w-full mt-1 p-2 border rounded"
-              />
-              {errors.phoneNumber && (
-                <span className="text-red-500 text-sm">{errors.phoneNumber.message}</span>
-              )}
+              <div>
+                <label className="block text-sm font-medium">Phone Number*</label>
+                <Input
+                  type="tel"
+                  placeholder="Enter Phone Number"
+                  {...register("phoneNumber", { required: "Phone Number is required!" })}
+                  className="w-full mt-1 p-2 border rounded"
+                />
+                {errors.phoneNumber && (
+                  <span className="text-red-500 text-sm">{errors.phoneNumber.message}</span>
+                )}
+              </div>
             </div>
 
             <div>
@@ -197,6 +190,15 @@ const CreateQuotationForm = () => {
             </div>
           </div>
         </div>
+      </div>
+
+            {/* Submit Button */}
+      <div className="flex justify-end mt-6 gap-8">
+        <Button type="submit" className=" bg-white text-black border-gray-50">
+          Cancel        </Button>
+        <Button type="submit" className="bg-blue-500 text-white">
+          Submit
+        </Button>
       </div>
     </form>
   );

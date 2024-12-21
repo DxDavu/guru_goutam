@@ -241,20 +241,20 @@ const AddContactForm = () => {
         {/* Personal Details */}
         <div className="bg-white p-6 border rounded-lg shadow">
           <h3 className="text-lg font-semibold mb-4">Personal Details:</h3>
-          <div className="grid gap-4">
-            <div className="grid grid-cols-2">
-            <Input
-              label="Customer ID"
-              placeholder="Enter Customer ID"
-              {...register("customerId", { required: "Customer ID is required!" })}
-              error={errors.customerId?.message}
-            />
-            <Input
-              label="Date"
-              type="date"
-              {...register("date", { required: "Date is required!" })}
-              error={errors.date?.message}
-            />
+          <div className="grid gap-6">
+            <div className="grid grid-cols-2 gap-4">
+              <Input
+                label="Customer ID"
+                placeholder="Enter Customer ID"
+                {...register("customerId", { required: "Customer ID is required!" })}
+                error={errors.customerId?.message}
+              />
+              <Input
+                label="Date"
+                type="date"
+                {...register("date", { required: "Date is required!" })}
+                error={errors.date?.message}
+              />
             </div>
 
             <Input
@@ -268,36 +268,36 @@ const AddContactForm = () => {
               placeholder="Enter Company Name"
               {...register("companyName")}
             />
-            <div className="grid grid-cols-2">
-            <Input
-              label="First Name"
-              placeholder="Enter First Name"
-              {...register("firstName", { required: "First Name is required!" })}
-              error={errors.firstName?.message}
-            />
-            <Input
-              label="Last Name"
-              placeholder="Enter Last Name"
-              {...register("lastName", { required: "Last Name is required!" })}
-              error={errors.lastName?.message}
-            />
+            <div className="grid grid-cols-2 gap-4">
+              <Input
+                label="First Name"
+                placeholder="Enter First Name"
+                {...register("firstName", { required: "First Name is required!" })}
+                error={errors.firstName?.message}
+              />
+              <Input
+                label="Last Name"
+                placeholder="Enter Last Name"
+                {...register("lastName", { required: "Last Name is required!" })}
+                error={errors.lastName?.message}
+              />
             </div>
-            <div className="grid grid-cols-2">
+            <div className="grid grid-cols-2 gap-4">
 
-            <Input
-              label="Email ID"
-              type="email"
-              placeholder="Enter Email"
-              {...register("email", { required: "Email is required!" })}
-              error={errors.email?.message}
-            />
-            <Input
-              label="Phone Number"
-              placeholder="Enter Phone Number"
-              {...register("phone", { required: "Phone Number is required!" })}
-              error={errors.phone?.message}
-            />
-          </div>
+              <Input
+                label="Email ID"
+                type="email"
+                placeholder="Enter Email"
+                {...register("email", { required: "Email is required!" })}
+                error={errors.email?.message}
+              />
+              <Input
+                label="Phone Number"
+                placeholder="Enter Phone Number"
+                {...register("phone", { required: "Phone Number is required!" })}
+                error={errors.phone?.message}
+              />
+            </div>
           </div>
         </div>
 
@@ -305,11 +305,13 @@ const AddContactForm = () => {
         <div className="bg-white p-6 border rounded-lg shadow">
           <h3 className="text-lg font-semibold mb-4">Address:</h3>
           <div className="grid gap-4">
-            <div className="grid grid-cols-2">
-            <Input label="Pincode" placeholder="Enter Pincode" {...register("pincode")} />
-            <Input label="Country" placeholder="Select Country" {...register("country")} />
-            <Input label="State" placeholder="Select State" {...register("state")} />
-            <Input label="City" placeholder="Select City" {...register("city")} />
+            {/* <div className="grid grid-cols-2"> */}
+            <div className="grid grid-cols-2 gap-4">
+
+              <Input label="Pincode" placeholder="Enter Pincode" {...register("pincode")} />
+              <Input label="Country" placeholder="Select Country" {...register("country")} />
+              <Input label="State" placeholder="Select State" {...register("state")} />
+              <Input label="City" placeholder="Select City" {...register("city")} />
             </div>
             <Input label="Street" placeholder="Enter Street" {...register("street")} />
             <Input label="Landmark" placeholder="Enter Landmark" {...register("landmark")} />
@@ -344,17 +346,19 @@ const AddContactForm = () => {
       </div>
 
       {/* Other Information and Control */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
         <div className="bg-white p-6 border rounded-lg shadow">
           <h3 className="text-lg font-semibold mb-4">Other Information:</h3>
-          <div className="grid gap-4">
+          <div className="grid grid-cols-2 gap-4">
             <Input label="Owner" placeholder="Enter Owner Name" {...register("owner")} />
             <Input
               label="Contact Generated By"
               placeholder="Enter Generator Name"
               {...register("contactGeneratedBy")}
             />
-            <Input label="Remarks" placeholder="Enter Remarks" {...register("remarks")} />
+            <div className="w-full">
+              <Input label="Remarks" placeholder="Enter Remarks" {...register("remarks")} />
+            </div>
           </div>
         </div>
 
@@ -367,7 +371,9 @@ const AddContactForm = () => {
         </div>
       </div>
 
-      <div className="flex justify-end mt-6">
+      <div className="flex justify-end mt-6 gap-8">
+        <Button type="submit" className=" bg-white text-black border-gray-50">
+          Cancel        </Button>
         <Button type="submit" className="bg-blue-500 text-white">
           Submit
         </Button>
@@ -377,4 +383,3 @@ const AddContactForm = () => {
 };
 
 export default AddContactForm;
-

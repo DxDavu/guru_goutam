@@ -2,6 +2,8 @@
 
 import { useForm } from "react-hook-form";
 
+import { Input } from "@/components/ui/input"; // Custom Input Component
+import { Button } from "@/components/ui/button"; // Custom Button Component
 const AddLeadForm = () => {
   const {
     register,
@@ -22,10 +24,10 @@ const AddLeadForm = () => {
         {/* Customer Details */}
         <div className="bg-white p-6 border rounded-lg shadow">
           <h3 className="text-lg font-semibold mb-4">Customer Details:</h3>
-          <div className="grid gap-4">
+          <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium">Lead ID*</label>
-              <input
+              <Input
                 type="text"
                 placeholder="Enter Lead ID"
                 {...register("leadId", { required: "Lead ID is required!" })}
@@ -36,7 +38,7 @@ const AddLeadForm = () => {
 
             <div>
               <label className="block text-sm font-medium">Lead Date*</label>
-              <input
+              <Input
                 type="date"
                 {...register("leadDate", { required: "Lead Date is required!" })}
                 className="w-full mt-1 p-2 border rounded"
@@ -48,7 +50,7 @@ const AddLeadForm = () => {
 
             <div>
               <label className="block text-sm font-medium">Customer ID*</label>
-              <input
+              <Input
                 type="text"
                 placeholder="Enter Customer ID"
                 {...register("customerId", { required: "Customer ID is required!" })}
@@ -74,15 +76,115 @@ const AddLeadForm = () => {
               )}
             </div>
           </div>
+          <div className="mt-4">
+              <label className="block text-sm font-medium">Customer Company*</label>
+              <Input
+                type="text"
+                placeholder="Enter Customer Company"
+                {...register("customerId", { required: "Company ID is required!" })}
+                className="w-full mt-1 p-2 border rounded"
+              />
+              {errors.customerId && (
+                <span className="text-red-500 text-sm">{errors.customerId.message}</span>
+              )}
+            </div>
+            <div className="mt-4">
+              <label className="block text-sm font-medium">Contactt Person *</label>
+              <Input
+                type="text"
+                placeholder="Enter  Contactt Person"
+                {...register("customerId", { required: "Customer ID is required!" })}
+                className="w-full mt-1 p-2 border rounded"
+              />
+              {errors.customerId && (
+                <span className="text-red-500 text-sm">{errors.customerId.message}</span>
+              )}
+            </div>
+        </div>
+
+
+        {/* Lead Details */}
+        <div className="bg-white p-6 border rounded-lg shadow w-[400px] ">
+          <h3 className="text-lg font-semibold mb-4">Lead Details:</h3>
+          <div className="grid gap-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium">Lead  generated </label>
+                <Input
+                  type="text"
+                  placeholder="Enter Lead Title"
+                  {...register("leadTitle", { required: "Lead Title is required!" })}
+                  className="w-full mt-1 p-2 border rounded"
+                />
+                {errors.leadTitle && (
+                  <span className="text-red-500 text-sm">{errors.leadTitle.message}</span>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium">Lead Mode*</label>
+                <Input
+                  type="text"
+                  placeholder="Enter Lead Title"
+                  {...register("leadTitle", { required: "Lead Title is required!" })}
+                  className="w-full mt-1 p-2 border rounded"
+                />
+                {errors.leadTitle && (
+                  <span className="text-red-500 text-sm">{errors.leadTitle.message}</span>
+                )}
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium">Lead Title*</label>
+              <Input
+                type="text"
+                placeholder="Enter Lead Title"
+                {...register("leadTitle", { required: "Lead Title is required!" })}
+                className="w-full mt-1 p-2 border rounded"
+              />
+              {errors.leadTitle && (
+                <span className="text-red-500 text-sm">{errors.leadTitle.message}</span>
+              )}
+            </div>
+            <div>
+              <label className="block text-sm font-medium">Lead Details*</label>
+              <Input
+                placeholder="Enter Lead Details"
+                {...register("leadDetails", { required: "Lead Details are required!" })}
+                className="w-full mt-1 p-2 border rounded"
+              ></Input>
+              {errors.leadDetails && (
+                <span className="text-red-500 text-sm">{errors.leadDetails.message}</span>
+              )}
+            </div>
+            <div>
+              <label className="block text-sm font-medium">Lead Status*</label>
+              <Input
+                placeholder="Enter Lead Details"
+                {...register("leadDetails", { required: "Lead status are required!" })}
+                className="w-full mt-1 p-2 border rounded"
+              ></Input>
+              {errors.leadDetails && (
+                <span className="text-red-500 text-sm">{errors.leadDetails.message}</span>
+              )}
+            </div>
+          </div>
+        </div>
+        {/* Control Section */}
+        <div className="bg-white p-6 border rounded-lg shadow w-52   h-40  ml-24">
+          <h3 className="text-lg font-semibold mb-4">Control:</h3>
+          <label className="flex items-center gap-2">
+            <span>Active Status</span>
+            <input type="checkbox" {...register("activeStatus")} />
+          </label>
         </div>
 
         {/* Address Section */}
         <div className="bg-white p-6 border rounded-lg shadow">
           <h3 className="text-lg font-semibold mb-4">Address:</h3>
-          <div className="grid gap-4">
+          <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium">Pincode*</label>
-              <input
+              <Input
                 type="text"
                 placeholder="Enter Pincode"
                 {...register("pincode", { required: "Pincode is required!" })}
@@ -107,57 +209,77 @@ const AddLeadForm = () => {
                 <span className="text-red-500 text-sm">{errors.country.message}</span>
               )}
             </div>
-          </div>
-        </div>
-
-        {/* Lead Details */}
-        <div className="bg-white p-6 border rounded-lg shadow">
-          <h3 className="text-lg font-semibold mb-4">Lead Details:</h3>
-          <div className="grid gap-4">
             <div>
-              <label className="block text-sm font-medium">Lead Title*</label>
-              <input
+              <label className="block text-sm font-medium">Country*</label>
+              <select
+                {...register("country", { required: "Country is required!" })}
+                className="w-full mt-1 p-2 border rounded"
+              >
+                <option value="">Select Country</option>
+                <option value="india">India</option>
+                <option value="usa">USA</option>
+              </select>
+              {errors.country && (
+                <span className="text-red-500 text-sm">{errors.country.message}</span>
+              )}
+            </div>
+            <div>
+              <label className="block text-sm font-medium">Country*</label>
+              <select
+                {...register("country", { required: "Country is required!" })}
+                className="w-full mt-1 p-2 border rounded"
+              >
+                <option value="">Select Country</option>
+                <option value="india">India</option>
+                <option value="usa">USA</option>
+              </select>
+              {errors.country && (
+                <span className="text-red-500 text-sm">{errors.country.message}</span>
+              )}
+            </div>
+          </div>
+     
+          <div className="mt-4">
+          <label className="block text-sm font-medium">Landmark*</label>
+              <Input
                 type="text"
-                placeholder="Enter Lead Title"
-                {...register("leadTitle", { required: "Lead Title is required!" })}
+                placeholder="Landmark  "
+                {...register("pincode", { required: "Pincode is required!" })}
                 className="w-full mt-1 p-2 border rounded"
               />
-              {errors.leadTitle && (
-                <span className="text-red-500 text-sm">{errors.leadTitle.message}</span>
+              {errors.pincode && (
+                <span className="text-red-500 text-sm">{errors.pincode.message}</span>
               )}
             </div>
-            <div>
-              <label className="block text-sm font-medium">Lead Details*</label>
-              <textarea
-                placeholder="Enter Lead Details"
-                {...register("leadDetails", { required: "Lead Details are required!" })}
+            <div className="mt-4">
+              <label className="block text-sm font-medium">Street*</label>
+              <Input
+                type="text"
+                placeholder="Street  "
+                {...register("pincode", { required: "Pincode is required!" })}
                 className="w-full mt-1 p-2 border rounded"
-              ></textarea>
-              {errors.leadDetails && (
-                <span className="text-red-500 text-sm">{errors.leadDetails.message}</span>
+              />
+              {errors.pincode && (
+                <span className="text-red-500 text-sm">{errors.pincode.message}</span>
               )}
             </div>
-          </div>
-        </div>
+            </div>
+
+
+
+
+
       </div>
 
-      {/* Control Section */}
-      <div className="mt-6 bg-white p-6 border rounded-lg shadow">
-        <h3 className="text-lg font-semibold mb-4">Control:</h3>
-        <label className="flex items-center gap-2">
-          <input type="checkbox" {...register("activeStatus")} />
-          <span>Active Status</span>
-        </label>
-      </div>
+
 
       {/* Submit Button */}
-      <div className="flex justify-end mt-6">
-        <button
-          type="submit"
-          className="px-6 py-2 bg-blue-500 text-white rounded shadow hover:bg-blue-600"
-        >
-          Save
-        </button>
+      <div className="flex justify-end mt-6 gap-8">
+        <Button type="submit" className=" bg-white text-black border-gray-50">
+          Cancel        </Button>
+        <Button type="submit" className="bg-blue-500 text-white">
+          Submit
+        </Button>
       </div>
     </form>
   );
