@@ -126,304 +126,171 @@ const ServiceForm = ({ type, data }) => {
   return (
     <form
       onSubmit={onSubmit}
-      className="w-full max-w-screen-2xl mx-auto p-8 bg-white shadow-md rounded-lg"
+      className="bg-white w-full max-w-screen-2xl mx-auto p-4 shadow-md rounded-lg"
     >
-      <h1 className="text-xl font-semibold">
-        {type === "create" ? "Create Service" : "Edit Service"}
-      </h1>
-      <div className="bg-gray-200 p-6 border rounded-lg shadow-lg mb-6 flex flex-col gap-6">
-        <div className="bg-gray-50 p-6 border rounded-lg shadow-lg w-full">
+      <div className="p-2   mb-6 gap-6 grid grid-cols-3">
+
+        {/* Column 1: Basic Information */}
+        <div className=" p-4 border rounded-lg shadow-lg w-full">
           <h3 className="text-lg font-semibold mb-4">Basic Information</h3>
-          <div className="flex justify-around">
-            <div>
-              {/* Image Section */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Upload Product Image
-                </label>
-                <div className="flex items-center gap-4">
-                  {/* Image Preview Section */}
-                  {imagePreview ? (
-                    <div className="relative">
-                      <Image
-                        src={imagePreview}
-                        alt="Preview"
-                        width={64}
-                        height={64}
-                        className="w-24 h-24 object-cover rounded-lg border border-gray-300 shadow-sm"
-                      />
-                      <button
-                        type="button"
-                        onClick={handleRemoveImage}
-                        className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full shadow hover:bg-red-600"
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="w-24 h-24 bg-gray-100 flex items-center justify-center rounded-lg border border-dashed border-gray-300">
-                      <span className="text-xs text-gray-500">
-                        {" "}
-                        <Image
-                          src="/upload.png"
-                          alt="Upload Icon"
-                          width={28}
-                          height={28}
-                        />
-                      </span>
-                    </div>
-                  )}
-
-                  {/* Upload Button */}
-                  <CldUploadWidget
-                    uploadPreset="gurugoutam"
-                    onSuccess={handleImageUpload}
-                  >
-                    {({ open }) => (
-                      <button
-                        type="button"
-                        onClick={() => open()}
-                        className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                      >
-                        Upload Image
-                      </button>
-                    )}
-                  </CldUploadWidget>
-                </div>
-                {/* Helper Text */}
-                <p className="mt-2 text-xs text-gray-500">
-                  Supported formats: JPG, PNG (max size: 2MB)
-                </p>
-              </div>
-
-              {/* Dynamic Form Fields */}
-              <div className="mb-4">
-                <label className="text-sm font-medium">Type</label>
-                <Input
-                  {...register("type")}
-                  placeholder="Enter Type"
-                  className="w-full max-w-xs border border-gray-300 rounded-md p-2"
+          {/* Image Upload */}
+          <div className="mb-4">
+            <label className="block font-medium mb-1 text-sm md:text-xs text-gray-700 mb-1">
+              Upload Product Image
+            </label>
+            {imagePreview ? (
+              <div className="relative">
+                <Image
+                  src={imagePreview}
+                  alt="Preview"
+                  width={64}
+                  height={64}
+                  className="w-24 h-24 object-cover rounded-lg border border-gray-300 shadow-sm"
                 />
-                {errors.type && (
-                  <p className="text-red-500 text-xs">{errors.type.message}</p>
-                )}
+                <button
+                  type="button"
+                  onClick={handleRemoveImage}
+                  className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full shadow hover:bg-red-600"
+                >
+                  ✕
+                </button>
               </div>
+            ) : (
+              <span className="text-xs text-gray-500">
+                <Image src="/upload.png" alt="Upload Icon" width={28} height={28} />
+              </span>
+            )}
+            <CldUploadWidget uploadPreset="gurugoutam" onSuccess={handleImageUpload}>
+              {({ open }) => (
+                <button
+                  type="button"
+                  onClick={() => open()}
+                  className="px-4 py-2 font-medium mb-1 text-sm md:text-xs text-white bg-blue-600 rounded-md shadow hover:bg-blue-700"
+                >
+                  Upload Image
+                </button>
+              )}
+            </CldUploadWidget>
+            <p className="mt-2 text-xs text-gray-500">Supported formats: JPG, PNG (max size: 2MB)</p>
+          </div>
+          {/* Product ID */}
+          <div className="mb-4">
+            <label className="font-medium mb-1 text-sm md:text-xs">Product ID</label>
+            <Input
+              type="number"
+              {...register("product_id", { valueAsNumber: true })}
+              placeholder="Enter Product ID"
+              className="w-full border border-gray-300 rounded-md p-2"
+            />
+            {errors.product_id && <p className="text-red-500 text-xs">{errors.product_id.message}</p>}
+          </div>
+          {/* Product Name */}
+          <div className="mb-4">
+            <label className="font-medium mb-1 text-sm md:text-xs">Product Name</label>
+            <Input
+              {...register("product_name")}
+              placeholder="Enter Product Name"
+              className="w-full border border-gray-300 rounded-md p-2"
+            />
+            {errors.product_name && <p className="text-red-500 text-xs">{errors.product_name.message}</p>}
+          </div>
+        </div>
 
-              <div className="mb-4">
-                <label className="text-sm font-medium">Priority</label>
-                <Input
-                  {...register("priority")}
-                  placeholder="Enter Priority"
-                  className="w-full max-w-xs border border-gray-300 rounded-md p-2"
-                />
-                {errors.priority && (
-                  <p className="text-red-500 text-xs">
-                    {errors.priority.message}
-                  </p>
-                )}
-              </div>
-
-              <div className="mb-4">
-                <label className="text-sm font-medium">Product ID</label>
-                <Input
-                  type="number"
-                  {...register("product_id", { valueAsNumber: true })}
-                  placeholder="Enter Product ID"
-                  className="w-full max-w-xs border border-gray-300 rounded-md p-2"
-                />
-                {errors.product_id && (
-                  <p className="text-red-500 text-xs">
-                    {errors.product_id.message}
-                  </p>
-                )}
-              </div>
-
-              <div className="mb-4">
-                <label className="text-sm font-medium">Product Name</label>
-                <Input
-                  {...register("product_name")}
-                  placeholder="Enter Product Name"
-                  className="w-full max-w-xs border border-gray-300 rounded-md p-2"
-                />
-                {errors.product_name && (
-                  <p className="text-red-500 text-xs">
-                    {errors.product_name.message}
-                  </p>
-                )}
-              </div>
-
-              <div className="mb-4">
-                <label className="text-sm font-medium">Order No</label>
-                <Input
-                  type="number"
-                  {...register("order_no", { valueAsNumber: true })}
-                  placeholder="Enter Order No"
-                  className="w-full max-w-xs border border-gray-300 rounded-md p-2"
-                />
-                {errors.order_no && (
-                  <p className="text-red-500 text-xs">
-                    {errors.order_no.message}
-                  </p>
-                )}
-              </div>
-
-              <div className="mb-4">
-                <label className="text-sm font-medium">Client ID</label>
-                <Input
-                  type="number"
-                  {...register("client_id", { valueAsNumber: true })}
-                  placeholder="Enter Client ID"
-                  className="w-full max-w-xs border border-gray-300 rounded-md p-2"
-                />
-                {errors.client_id && (
-                  <p className="text-red-500 text-xs">
-                    {errors.client_id.message}
-                  </p>
-                )}
-              </div>
-              <div className="mb-4">
-                <label className="text-sm font-medium">AMC</label>
-                <Input
-                  {...register("amc")}
-                  placeholder="Enter AMC"
-                  className="w-full max-w-xs border border-gray-300 rounded-md p-2"
-                />
-                {errors.amc && (
-                  <p className="text-red-500 text-xs">{errors.amc.message}</p>
-                )}
-              </div>
+        {/* Column 2: Additional Details */}
+        <div className="bg-white p-2 border rounded-lg shadow-lg w-[370px] ">
+          <h3 className="text-lg font-semibold mb-2 ">Additional Details</h3>
+          <div className=" p-2 grid grid-cols-2 gap-4 ">
+            {/* Type */}
+            <div className="mb-4">
+              <label className="font-medium mb-1 text-sm md:text-xs">Type</label>
+              <Input
+                {...register("type")}
+                placeholder="Enter Type"
+                className="w-full border border-gray-300 rounded-md p-2"
+              />
+              {errors.type && <p className="text-red-500 text-xs">{errors.type.message}</p>}
             </div>
-            <div>
-              <div className="mb-4">
-                <label className="text-sm font-medium">Sale Date</label>
-                <Input
-                  type="date"
-                  {...register("sale_date")}
-                  className="w-full max-w-xs border border-gray-300 rounded-md p-2"
-                />
-                {errors.sale_date && (
-                  <p className="text-red-500 text-xs">
-                    {errors.sale_date.message}
-                  </p>
-                )}
-              </div>
+            {/* Priority */}
+            <div className="mb-4">
+              <label className="font-medium mb-1 text-sm md:text-xs">Priority</label>
+              <Input
+                {...register("priority")}
+                placeholder="Enter Priority"
+                className="w-full border border-gray-300 rounded-md p-2"
+              />
+              {errors.priority && <p className="text-red-500 text-xs">{errors.priority.message}</p>}
+            </div>
+            {/* Order No */}
+            <div className="mb-4">
+              <label className="font-medium mb-1 text-sm md:text-xs">Order No</label>
+              <Input
+                type="number"
+                {...register("order_no", { valueAsNumber: true })}
+                placeholder="Enter Order No"
+                className="w-full border border-gray-300 rounded-md p-2"
+              />
+              {errors.order_no && <p className="text-red-500 text-xs">{errors.order_no.message}</p>}
+            </div>
+            {/* Client ID */}
+            <div className="mb-4">
+              <label className="font-medium mb-1 text-sm md:text-xs">Client ID</label>
+              <Input
+                type="number"
+                {...register("client_id", { valueAsNumber: true })}
+                placeholder="Enter Client ID"
+                className="w-full border border-gray-300 rounded-md p-2"
+              />
+              {errors.client_id && <p className="text-red-500 text-xs">{errors.client_id.message}</p>}
+            </div>
 
-              <div className="mb-4">
-                <label className="text-sm font-medium">Client Name</label>
-                <Input
-                  {...register("client_name")}
-                  placeholder="Enter Client Name"
-                  className="w-full max-w-xs border border-gray-300 rounded-md p-2"
-                />
-                {errors.client_name && (
-                  <p className="text-red-500 text-xs">
-                    {errors.client_name.message}
-                  </p>
-                )}
-              </div>
-
-              <div className="mb-4">
-                <label className="text-sm font-medium">Service Head</label>
-                <Input
-                  {...register("service_head")}
-                  placeholder="Enter Service Head"
-                  className="w-full max-w-xs border border-gray-300 rounded-md p-2"
-                />
-                {errors.service_head && (
-                  <p className="text-red-500 text-xs">
-                    {errors.service_head.message}
-                  </p>
-                )}
-              </div>
-
-              <div className="mb-4">
-                <label className="text-sm font-medium">Service Staff</label>
-                <Input
-                  {...register("service_staff")}
-                  placeholder="Enter Service Staff"
-                  className="w-full max-w-xs border border-gray-300 rounded-md p-2"
-                />
-                {errors.service_staff && (
-                  <p className="text-red-500 text-xs">
-                    {errors.service_staff.message}
-                  </p>
-                )}
-              </div>
-
-              <div className="mb-4">
-                <label className="text-sm font-medium">
-                  Service Receive Data
-                </label>
-                <Input
-                  type="date"
-                  {...register("service_receive_data")}
-                  className="w-full max-w-xs border border-gray-300 rounded-md p-2"
-                />
-                {errors.service_receive_data && (
-                  <p className="text-red-500 text-xs">
-                    {errors.service_receive_data.message}
-                  </p>
-                )}
-              </div>
-
-              <div className="mb-4">
-                <label className="text-sm font-medium">Start Date & Time</label>
-                <Input
-                  type="datetime-local"
-                  {...register("start_date_time")}
-                  className="w-full max-w-xs border border-gray-300 rounded-md p-2"
-                />
-                {errors.start_date_time && (
-                  <p className="text-red-500 text-xs">
-                    {errors.start_date_time.message}
-                  </p>
-                )}
-              </div>
-
-              <div className="mb-4">
-                <label className="text-sm font-medium">End Date & Time</label>
-                <Input
-                  type="datetime-local"
-                  {...register("end_date_time")}
-                  className="w-full max-w-xs border border-gray-300 rounded-md p-2"
-                />
-                {errors.end_date_time && (
-                  <p className="text-red-500 text-xs">
-                    {errors.end_date_time.message}
-                  </p>
-                )}
-              </div>
-
-              <div className="mb-4">
-                <label className="text-sm font-medium">Task Duration</label>
-                <Input
-                  {...register("task_duration")}
-                  placeholder="Enter Task Duration"
-                  className="w-full max-w-xs border border-gray-300 rounded-md p-2"
-                />
-                {errors.task_duration && (
-                  <p className="text-red-500 text-xs">
-                    {errors.task_duration.message}
-                  </p>
-                )}
-              </div>
-
-              <div className="mb-4">
-                <label className="text-sm font-medium">Expense</label>
-                <Input
-                  type="number"
-                  {...register("expense", { valueAsNumber: true })}
-                  placeholder="Enter Expense"
-                  className="w-full max-w-xs border border-gray-300 rounded-md p-2"
-                />
-                {errors.expense && (
-                  <p className="text-red-500 text-xs">
-                    {errors.expense.message}
-                  </p>
-                )}
-              </div>
+            {/* Service Staff */}
+            <div className="mb-4">
+              <label className="font-medium mb-1 text-sm md:text-xs">Service Staff</label>
+              <Input
+                {...register("service_staff")}
+                placeholder="Enter Service Staff"
+                className="w-full border border-gray-300 rounded-md p-2"
+              />
+              {errors.service_staff && <p className="text-red-500 text-xs">{errors.service_staff.message}</p>}
+            </div>
+            {/* Start Date & Time */}
+            <div className="mb-4">
+              <label className="font-medium mb-1 text-sm md:text-xs">Start Date & Time</label>
+              <Input
+                type="date"
+                {...register("start_date_time")}
+                className="w-full border border-gray-300 rounded-md p-2"
+              />
+              {errors.start_date_time && <p className="text-red-500 text-xs">{errors.start_date_time.message}</p>}
+            </div>
+            {/* End Date & Time */}
+            <div className="mb-4">
+              <label className="font-medium mb-1 text-sm md:text-xs">End Date & Time</label>
+              <Input
+                type="date"
+                {...register("end_date_time")}
+                className="w-full border border-gray-300 rounded-md p-2"
+              />
+              {errors.end_date_time && <p className="text-red-500 text-xs">{errors.end_date_time.message}</p>}
+            </div>
+            {/* Task Duration */}
+            <div className="mb-4">
+              <label className="font-medium mb-1 text-sm md:text-xs">Task Duration</label>
+              <Input
+                {...register("task_duration")}
+                placeholder="Enter Task Duration"
+                className="w-full border border-gray-300 rounded-md p-2"
+              />
+              {errors.task_duration && <p className="text-red-500 text-xs">{errors.task_duration.message}</p>}
             </div>
           </div>
+        </div>
+        <div className="bg-white p-4 border rounded-lg shadow w-52 h-60 items ml-20	">
+          <h3 className="text-lg font-semibold mb-4">Control:</h3>
+          <label className="flex items-center gap-2">
+            <span>Active Status</span>
+            <input type="checkbox" {...register("activeStatus")} />
+          </label>
         </div>
       </div>
 

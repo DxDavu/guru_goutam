@@ -161,78 +161,91 @@
 
 // pages/create-grn.js
 
-import React from 'react';
-import { Input } from "@/components/ui/input";
+"use client";
+
+import { useForm } from "react-hook-form";
+import { Input } from "@/components/ui/input"; // Custom Input Component
+import { Button } from "@/components/ui/button"; // Custom Button Component
+
 
 const ResponsiveForm = () => {
   return (
-    <form className="w-full  mx-auto p-8 bg-white shadow-md rounded-lg">
-      <div className="w-full p-6 rounded-md shadow-md bg-gray-200">
+    <form className="w-full mx-auto p-4 bg-white shadow-md rounded-lg">
+      <div className="w-full p-4 rounded-md shadow-md bg-gray-200">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Basic Details */}
           <div className="space-y-4 bg-gray-50 p-4 rounded">
             <h3 className="text-lg font-semibold">Basic Details:</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block font-medium">Customer Code*</label>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="flex flex-col">
+                <label className="font-medium mb-1 text-sm md:text-xs">
+                  Customer Code*
+                </label>
                 <Input
                   type="text"
-                  className="mt-1 block w-full"
+                  className="block w-full"
                   placeholder="Enter Customer Code"
                 />
               </div>
-              <div>
-                <label className="block font-medium">GRN*</label>
+              <div className="flex flex-col">
+                <label className="font-medium mb-1 text-sm md:text-xs">GRN*</label>
                 <Input
                   type="text"
-                  className="mt-1 block w-full"
+                  className="block w-full"
                   placeholder="Enter GRN"
                 />
               </div>
-              <div>
-                <label className="block font-medium">Email ID*</label>
+              <div className="flex flex-col">
+                <label className="font-medium mb-1 text-sm md:text-xs">
+                  Email ID*
+                </label>
                 <Input
                   type="email"
-                  className="mt-1 block w-full"
+                  className="block w-full"
                   placeholder="Enter Email ID"
                 />
               </div>
-              <div>
-                <label className="block font-medium">Phone Number*</label>
+              <div className="flex flex-col">
+                <label className="font-medium mb-1 text-sm md:text-xs">
+                  Phone Number*
+                </label>
                 <Input
                   type="text"
-                  className="mt-1 block w-full"
+                  className="block w-full"
                   placeholder="Enter Phone Number"
                 />
               </div>
-              <div>
-                <label className="block font-medium">DC Number*</label>
+              <div className="flex flex-col">
+                <label className="font-medium mb-1 text-sm md:text-xs">
+                  DC Number*
+                </label>
                 <Input
                   type="text"
-                  className="mt-1 block w-full"
+                  className="block w-full"
                   placeholder="Enter DC Number"
                 />
               </div>
-              <div>
-                <label className="block font-medium">Date*</label>
-                <Input
-                  type="date"
-                  className="mt-1 block w-full"
-                />
+              <div className="flex flex-col">
+                <label className="font-medium mb-1 text-sm md:text-xs">Date*</label>
+                <Input type="date" className="block w-full" />
               </div>
-              <div>
-                <label className="block font-medium">TIN Number*</label>
+              <div className="flex flex-col">
+                <label className="font-medium mb-1 text-sm md:text-xs">
+                  TIN Number*
+                </label>
                 <Input
                   type="text"
-                  className="mt-1 block w-full"
+                  className="block w-full"
                   placeholder="Enter TIN Number"
                 />
               </div>
-              <div>
-                <label className="block font-medium">PAN Number*</label>
+              <div className="flex flex-col">
+                <label className="font-medium mb-1 text-sm md:text-xs">
+                  PAN Number*
+                </label>
                 <Input
                   type="text"
-                  className="mt-1 block w-full"
+                  className="block w-full"
                   placeholder="Enter PAN Number"
                 />
               </div>
@@ -242,63 +255,65 @@ const ResponsiveForm = () => {
           {/* TO Address */}
           <div className="space-y-4 bg-gray-50 p-4 rounded">
             <h3 className="text-lg font-semibold">To Address:</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block font-medium">Company Name*</label>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="flex flex-col">
+                <label className="font-medium mb-1 text-sm md:text-xs">
+                  Company Name*
+                </label>
                 <Input
                   type="text"
-                  className="mt-1 block w-full"
+                  className="block w-full"
                   placeholder="Enter Company Name"
                 />
               </div>
-              <div>
-                <label className="block font-medium">Pincode*</label>
+              <div className="flex flex-col">
+                <label className="font-medium mb-1 text-sm md:text-xs">Pincode*</label>
                 <Input
                   type="text"
-                  className="mt-1 block w-full"
+                  className="block w-full"
                   placeholder="Enter Pincode"
                 />
               </div>
-              <div>
-                <label className="block font-medium">Country*</label>
+              <div className="flex flex-col">
+                <label className="font-medium mb-1 text-sm md:text-xs">Country*</label>
                 <select
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                  className="block w-full border-gray-300 rounded-md shadow-sm"
                   defaultValue=""
                 >
                   <option value="">Select Country</option>
                 </select>
               </div>
-              <div>
-                <label className="block font-medium">State*</label>
+              <div className="flex flex-col">
+                <label className="font-medium mb-1 text-sm md:text-xs">State*</label>
                 <select
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                  className="block w-full border-gray-300 rounded-md shadow-sm"
                   defaultValue=""
                 >
                   <option value="">Select State</option>
                 </select>
               </div>
-              <div>
-                <label className="block font-medium">City*</label>
+              <div className="flex flex-col">
+                <label className="font-medium mb-1 text-sm md:text-xs">City*</label>
                 <select
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                  className="block w-full border-gray-300 rounded-md shadow-sm"
                   defaultValue=""
                 >
                   <option value="">Select City</option>
                 </select>
               </div>
-              <div>
-                <label className="block font-medium">Landmark</label>
+              <div className="flex flex-col">
+                <label className="font-medium mb-1 text-sm md:text-xs">Landmark</label>
                 <Input
                   type="text"
-                  className="mt-1 block w-full"
+                  className="block w-full"
                   placeholder="Enter Landmark"
                 />
               </div>
-              <div>
-                <label className="block font-medium">Street*</label>
+              <div className="flex flex-col">
+                <label className="font-medium mb-1 text-sm md:text-xs">Street*</label>
                 <Input
                   type="text"
-                  className="mt-1 block w-full"
+                  className="block w-full"
                   placeholder="Enter Street"
                 />
               </div>
@@ -308,76 +323,90 @@ const ResponsiveForm = () => {
           {/* Person Inform */}
           <div className="space-y-4 bg-gray-50 p-4 rounded">
             <h3 className="text-lg font-semibold">Person Inform:</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block font-medium">Informed Name*</label>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="flex flex-col">
+                <label className="font-medium mb-1 text-sm md:text-xs">
+                  Informed Name*
+                </label>
                 <Input
                   type="text"
-                  className="mt-1 block w-full"
+                  className="block w-full"
                   placeholder="Enter Informed Name"
                 />
               </div>
-              <div>
-                <label className="block font-medium">Phone Number*</label>
+              <div className="flex flex-col">
+                <label className="font-medium mb-1 text-sm md:text-xs">
+                  Phone Number*
+                </label>
                 <Input
                   type="text"
-                  className="mt-1 block w-full"
+                  className="block w-full"
                   placeholder="Enter Phone Number"
                 />
               </div>
-              <div>
-                <label className="block font-medium">Returned Name*</label>
+              <div className="flex flex-col">
+                <label className="font-medium mb-1 text-sm md:text-xs">
+                  Returned Name*
+                </label>
                 <Input
                   type="text"
-                  className="mt-1 block w-full"
+                  className="block w-full"
                   placeholder="Enter Returned Name"
                 />
               </div>
-              <div>
-                <label className="block font-medium">Phone Number*</label>
+              <div className="flex flex-col">
+                <label className="font-medium mb-1 text-sm md:text-xs">
+                  Phone Number*
+                </label>
                 <Input
                   type="text"
-                  className="mt-1 block w-full"
+                  className="block w-full"
                   placeholder="Enter Phone Number"
                 />
               </div>
-              <div>
-                <label className="block font-medium">Received Name*</label>
+              <div className="flex flex-col">
+                <label className="font-medium mb-1 text-sm md:text-xs">
+                  Received Name*
+                </label>
                 <Input
                   type="text"
-                  className="mt-1 block w-full"
+                  className="block w-full"
                   placeholder="Enter Received Name"
                 />
               </div>
-              <div>
-                <label className="block font-medium">Vehicle Number*</label>
+              <div className="flex flex-col">
+                <label className="font-medium mb-1 text-sm md:text-xs">
+                  Vehicle Number*
+                </label>
                 <Input
                   type="text"
-                  className="mt-1 block w-full"
+                  className="block w-full"
                   placeholder="Enter Vehicle Number"
                 />
               </div>
-              <div>
-                <label className="block font-medium">Description</label>
+              <div className="flex flex-col col-span-2">
+                <label className="font-medium mb-1 text-sm md:text-xs">Description</label>
                 <textarea
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                  className="block w-full border-gray-300 rounded-md shadow-sm"
                   placeholder="Enter Description"
                 ></textarea>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <div className="mt-6 text-center">
-          <button
-            type="submit"
-            className="px-6 py-2 bg-blue-500 text-white rounded-md"
-          >
-            Submit
-          </button>
-        </div>
+      <div className="flex justify-end mt-6 gap-8">
+        <Button type="submit" className="bg-white text-black border-gray-50">
+          Cancel
+        </Button>
+        <Button type="submit" className="bg-blue-500 text-white">
+          Submit
+        </Button>
       </div>
     </form>
+
+
   );
 };
 

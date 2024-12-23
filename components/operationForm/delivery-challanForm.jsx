@@ -157,22 +157,24 @@
 
 // export default DeliveryChallanForm;
 // pages/delivery-challan-form.jsx
-import React from "react";
-import { Input } from "@/components/ui/input";
+"use client";
+
+import { useForm } from "react-hook-form";
+import { Input } from "@/components/ui/input"; // Custom Input Component
+import { Button } from "@/components/ui/button"; // Custom Button Component
 
 const DeliveryChallanForm = () => {
   return (
-    <form className="w-full max-w-1xl mx-auto p-10 bg-white shadow-md rounded-lg">
+    <form className="w-full max-w-1xl mx-auto p-2 bg-white shadow-sm rounded-lg">
       <div className="">
-        <div className="w-full  p-6 rounded-md shadow-md bg-gray-200">
-          <h2 className="text-2xl font-semibold mb-4">Create Delivery Challan</h2>
+        <div className="w-full  p-2 rounded-md shadow-md bg-gray-200">
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6  ">
             {/* Delivery Details */}
-            <div className="space-y-4 bg-gray-50 p-3 rounded">
+            <div className="space-y-4 bg-white p-3 rounded">
               <h3 className="text-lg font-semibold">Delivery Details</h3>
-              <div>
-                <label>Product ID</label>
+              <div className="gap-4">
+                <label className="font-medium mb-1 text-sm md:text-xs">Product ID</label>
                 <Input
                   type="text"
                   className="w-full border-gray-300 rounded-md shadow-sm"
@@ -180,10 +182,15 @@ const DeliveryChallanForm = () => {
                 />
                 <label className="block font-medium">Customer</label>
                 <select
-                  className="mt-1 flex-1 border-gray-300 rounded-md shadow-sm"
+                  className="mt-1 flex-1 border-gray-300 rounded-md shadow-sm font-medium mb-1 text-sm md:text-xs"
                   defaultValue=""
                 >
-                  <option value="">Select Customer</option>
+                  <option value=" " className="">Select Customer</option>
+                  <option value=" " className="">Select Customer</option>
+                  <option value=" " className="">Select Customer</option>
+                  <option value=" " className="">Select Customer</option>
+                  <option value=" " className="">Select Customer</option>
+                  <option value=" " className="">Select Customer</option>
                 </select>
                 <button
                   type="button"
@@ -192,16 +199,19 @@ const DeliveryChallanForm = () => {
                   +
                 </button>
 
-                <label className="block font-medium">Customer Code</label>
-                <Input
-                  type="text"
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                  placeholder="Customer Code"
-                />
+                <div>
+
+                  <label className="font-medium mb-1 text-sm md:text-xs">Customer Code</label>
+                  <Input
+                    type="text"
+                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                    placeholder="Customer Code"
+                  />
+                </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block font-medium">Quotation Number*</label>
+                  <label className="font-medium mb-1 text-sm md:text-xs">Quotation Number*</label>
                   <Input
                     type="text"
                     className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
@@ -209,7 +219,7 @@ const DeliveryChallanForm = () => {
                   />
                 </div>
                 <div>
-                  <label className="block font-medium">Order Number*</label>
+                  <label className="font-medium mb-1 text-sm md:text-xs">Order Number*</label>
                   <Input
                     type="text"
                     className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
@@ -219,14 +229,14 @@ const DeliveryChallanForm = () => {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block font-medium">Date*</label>
+                  <label className="font-medium mb-1 text-sm md:text-xs">Date*</label>
                   <Input
                     type="date"
                     className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
                   />
                 </div>
                 <div>
-                  <label className="block font-medium">Other Reference*</label>
+                  <label className="font-medium mb-1 text-sm md:text-xs">Other Reference*</label>
                   <Input
                     type="text"
                     className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
@@ -236,7 +246,7 @@ const DeliveryChallanForm = () => {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block font-medium">TIN*</label>
+                  <label className="font-medium mb-1 text-sm md:text-xs">TIN*</label>
                   <Input
                     type="text"
                     className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
@@ -244,7 +254,7 @@ const DeliveryChallanForm = () => {
                   />
                 </div>
                 <div>
-                  <label className="block font-medium">PAN*</label>
+                  <label className="font-medium mb-1 text-sm md:text-xs">PAN*</label>
                   <Input
                     type="text"
                     className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
@@ -253,14 +263,14 @@ const DeliveryChallanForm = () => {
                 </div>
               </div>
               <div>
-                <label className="block font-medium">Remarks</label>
+                <label className="font-medium mb-1 text-sm md:text-xs">Remarks</label>
                 <textarea
                   className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
                   placeholder="Enter Remarks"
                 ></textarea>
               </div>
               <div>
-                <label className="block font-medium">Attach DC</label>
+                <label className="font-medium mb-1 text-sm md:text-xs">Attach DC</label>
                 <Input
                   type="file"
                   className="mt-1 block w-full text-gray-500 border-gray-300 rounded-md"
@@ -269,10 +279,10 @@ const DeliveryChallanForm = () => {
             </div>
 
             {/* Shipping Details */}
-            <div className="space-y-4 bg-gray-50 p-3 rounded">
+            <div className="space-y-4 bg-white p-3 rounded">
               <h3 className="text-lg font-semibold">Shipping Details</h3>
               <div>
-                <label className="block font-medium">Order Placed by*</label>
+                <label className="font-medium mb-1 text-sm md:text-xs">Order Placed by*</label>
                 <Input
                   type="text"
                   className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
@@ -280,7 +290,7 @@ const DeliveryChallanForm = () => {
                 />
               </div>
               <div>
-                <label className="block font-medium">Mobile Number*</label>
+                <label className="font-medium mb-1 text-sm md:text-xs">Mobile Number*</label>
                 <Input
                   type="text"
                   className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
@@ -288,7 +298,7 @@ const DeliveryChallanForm = () => {
                 />
               </div>
               <div>
-                <label className="block font-medium">Shipping Name*</label>
+                <label className="font-medium mb-1 text-sm md:text-xs">Shipping Name*</label>
                 <Input
                   type="text"
                   className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
@@ -296,7 +306,7 @@ const DeliveryChallanForm = () => {
                 />
               </div>
               <div>
-                <label className="block font-medium">Shipping Address*</label>
+                <label className="font-medium mb-1 text-sm md:text-xs">Shipping Address*</label>
                 <textarea
                   className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
                   placeholder="Enter Address"
@@ -304,7 +314,7 @@ const DeliveryChallanForm = () => {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block font-medium">Pincode*</label>
+                  <label className="font-medium mb-1 text-sm md:text-xs">Pincode*</label>
                   <Input
                     type="text"
                     className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
@@ -312,9 +322,9 @@ const DeliveryChallanForm = () => {
                   />
                 </div>
                 <div>
-                  <label className="block font-medium">Country*</label>
+                  <label className="font-medium mb-1 text-sm md:text-xs">Country*</label>
                   <select
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm font-medium mb-1 text-sm md:text-xs"
                     defaultValue=""
                   >
                     <option value="">Select Country</option>
@@ -323,18 +333,18 @@ const DeliveryChallanForm = () => {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block font-medium">State*</label>
+                  <label className="font-medium mb-1 text-sm md:text-xs">State*</label>
                   <select
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm font-medium mb-1 text-sm md:text-xs"
                     defaultValue=""
                   >
                     <option value="">Select State</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block font-medium">City*</label>
+                  <label className="font-medium mb-1 text-sm md:text-xs">City*</label>
                   <select
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm font-medium mb-1 text-sm md:text-xs"
                     defaultValue=""
                   >
                     <option value="">Select City</option>
@@ -344,10 +354,10 @@ const DeliveryChallanForm = () => {
             </div>
 
             {/* Other Details */}
-            <div className="space-y-4 bg-gray-50 w-full p-3 rounded">
+            <div className="space-y-4 bg-white w-full p-3 rounded">
               <h3 className="text-lg font-semibold">Other Details</h3>
               <div>
-                <label className="block font-medium">Vehicle Number*</label>
+                <label className="font-medium mb-1 text-sm md:text-xs">Vehicle Number*</label>
                 <Input
                   type="text"
                   className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
@@ -355,7 +365,7 @@ const DeliveryChallanForm = () => {
                 />
               </div>
               <div>
-                <label className="block font-medium">Delivered Staff</label>
+                <label className="font-medium mb-1 text-sm md:text-xs">Delivered Staff</label>
                 <Input
                   type="text"
                   className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
@@ -363,7 +373,7 @@ const DeliveryChallanForm = () => {
                 />
               </div>
               <div>
-                <label className="block font-medium">Received Name</label>
+                <label className="font-medium mb-1 text-sm md:text-xs">Received Name</label>
                 <Input
                   type="text"
                   className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
@@ -371,7 +381,8 @@ const DeliveryChallanForm = () => {
                 />
               </div>
               <div>
-                <label className="block font-medium">Receiver Mob Number</label>
+                <label className="font-medium mb-1 text-sm md:text-xs">Receiver Mob Number</label>
+
                 <Input
                   type="text"
                   className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
@@ -379,18 +390,19 @@ const DeliveryChallanForm = () => {
                 />
               </div>
             </div>
-            </div>
-         
-
-          <div className="mt-6 text-center">
-            <button
-              type="submit"
-              className="px-6 py-2 bg-blue-500 text-white rounded-md"
-            >
-              Save
-            </button>
           </div>
+
+
+
         </div>
+      </div>
+
+      <div className="flex justify-end mt-6 gap-8">
+        <Button type="submit" className=" bg-white text-black border-gray-50">
+          Cancel        </Button>
+        <Button type="submit" className="bg-blue-500 text-white">
+          Submit
+        </Button>
       </div>
     </form>
   );

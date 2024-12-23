@@ -71,6 +71,7 @@ export const columns = [
   { accessorKey: "customer_name", header: "Customer Name" },
   { accessorKey: "created_by", header: "Created By" },
   { accessorKey: "amount", header: "Amount" },
+  { accessorKey: "print", header: "Print Invoice" },
   {
     accessorKey: "active_status",
     header: "Status",

@@ -209,6 +209,9 @@
 
 import React from "react";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button"; // Custom Button Component
+
+
 
 const CreateInvoice = () => {
   return (
@@ -218,12 +221,12 @@ const CreateInvoice = () => {
 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
             {/* Delivery Details */}
-            <div className="space-y-4 bg-gray-50 p-4 rounded-lg">
+            <div className="space-y-4 bg-white p-4 rounded-lg">
               {/* Basic Details */}
               <h3 className="text-lg font-semibold mb-4">Basic Details:</h3>
               <div className="grid grid-cols-2 mt-4 gap-6">
                 <div>
-                  <label className="block font-medium">Customer Code*</label>
+                  <label className="font-medium mb-1 text-sm md:text-xs">Customer Code*</label>
                   <Input
                     type="text"
                     className="mt-1 block w-full border border-gray-300 rounded-md p-2"
@@ -231,7 +234,7 @@ const CreateInvoice = () => {
                   />
                 </div>
                 <div>
-                  <label className="block font-medium">Email ID*</label>
+                  <label className="font-medium mb-1 text-sm md:text-xs">Email ID*</label>
                   <Input
                     type="email"
                     className="mt-1 block w-full border border-gray-300 rounded-md p-2"
@@ -239,7 +242,7 @@ const CreateInvoice = () => {
                   />
                 </div>
                 <div>
-                  <label className="block font-medium">Phone Number*</label>
+                  <label className="font-medium mb-1 text-sm md:text-xs">Phone Number*</label>
                   <Input
                     type="text"
                     className="mt-1 block w-full border border-gray-300 rounded-md p-2"
@@ -247,7 +250,7 @@ const CreateInvoice = () => {
                   />
                 </div>
                 <div>
-                  <label className="block font-medium">DC Number*</label>
+                  <label className="font-medium mb-1 text-sm md:text-xs">DC Number*</label>
                   <Input
                     type="text"
                     className="mt-1 block w-full border border-gray-300 rounded-md p-2"
@@ -255,14 +258,14 @@ const CreateInvoice = () => {
                   />
                 </div>
                 <div>
-                  <label className="block font-medium">Date*</label>
+                  <label className="font-medium mb-1 text-sm md:text-xs">Date*</label>
                   <Input
                     type="date"
                     className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                   />
                 </div>
                 <div>
-                  <label className="block font-medium">TIN Number*</label>
+                  <label className="font-medium mb-1 text-sm md:text-xs">TIN Number*</label>
                   <Input
                     type="text"
                     className="mt-1 block w-full border border-gray-300 rounded-md p-2"
@@ -270,7 +273,7 @@ const CreateInvoice = () => {
                   />
                 </div>
                 <div>
-                  <label className="block font-medium">PAN Number*</label>
+                  <label className="font-medium mb-1 text-sm md:text-xs">PAN Number*</label>
                   <Input
                     type="text"
                     className="mt-1 block w-full border border-gray-300 rounded-md p-2"
@@ -278,14 +281,14 @@ const CreateInvoice = () => {
                   />
                 </div>
                 <div>
-                  <label className="block font-medium">Project Start Date*</label>
+                  <label className="font-medium mb-1 text-sm md:text-xs">Project Start Date*</label>
                   <Input
                     type="date"
                     className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                   />
                 </div>
                 <div>
-                  <label className="block font-medium">Project End Date*</label>
+                  <label className="font-medium mb-1 text-sm md:text-xs">Project End Date*</label>
                   <Input
                     type="date"
                     className="mt-1 block w-full border border-gray-300 rounded-md p-2"
@@ -295,10 +298,10 @@ const CreateInvoice = () => {
             </div>
 
             {/* TO Address */}
-            <div className="space-y-4 bg-gray-50 p-4 rounded-lg">
+            <div className="space-y-4 bg-white p-4 rounded-lg">
               <h3 className="text-lg font-semibold mb-4">To Address:</h3>
               <div>
-                <label className="block font-medium">Company Name*</label>
+                <label className="font-medium mb-1 text-sm md:text-xs">Company Name*</label>
                 <Input
                   type="text"
                   className="mt-1 block w-full border border-gray-300 rounded-md p-2"
@@ -307,143 +310,135 @@ const CreateInvoice = () => {
               </div>
               <div className="grid grid-cols-2 mt-4 gap-6">
 
-              <div>
-                <label className="block font-medium">Pincode*</label>
-                <Input
-                  type="text"
-                  className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                  placeholder="Enter Pincode"
-                />
+                <div>
+                  <label className="font-medium mb-1 text-sm md:text-xs">Pincode*</label>
+                  <Input
+                    type="text"
+                    className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                    placeholder="Enter Pincode"
+                  />
+                </div>
+                <div>
+                  <label className="font-medium mb-1 text-sm md:text-xs">Country*</label>
+                  <select
+                    className="mt-1 block w-full border border-gray-300 rounded-md p-2 font-medium mb-1 text-sm md:text-xs"
+                    defaultValue=""
+                  >
+                    <option value="">Select Country</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="font-medium mb-1 text-sm md:text-xs">State*</label>
+                  <select
+                    className="mt-1 block w-full border border-gray-300 rounded-md p-2 font-medium mb-1 text-sm md:text-xs"
+                    defaultValue=""
+                  >
+                    <option value="">Select State</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="font-medium mb-1 text-sm md:text-xs">City*</label>
+                  <select
+                    className="mt-1 block w-full border border-gray-300 rounded-md p-2 font-medium mb-1 text-sm md:text-xs"
+                    defaultValue=""
+                  >
+                    <option value="">Select City</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="font-medium mb-1 text-sm md:text-xs">Landmark</label>
+                  <Input
+                    type="text"
+                    className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                    placeholder="Enter Landmark"
+                  />
+                </div>
+                <div>
+                  <label className="font-medium mb-1 text-sm md:text-xs">Street*</label>
+                  <Input
+                    type="text"
+                    className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                    placeholder="Enter Address"
+                  />
+                </div>
               </div>
-              <div>
-                <label className="block font-medium">Country*</label>
-                <select
-                  className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                  defaultValue=""
-                >
-                  <option value="">Select Country</option>
-                </select>
-              </div>
-              <div>
-                <label className="block font-medium">State*</label>
-                <select
-                  className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                  defaultValue=""
-                >
-                  <option value="">Select State</option>
-                </select>
-              </div>
-              <div>
-                <label className="block font-medium">City*</label>
-                <select
-                  className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                  defaultValue=""
-                >
-                  <option value="">Select City</option>
-                </select>
-              </div>
-              <div>
-                <label className="block font-medium">Landmark</label>
-                <Input
-                  type="text"
-                  className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                  placeholder="Enter Landmark"
-                />
-              </div>
-              <div>
-                <label className="block font-medium">Street*</label>
-                <Input
-                  type="text"
-                  className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                  placeholder="Enter Address"
-                />
-              </div>
-            </div>
             </div>
 
             {/* Person Inform */}
-            <div className="space-y-4 bg-gray-50 p-4 rounded-lg">
+            <div className="space-y-4 bg-white p-4 rounded-lg">
               <h3 className="text-lg font-semibold mb-4">Person Inform:</h3>
               <div className="grid grid-cols-2 mt-4 gap-6">
 
-              <div>
-                <label className="block font-medium">Informed Name*</label>
-                <Input
-                  type="text"
-                  className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                  placeholder="Enter Informed Name"
-                />
+                <div>
+                  <label className="font-medium mb-1 text-sm md:text-xs">Informed Name*</label>
+                  <Input
+                    type="text"
+                    className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                    placeholder="Enter Informed Name"
+                  />
+                </div>
+                <div>
+                  <label className="font-medium mb-1 text-sm md:text-xs">Phone Number*</label>
+                  <Input
+                    type="text"
+                    className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                    placeholder="Enter Phone Number"
+                  />
+                </div>
+                <div>
+                  <label className="font-medium mb-1 text-sm md:text-xs">Returned Name*</label>
+                  <Input
+                    type="text"
+                    className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                    placeholder="Enter Returned Name"
+                  />
+                </div>
+                <div>
+                  <label className="font-medium mb-1 text-sm md:text-xs">Phone Number*</label>
+                  <Input
+                    type="text"
+                    className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                    placeholder="Enter Phone Number"
+                  />
+                </div>
+                <div>
+                  <label className="font-medium mb-1 text-sm md:text-xs">Received Name*</label>
+                  <Input
+                    type="text"
+                    className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                    placeholder="Enter Received Name"
+                  />
+                </div>
+                <div>
+                  <label className="font-medium mb-1 text-sm md:text-xs">Vehicle Number*</label>
+                  <Input
+                    type="text"
+                    className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                    placeholder="Enter Vehicle Number"
+                  />
+                </div>
+                <div>
+                  <label className="font-medium mb-1 text-sm md:text-xs">Description</label>
+                  <textarea
+                    className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                    placeholder="Enter Description"
+                  ></textarea>
+                </div>
               </div>
-              <div>
-                <label className="block font-medium">Phone Number*</label>
-                <Input
-                  type="text"
-                  className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                  placeholder="Enter Phone Number"
-                />
-              </div>
-              <div>
-                <label className="block font-medium">Returned Name*</label>
-                <Input
-                  type="text"
-                  className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                  placeholder="Enter Returned Name"
-                />
-              </div>
-              <div>
-                <label className="block font-medium">Phone Number*</label>
-                <Input
-                  type="text"
-                  className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                  placeholder="Enter Phone Number"
-                />
-              </div>
-              <div>
-                <label className="block font-medium">Received Name*</label>
-                <Input
-                  type="text"
-                  className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                  placeholder="Enter Received Name"
-                />
-              </div>
-              <div>
-                <label className="block font-medium">Vehicle Number*</label>
-                <Input
-                  type="text"
-                  className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                  placeholder="Enter Vehicle Number"
-                />
-              </div>
-              <div>
-                <label className="block font-medium">Description</label>
-                <textarea
-                  className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                  placeholder="Enter Description"
-                ></textarea>
-              </div>
-            </div>
             </div>
           </div>
 
-          <div className="mt-6  flex  justify-end">
-            <div>
-            <button
-              type="submit"
-              className="px-6 py-2  text-black rounded-md"
-            >
-              Cancel
-            </button>
-            </div>
-            <div>
-            <button
-              type="submit"
-              className="px-6 py-2 bg-blue-500 text-white rounded-md"
-            >
-              Submit
-            </button>
-            </div>
-          </div>
+     
         </div>
+      </div>
+
+      <div className="flex justify-end mt-6 gap-8">
+        <Button type="submit" className="bg-white text-black border-gray-50">
+          Cancel
+        </Button>
+        <Button type="submit" className="bg-blue-500 text-white">
+          Submit
+        </Button>
       </div>
     </form>
   );
