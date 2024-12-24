@@ -133,7 +133,7 @@ export const CreateNewProductCategoryButton = () => {
   const router = useRouter();
 
   return (
-    <div className="flex justify-end mb-1">
+    <div className="flex justify-end mt-10">
       {canAdd && (
         <Button
           className="bg-blue-500 text-white"

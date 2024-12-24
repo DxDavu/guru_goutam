@@ -139,7 +139,7 @@ export const CreateNewItemVariantButton = () => {
   }
 
   return (
-    <div className="flex justify-end mb-1">
+    <div className="flex justify-end mt-10">
       <Button
         className="bg-blue-500 text-white"
         onClick={() => router.push("/product-library/item-variant/new")}

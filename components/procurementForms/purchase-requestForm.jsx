@@ -207,7 +207,7 @@ const PurchaseRequestForm = ({ type, data }) => {
           <div className="mt-4">
             <Input {...register("pr_id")} placeholder="Purchase Request ID" />
           </div>
-          <div className="mt-4">
+          {/* <div className="mt-4">
             <Input {...register("pr_date")} type="date" placeholder="Purchase Request Date" />
           </div>
           <div className="mt-4">
@@ -225,7 +225,7 @@ const PurchaseRequestForm = ({ type, data }) => {
                 </SelectGroup>
               </SelectContent>
             </Select>
-          </div>
+          </div> */}
           <div className="mt-4">
             <Input {...register("owner")} placeholder="Owner" />
           </div>
@@ -265,10 +265,10 @@ const PurchaseRequestForm = ({ type, data }) => {
 
         {/* Additional Information */}
         <div className="bg-gray-50 p-4 sm:p-6 border rounded-lg shadow-lg">
-          <h3 className="font-medium">Additional Information:</h3>
+          <h3 className="font-medium">Additional Information :</h3>
           <Select
             onValueChange={(value) => setValue("purchase_type", value)}
-            value={watch("purchase_type") || ""}
+            value={watch("purchase_typesssssssssssss") || ""}
           >
             <SelectTrigger>
               <SelectValue placeholder="Purchase Type" />
@@ -276,8 +276,8 @@ const PurchaseRequestForm = ({ type, data }) => {
             <SelectContent>
               <SelectGroup>
                 <SelectItem value="Buy">Buy</SelectItem>
-                <SelectItem value="Sell">Sell</SelectItem>
-              </SelectGroup>
+                <SelectItem value="Rent">Rent</SelectItem>
+              </SelectGroup> 
             </SelectContent>
           </Select>
           <div className="mt-4">

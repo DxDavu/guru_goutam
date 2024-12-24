@@ -22,7 +22,7 @@ export default function Menu({ isOpen }) {
   return (
     <>
       {/* Desktop Menu (always visible on lg screens) */}
-      <div className="hidden lg:flex space-x-4">
+      <div className="hidden lg:flex space-x-4 ">
         {menuItems.map((menuItem, index) => (
           <a
             key={index}
@@ -38,9 +38,9 @@ export default function Menu({ isOpen }) {
         ))}
       </div>
 
-      {/* Mobile Menu (only visible when isOpen is true) */}
+      {/* Mobile Menu (only visible when isOpen is true) */}  
       {isOpen && (
-        <div className="flex flex-col space-y-1 lg:hidden">
+        <div className="flex flex-col space-y-1 lg:hidden ">
           {menuItems.map((menuItem, index) => (
             <Link
               key={index}

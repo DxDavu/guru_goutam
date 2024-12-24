@@ -147,15 +147,18 @@ const InventoryForm = ({ type, data }) => {
   return (
     <form 
   onSubmit={onSubmit} 
-  className="w-full max-w-screen-2xl mx-auto p-8 bg-white shadow-md rounded-lg">
+  className="w-full max-w-screen-2xl mx-auto p-2 bg-white shadow-md rounded-lg">
   
-  <div className="flex flex-col lg:flex-row bg-gray-200 p-6 border rounded-lg shadow-lg mb-6 gap-6 mt-5 w-full">
+  <div className="flex flex-col lg:flex-row bg-gray-200 p-2 border rounded-lg shadow-lg mb-6 gap-6 mt-5 w-full">
     {/* Left Section */}
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-6 w-full">
-      <div className="w-full lg:w-auto">
-        <div className="bg-gray-50 p-6 border rounded-lg shadow-lg">
-          <h3 className="font-semibold">Product Details:</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-gray-50 p-6 border rounded-lg">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-6 gap-y-6 w-full">
+
+        <div className="bg-white p-6 border rounded-lg shadow-lg">
+        <h3 className="font-semibold">Product Details test 29:</h3>
+
+        <div className="w-full lg:w-auto">
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-white p-2 border rounded-lg">
             <div>
               <h3>Owner</h3>
               <Input {...register("owner")} placeholder="Owner" className="border border-gray-300 rounded-md p-4 w-full" />
@@ -195,11 +198,11 @@ const InventoryForm = ({ type, data }) => {
       </div>
 
       {/* Middle Section */}
-      <div className="bg-gray-50 p-6 border rounded-lg shadow-lg w-full lg:w-auto">
+      <div className="bg-white p-2 border rounded-lg shadow-lg w-full lg:w-auto">
         <h3 className="font-semibold">Price Details:</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="font-medium">Price per Product:</label>
+            <label className="font-medium mb-1 text-sm md:text-xs">Price per Product:</label>
             <Input
               {...register("productPrice", { valueAsNumber: true })}
               type="number"
@@ -209,7 +212,7 @@ const InventoryForm = ({ type, data }) => {
             />
           </div>
           <div>
-            <label className="font-medium">Total Quantity:</label>
+            <label className="font-medium mb-1 text-sm md:text-xs">Total Quantity:</label>
             <Input
               {...register("totalQuantity", { valueAsNumber: true })}
               type="number"
@@ -219,7 +222,7 @@ const InventoryForm = ({ type, data }) => {
             />
           </div>
           <div className="sm:col-span-2">
-            <label className="font-medium">Total Price:</label>
+            <label className="font-medium mb-1 text-sm md:text-xs">Total Price:</label>
             <Input 
               {...register("total_price", { valueAsNumber: true })} 
               readOnly 
@@ -232,9 +235,9 @@ const InventoryForm = ({ type, data }) => {
 
       {/* Right Section */}
       <div className="mt-4 lg:mt-0 w-full lg:w-auto">
-        <div className="bg-gray-50 p-6 border rounded-lg shadow-lg">
+        <div className="bg-gray-50 p-2 border rounded-lg shadow-lg">
           <h1 className="font-extrabold">Control</h1>
-          <label className="font-medium">Active Status:</label>
+          <label className="font-medium mb-1 text-sm md:text-xs">Active Status:</label>
           <input
             type="checkbox"
             checked={watch("active_status")}
@@ -248,13 +251,13 @@ const InventoryForm = ({ type, data }) => {
 
   {/* Product Details Section */}
   <div>
-    <h3 className="font-medium">Product Details:</h3>
+    <h3 className="font-medium mb-1 text-sm md:text-xs">Product Details:</h3>
     <Button type="button" onClick={handleOpenModal}>
       Select Product
     </Button>
     {selectedProduct && (
       <div className="mt-2">
-        <p className="font-medium">{selectedProduct.product_name}</p>
+        <p className="font-medium mb-1 text-sm md:text-xs">{selectedProduct.product_name}</p>
         <p className="text-sm text-gray-500">{selectedProduct.category}</p>
         <p className="text-sm text-gray-400">{selectedProduct.model}</p>
       </div>

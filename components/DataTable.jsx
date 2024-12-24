@@ -118,8 +118,8 @@
 //     </div>
 //   )
 // }
-"use client"
-import * as React from "react"
+"use client";
+import * as React from "react";
 import {
   flexRender,
   getCoreRowModel,
@@ -127,7 +127,7 @@ import {
   getSortedRowModel,
   useReactTable,
   getFilteredRowModel,
-} from "@tanstack/react-table"
+} from "@tanstack/react-table";
 
 import {
   Table,
@@ -136,16 +136,13 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
 import { Button } from "./ui/button";
-import { Input } from "@/components/ui/input"
+import { Input } from "@/components/ui/input";
 
-export function DataTable({
-  columns,
-  data,
-}) {
-  const [sorting, setSorting] = React.useState([])
-  const [globalFilter, setGlobalFilter] = React.useState("")
+export function DataTable({ columns, data }) {
+  const [sorting, setSorting] = React.useState([]);
+  const [globalFilter, setGlobalFilter] = React.useState("");
 
   const table = useReactTable({
     data,
@@ -160,11 +157,11 @@ export function DataTable({
     },
     onSortingChange: setSorting,
     onGlobalFilterChange: setGlobalFilter,
-    globalFilterFn: "includesString", // You can customize the filter function here
-  })
+    globalFilterFn: "includesString",
+  });
 
   return (
-    <div>
+    <div className="ml-34 mt-6">
       <div className="flex items-center py-1">
         <Input
           placeholder="Filter key fields"
@@ -173,52 +170,62 @@ export function DataTable({
           className="max-w-sm"
         />
       </div>
-      <div className="rounded-md border">
-        <Table className="border border-gray-300">
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id} className="border-b border-gray-300 text-gray-900">
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id} className="border border-gray-300 text-gray-900">
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                  className="border-b border-gray-300 text-gray-900"
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="border border-gray-300 text-gray-800">
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
+
+      {/* Scrollable Table Container */}
+      <div className="rounded-md border overflow-auto max-h-[70vh]">
+        <div className="overflow-hidden">
+          <Table className="border-collapse table-auto">
+            <TableHeader className="sticky top-0 bg-white z-10">
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <TableHead
+                      key={header.id}
+                      className="border-gray-300 border"
+                    >
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                    </TableHead>
                   ))}
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center border border-gray-300 text-gray-800"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow key={row.id}>
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell
+                        key={cell.id}
+                        className="border-gray-300 border"
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    No results.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </div>
+
       <div className="flex items-center justify-end space-x-2 py-4">
         <Button
           variant="outline"
@@ -238,5 +245,5 @@ export function DataTable({
         </Button>
       </div>
     </div>
-  )
+  );
 }
