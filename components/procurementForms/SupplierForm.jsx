@@ -114,8 +114,11 @@ const SupplierForm = ({ type, data }) => {
   }, [state, router, type]);
 
   return (
-    <form onSubmit={onSubmit} className="space-y-6 w-full">
-      <div className=" bg-gray-200 p-4 border rounded-1g shadow-1g mb-6 flex  gap-9">
+    <form onSubmit={onSubmit} className="space-y-6 w-full mt-20">
+            <h1 className="text-xl font-semibold">
+        {type === "create" ? "Create Suppliers " : "Edit Suppliers "}
+      </h1>
+      <div className=" bg-gray-200 p-2 border rounded-1g shadow-1g mb-6 flex  gap-9">
 
         <div className=" grid grid-cols-3 bg-gray-50 p-2 border rounde-dlg shadow-lg w-full gap-2">
           {/* Supplier Information */}

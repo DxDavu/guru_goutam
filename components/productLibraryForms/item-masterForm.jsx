@@ -735,7 +735,7 @@ const ItemVariantForm = ({ type, data }) => {
 
   return (
     <form
-      className="w-full max-w-1xl mx-auto p-8 bg-white shadow-md rounded-lg"
+      className="w-full max-w-1xl mx-auto p-8 bg-white shadow-md rounded-lg mt-10"
       onSubmit={onSubmit}
     >
       <h1 className="text-xl font-semibold">

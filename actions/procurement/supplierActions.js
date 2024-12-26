@@ -7,23 +7,30 @@ import Supplier from "@/lib/database/models/procurement/Supplier.model";
 import Country from "@/lib/database/models/setting/Country.model";
 import State from "@/lib/database/models/setting/State.model";
 import City from "@/lib/database/models/setting/City.model";
+import Module from "@/lib/database/models/procurement/Module.model";  // Import the Module model
+
+
+
 
 // Fetch active countries
 export const getActiveCountries = async () => {
   await connectToDatabase();
-  return await Country.find({ active_status: true }, "name").lean();
+  const countries = await Country.find({ active_status: true }, "name").lean();
+  return countries.map((country) => serializeData(country));
 };
 
 // Fetch active states by country
 export const getActiveStates = async () => {
   await connectToDatabase();
-  return await State.find({active_status: true }, "name").lean();
+  const states = await State.find({ active_status: true }, "name").lean();
+  return states.map((state) => serializeData(state));
 };
 
 // Fetch active cities by state
 export const getActiveCities = async () => {
   await connectToDatabase();
-  return await City.find({active_status: true }, "name").lean();
+  const cities = await City.find({ active_status: true }, "name").lean();
+  return cities.map((city) => serializeData(city));
 };
 
 // Fetch all suppliers
@@ -37,8 +44,7 @@ export const getSuppliers = async () => {
     .sort({ createdAt: -1 });
 
   return suppliers.map((supplier) => ({
-    ...supplier,
-    _id: supplier._id.toString(),
+    ...serializeData(supplier),
     country: supplier.country?.name || "",
     state: supplier.state?.name || "",
     city: supplier.city?.name || "",
@@ -56,20 +62,27 @@ export const getSupplierById = async (id) => {
 
   if (!supplier) return null;
 
-  return { ...supplier, _id: supplier._id.toString() };
+  return {
+    ...serializeData(supplier),
+    country: supplier.country?.name || "",
+    state: supplier.state?.name || "",
+    city: supplier.city?.name || "",
+  };
 };
 
 // Create a new supplier
 export const createSupplier = async (currentState, supplierData) => {
-
-    console.log("Supplier Data Received: ", supplierData); // Debugging
-
+  console.log("Supplier Data Received: ", supplierData); // Debugging
 
   try {
     await connectToDatabase();
     const newSupplier = new Supplier(supplierData);
     const savedSupplier = await newSupplier.save();
-    return { success: true, message: "Supplier created successfully", supplier: savedSupplier.toObject() };
+    return {
+      success: true,
+      message: "Supplier created successfully",
+      supplier: serializeData(savedSupplier.toObject()),
+    };
   } catch (error) {
     console.error("Error creating supplier:", error);
     return { success: false, message: "Error creating supplier." };
@@ -81,11 +94,19 @@ export const updateSupplier = async (currentState, supplierData) => {
   try {
     await connectToDatabase();
     const id = supplierData.id;
-    const updatedSupplier = await Supplier.findByIdAndUpdate(id, supplierData, { new: true });
+    const updatedSupplier = await Supplier.findByIdAndUpdate(id, supplierData, {
+      new: true,
+    });
+
     if (!updatedSupplier) {
       return { success: false, message: "Supplier not found" };
     }
-    return { success: true, message: "Supplier updated successfully", supplier: updatedSupplier.toObject() };
+
+    return {
+      success: true,
+      message: "Supplier updated successfully",
+      supplier: serializeData(updatedSupplier.toObject()),
+    };
   } catch (error) {
     console.error("Error updating supplier:", error);
     return { success: false, message: "Error updating supplier." };
@@ -94,10 +115,29 @@ export const updateSupplier = async (currentState, supplierData) => {
 
 // Delete a supplier
 export const deleteSupplier = async (id) => {
-  await connectToDatabase();
-  const deletedSupplier = await Supplier.findByIdAndDelete(id);
-  if (!deletedSupplier) {
-    return { success: false, message: "Supplier not found" };
+  try {
+    await connectToDatabase();
+    const deletedSupplier = await Supplier.findByIdAndDelete(id);
+    if (!deletedSupplier) {
+      return { success: false, message: "Supplier not found" };
+    }
+    return { success: true, message: "Supplier deleted successfully" };
+  } catch (error) {
+    console.error("Error deleting supplier:", error);
+    return { success: false, message: "Error deleting supplier." };
   }
-  return { success: true, message: "Supplier deleted successfully" };
 };
+
+
+
+// Utility to serialize data (convert ObjectId and Dates)
+const serializeData = (data) => {
+  if (!data) return null;
+  return {
+    ...data,
+    _id: data._id.toString(),  // Convert ObjectId to string
+    createdAt: data.createdAt?.toISOString(),
+    updatedAt: data.updatedAt?.toISOString(),
+  };
+};
+

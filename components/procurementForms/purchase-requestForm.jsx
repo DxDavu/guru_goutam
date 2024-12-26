@@ -199,8 +199,13 @@ const PurchaseRequestForm = ({ type, data }) => {
   }, [state, router, type]);
 
   return (
-    <form onSubmit={onSubmit} className="w-full max-w-screen-2xl mx-auto p-4 sm:p-6 md:p-8 bg-white shadow-md rounded-lg">
-      <div className="bg-gray-200 p-4 sm:p-6 border rounded-lg shadow-md mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+    <form onSubmit={onSubmit} className="w-full max-w-screen-2xl mx-auto p-4 sm:p-6 md:p-4 bg-white shadow-md rounded-lg mt-10">
+
+            <h1 className="text-xl font-semibold">
+        {type === "create" ? "Create purchase request" : "Edit  purchase request"}
+      </h1>
+
+      <div className="bg-gray-200 p-2 md:p-2 sm:p-4 border rounded-lg shadow-md mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Product Category Section */}
         <div className="bg-gray-50 p-4 sm:p-6 border rounded-lg shadow-lg">
           <h3 className="font-medium">Purchase Request Details:</h3>

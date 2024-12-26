@@ -147,12 +147,12 @@ const ProductTemplateForm = ({ type, data }) => {
   return (
     <form
       onSubmit={onSubmit}
-      className="w-full max-w-screen-2xl mx-auto p-4 md:p-8 bg-gray shadow-md rounded-lg"
+      className="w-full max-w-screen-2xl mx-auto p-4 md:p-8 bg-gray shadow-md rounded-lg mt-10"
     >
       {/* Form Container */}
-      <div className="flex flex-col md:flex-row gap-6">
+      <div className="flex flex-col md:flex-row gap-6 bg-gray-50">
         {/* Product Category Section */}
-        <div className="bg-white-100 p-6 border rounded-lg shadow-lg flex-1">
+        <div className="bg-white p-6 border rounded-lg shadow-lg flex-1">
           <h3 className="text-lg font-semibold mb-4">Choose Product Category</h3>
           <div className="mb-4">
             <label className="text-sm font-medium">Product Category</label>
@@ -291,8 +291,10 @@ const ProductTemplateForm = ({ type, data }) => {
           </div>
         </div>
 
+
+
         {/* Specifications Section */}
-        <div className="bg-white-100 p-6 border rounded-lg shadow-lg flex-1">
+        <div className="bg-white p-6 border rounded-lg shadow-lg flex-1">
           <h3 className="text-lg font-semibold mb-4">Specifications</h3>
           {[
             "ram",
@@ -362,7 +364,7 @@ const ProductTemplateForm = ({ type, data }) => {
 
 
         {/* Active Status Section */}
-        <div className="bg-white p-6 border rounded-lg shadow-sm flex-shrink-0 w-full md:w-80">
+        <div className="bg-white p-6 border rounded-lg shadow-sm flex-shrink-0 w-full md:w-80 h-40">
           <h3 className="text-lg font-semibold mb-4">Control</h3>
           <div className="flex items-center gap-2">
             <Checkbox

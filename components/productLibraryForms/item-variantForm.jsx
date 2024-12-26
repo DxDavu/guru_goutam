@@ -96,10 +96,10 @@ const ItemVariantForm = ({ type, data }) => {
 
   return (
     <form
-      className="w-full max-w-1xl mx-auto p-8 bg-white shadow-md rounded-lg"
+      className="w-full max-w-1xl mx-auto p-8 bg-white shadow-md rounded-lg mt-10"
       onSubmit={onSubmit}
     >    <h1 className="text-xl font-semibold">
-    {type === "create" ? "Add Item Variant" : "Edit Product Variant"}
+    {type === "create" ? "Add Item Variant " : "Edit Product Variant"}
   </h1>
       <div className="bg-gray-200 p-2 px-2 border rounded-lg shadow-lg mb-6">
     

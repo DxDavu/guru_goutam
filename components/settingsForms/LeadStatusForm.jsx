@@ -79,7 +79,7 @@ export default function LeadStatusForm({ type, data }) {
   }, [state, router, type]);
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4">
+    <form onSubmit={onSubmit} className="space-y-4 mt-10">
       <h1 className="text-xl font-semibold">
         {type === "create" ? "Create Lead Status" : "Edit Lead Status"}
       </h1>

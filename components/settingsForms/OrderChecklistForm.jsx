@@ -83,11 +83,11 @@ export default function OrderChecklistForm({ type, data }) {
   };
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4">
+    <form onSubmit={onSubmit} className="space-y-4 mt-10">
       <h1 className="text-xl font-semibold">
         {type === "create" ? "Create Order Checklist" : "Edit Order Checklist"}
       </h1>
-      <div className=" bg-gray-200 p-6 border rounded-1g shadow-1g mb-6 flex  gap-40">
+      <div className=" bg-gray-200 p-4 md:p-4 border rounded-1g shadow-1g mb-6 flex  gap-40">
         {/* Branch Section */}
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 flex-2">
           {/* Branch ID and Branch Name */}

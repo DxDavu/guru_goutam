@@ -80,80 +80,85 @@ const GroupForm = ({ type, data }) => {
   });
 
   return (
-    <form onSubmit={onSubmit}  className="w-full max-w-screen-2xl mx-auto p-8 bg-white shadow-md rounded-lg">
-      <div className=" flex bg-gray-200 p-6 border rounded-1g shadow-1g mb-6   gap-6 mt-5 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-6 w-full">
-          <div className=" bg-gray-50 p-6 border rounde-dlg shadow-lg">
-            <h3 className="font-semibold ">Product Details :</h3>
-            <div className=" grid grid-cols-2 gap-4   bg-gray-50 p-6 border rounde-dlg  w-full">
-              <div className="col-span-2">
-                <label className="text-sm font-medium">Group Name</label>
-                <Input
-                  {...register("group_name")}
-                  placeholder="Enter Group Name"
-                />
-                {errors.group_name && (
-                  <p className="text-red-500 text-xs">
-                    {errors.group_name.message}
-                  </p>
-                )}
-              </div>
-
-              <div className="col-span-2">
-                <label className="text-sm font-medium">Description</label>
-                <Input
-                  {...register("description")}
-                  placeholder="Enter Description"
-                />
-                {errors.description && (
-                  <p className="text-red-500 text-xs">
-                    {errors.description.message}
-                  </p>
-                )}
-              </div>
-            </div>
-          </div>
-
-          <div className=" bg-gray-50 p-6 border rounde-dlg shadow-lg">
-            <div>
-              <label className="font-medium">Total Quantity:</label>
+    <form onSubmit={onSubmit} className="w-full max-w-screen-2xl mx-auto p-8 bg-white shadow-md rounded-lg mt-10">
+    <h1 className="text-xl font-semibold">
+      {type === "create" ? "Create Group " : "Edit Group "}
+    </h1>
+  
+    <div className="flex bg-gray-200 p-6 border rounded-lg shadow-lg mb-6 gap-6 mt-5 w-full">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-6 w-full">
+        {/* Product Details Section */}
+        <div className="bg-white p-4 border rounded-lg shadow-lg">
+          <h3 className="font-semibold">Product Details :</h3>
+          <div className="grid grid-cols-2 gap-4 bg-gray-50 p-6 border rounded-lg w-full">
+            <div className="col-span-2">
+              <label className="text-sm font-medium">Group Name</label>
               <Input
-                {...register("product_qty", { valueAsNumber: true })}
-                type="number"
-                min="1"
-                placeholder="Total Quantity"
-                className="w-full mb-10"
+                {...register("group_name")}
+                placeholder="Enter Group Name"
               />
+              {errors.group_name && (
+                <p className="text-red-500 text-xs">
+                  {errors.group_name.message}
+                </p>
+              )}
             </div>
-
-            <div className="mt-4 lg:mt-0 w-full lg:w-auto">
-        <div className="bg-gray-50 p-6 border rounded-lg shadow-lg">
-          <h1 className="font-extrabold">Control</h1>
-          <label className="font-medium">Active Status:</label>
-          <input
-            type="checkbox"
-            checked={watch("active_status")}
-            className="mt-5"
-            onChange={(e) => setValue("active_status", e.target.checked)}
-          />
+            <div className="col-span-2">
+              <label className="text-sm font-medium">Description</label>
+              <Input
+                {...register("description")}
+                placeholder="Enter Description"
+              />
+              {errors.description && (
+                <p className="text-red-500 text-xs">
+                  {errors.description.message}
+                </p>
+              )}
+            </div>
+          </div>
         </div>
-      </div>
+  
+        {/* Quantity Section */}
+        <div className="bg-gray-50 p-6 border rounded-lg shadow-lg">
+          <div>
+            <label className="font-medium">Total Quantity:</label>
+            <Input
+              {...register("product_qty", { valueAsNumber: true })}
+              type="number"
+              min="1"
+              placeholder="Total Quantity"
+              className="w-full mb-10"
+            />
+          </div>
+        </div>
+  
+        {/* Status Section */}
+        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 w-70 h-32">
+          <h3 className="text-lg font-semibold mb-4">Control</h3>
+          <div className="flex items-center gap-2">
+            <Checkbox
+              checked={watch("active_status")}
+              onCheckedChange={(checked) => setValue("active_status", checked)}
+            />
+            <label className="text-sm font-medium">Active Status</label>
           </div>
         </div>
       </div>
-
-      <div className="col-span-2 flex justify-end">
-        <Button
-          variant="outline"
-          onClick={() => router.push("/inventory/group")}
-        >
-          Cancel
-        </Button>
-        <Button type="submit" className="bg-blue-500 text-white mx-2">
-          {type === "create" ? "Create" : "Update"}
-        </Button>
-      </div>
-    </form>
+    </div>
+  
+    <div className="col-span-2 flex justify-end">
+      <Button
+        variant="outline"
+        onClick={() => router.push("/inventory/group")}
+      >
+        Cancel
+      </Button>
+      <Button type="submit" className="bg-blue-500 text-white mx-2">
+        {type === "create" ? "Create" : "Update"}
+      </Button>
+    </div>
+  </form>
+  
   );
 };
 

@@ -115,7 +115,7 @@ export const CreateNewGroupButton = () => {
   const router = useRouter();
 
   return (
-    <div className="flex justify-end mb-1">
+    <div className="flex justify-end mt-10">
       <Button
         className={buttonClass}
         onClick={() => router.push("/inventory/group/new")}

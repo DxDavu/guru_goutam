@@ -21,11 +21,8 @@ export default function Sidebar() {
   const [activeTab, setActiveTab] = useState('');
 
   return (
-    <aside className="w-56 min-w-56 max-w-56 bg-gradient-to-b from-blue-950 to-blue-950 h-full flex flex-col justify-between text-white">
-    {/* Sidebar Header */}
-    <div className="py-6 px-4 flex items-center justify-center">
-      <h1 className="text-lg font-bold">Procurement</h1>
-    </div>
+    <aside className="w-56 min-w-56 max-w-56 bg-gradient-to-b from-blue-950 to-blue-950 h-full flex flex-col justify-between text-white mt-24">
+
 
     {/* Sidebar Links */}
     <nav className="flex flex-col py-4 space-y-1 flex-grow">

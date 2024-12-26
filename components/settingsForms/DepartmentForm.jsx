@@ -80,7 +80,7 @@ export default function DepartmentForm({ type, data }) {
   }, [state, router, type]);
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4">
+    <form onSubmit={onSubmit} className="space-y-4 mt-10">
       <h1 className="text-xl font-semibold">
         {type === "create" ? "Create Department" : "Edit Department"}
       </h1>

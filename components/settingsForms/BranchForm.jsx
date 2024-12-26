@@ -116,7 +116,7 @@ export default function BranchForm({ type, data }) {
   }, [state, router, type]);
 
   return (
-    <form onSubmit={onSubmit} className="space-y-6">
+    <form onSubmit={onSubmit} className="space-y-6 mt-10">
       <h1 className="text-2xl font-bold mb-8">
         {type === "create" ? "Add Branch" : "Edit Branch"}
       </h1>
@@ -248,13 +248,7 @@ export default function BranchForm({ type, data }) {
           </div>
       </div>
 
-      <div className="flex items-center gap-2 mt-4">
-        <Checkbox
-          checked={watch("active_status")}
-          onCheckedChange={(checked) => setValue("active_status", checked)}
-        />
-        <label className="text-sm font-medium">Active Status</label>
-      </div>
+   
 
       <div className="flex justify-center mt-5 gap-4">
         <Button

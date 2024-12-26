@@ -59,12 +59,12 @@ const BrandForm = ({ type, data }) => {
   }, [state, router, type]);
 
   return (
-    <form className="w-full max-w-1xl mx-auto p-4 md:p-8 bg-white shadow-md rounded-lg" onSubmit={onSubmit}>
+    <form className="w-full max-w-1xl mx-auto p-4 md:p-8 bg-white shadow-md rounded-lg mt-10" onSubmit={onSubmit}>
       <h1 className="text-lg md:text-xl font-semibold">
         {type === "create" ? "Add New Brand" : "Edit Brand"}
       </h1>
 
-      <div className="bg-gray-200 p-8 md:p-6 sm:p-4 border rounded-lg shadow-lg mb-6 flex flex-col lg:flex-row gap-4 md:gap-6">
+      <div className="bg-gray-200 p-4 md:p-4 sm:p-4 border rounded-lg shadow-lg mb-6 flex flex-col lg:flex-row gap-4 md:gap-6">
         {/* Brand Information Fields */}
         <div className="bg-gray-50 flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4 md:p-4">
           <div>
@@ -93,8 +93,8 @@ const BrandForm = ({ type, data }) => {
 
           <div>
             <div className="col-span-2">
-              <label className="text-sm font-medium">Description</label>
-              <Input
+              <label className="text-sm font-medium">Description </label>
+              <textarea
                 {...register("description")}
                 placeholder="Enter Brand Description"
                 className="w-full border border-gray-300 rounded-md p-2"

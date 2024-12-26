@@ -76,7 +76,7 @@ export default function ServicePriorityLevelForm({ type, data }) {
   }, [state, router, type]);
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4">
+    <form onSubmit={onSubmit} className="space-y- mt-10">
       <h1 className="text-xl font-semibold">{type === "create" ? "Add Priority Level" : "Edit Priority Level"}</h1>
 
       <div className=" bg-gray-200 p-6 border rounded-1g shadow-1g mb-6 flex  gap-40 ">

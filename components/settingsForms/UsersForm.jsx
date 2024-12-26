@@ -119,8 +119,8 @@ const UsersForm = ({ type, data }) => {
   }, [state, router, type]);
 
   return (
-    <form className="flex flex-col gap-8" onSubmit={onSubmit}>
-      <h1 className="text-xl font-semibold">{type === "create" ? "Create a new user" : "Edit User"}</h1>
+    <form className="flex flex-col gap-8 mt-20" onSubmit={onSubmit}>
+      <h1 className="text-xl font-semibold">{type === "create" ? "Create a new user " : "Edit User"}</h1>
 
       <div className="flex justify-between flex-wrap gap-4">
         <InputField label="First Name" name="first_name" register={register} error={errors.first_name} />

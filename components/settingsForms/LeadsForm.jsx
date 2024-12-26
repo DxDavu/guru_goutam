@@ -53,7 +53,7 @@ const LeadsForm = ({ type, data, setOpen }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md">
+    <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md mt-10">
       <h2 className="text-xl font-bold mb-4">{type === "create" ? "Create Lead" : "Edit Lead"}</h2>
       {/* Form Fields */}
       <div className="mb-4">

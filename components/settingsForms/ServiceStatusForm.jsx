@@ -79,12 +79,12 @@ export default function ServiceStatusForm({ type, data }) {
   }, [state, router, type]);
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4">
+    <form onSubmit={onSubmit} className="space-y-4 mt-10">
       <h1 className="text-xl font-semibold">
         {type === "create" ? "Create Service Status" : "Edit Service Status"}
       </h1>
 
-      <div className=" bg-gray-200 p-6 border rounded-1g shadow-1g mb-6 flex  gap-40">
+      <div className=" bg-gray-200 p-4 md:p-4 border rounded-1g shadow-1g mb-6 flex  gap-40">
       {/* Department Form Section */}
     <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 max-w-md flex-1">
       <div className="grid grid-cols-1 gap-4">

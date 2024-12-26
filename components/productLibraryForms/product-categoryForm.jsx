@@ -60,13 +60,13 @@ const ProductCategoryForm = ({ type, data }) => {
 
   return (
     <form
-      className="w-full max-w-1xl mx-auto p-4 md:p-8 bg-white shadow-md rounded-lg"
+      className="w-full max-w-1xl mx-auto p-4 md:p-4 bg-white shadow-md rounded-lg mt-10 "
       onSubmit={onSubmit}
     >
           <h1 className="text-lg md:text-xl font-semibold">
-          {type === "create" ? "Add Product Category" : "Edit Product Category"}
+          {type === "create" ? "Add Product Category " : "Edit Product Category"}
         </h1>
-      <div className="bg-gray-200 p-4 md:p-4 border rounded-lg shadow-lg mb-6">
+      <div className="bg-gray-200 p-2 md:p-2 border rounded-lg shadow-lg mb-6">
     
 
         {/* Category Information and Active Status Side by Side */}

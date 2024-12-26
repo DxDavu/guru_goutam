@@ -106,7 +106,7 @@ export default function TermsForm({ type, data }) {
   };
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4">
+    <form onSubmit={onSubmit} className="space-y-4 mt-10">
       <h1 className="text-xl font-semibold">
         {type === "create"
           ? "Create Terms and Condition"

@@ -147,14 +147,17 @@ const InventoryForm = ({ type, data }) => {
   return (
     <form 
   onSubmit={onSubmit} 
-  className="w-full max-w-screen-2xl mx-auto p-2 bg-white shadow-md rounded-lg">
+  className="w-full max-w-screen-2xl mx-auto p-2 bg-white shadow-md rounded-lg mt-10">
+          <h1 className="text-xl font-semibold">
+        {type === "create" ? "Create Products" : "Edit Products"}
+      </h1>
   
   <div className="flex flex-col lg:flex-row bg-gray-200 p-2 border rounded-lg shadow-lg mb-6 gap-6 mt-5 w-full">
     {/* Left Section */}
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-6 gap-y-6 w-full">
 
         <div className="bg-white p-6 border rounded-lg shadow-lg">
-        <h3 className="font-semibold">Product Details test 29:</h3>
+        <h3 className="font-semibold">Product Details:</h3>
 
         <div className="w-full lg:w-auto">
 

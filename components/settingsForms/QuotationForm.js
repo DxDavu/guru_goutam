@@ -49,7 +49,7 @@ const QuotationForm = ({ type, data, setOpen }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4 mt-10">
             <div>
                 <label htmlFor="quotation_code" className="block">Quotation Code</label>
                 <input type="text" name="quotation_code" value={formData.quotation_code} onChange={handleChange} className="border rounded w-full" required />

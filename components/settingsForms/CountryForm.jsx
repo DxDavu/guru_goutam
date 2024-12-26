@@ -62,7 +62,7 @@ export default function CountryForm({ type, data }) {
   const activeStatus = watch("active_status");
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4">
+    <form onSubmit={onSubmit} className="space-y-4 mt-10">
       <h1 className="text-xl font-semibold">
         {type === "create" ? "Add Country" : "Edit Country"}
       </h1>
