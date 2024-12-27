@@ -1,4 +1,4 @@
-// // @/actions/procurement/purchaseRequestActions.js
+// @/actions/procurement/purchaseRequestActions.js
 
 // "use server";
 
@@ -260,35 +260,51 @@
 //   }
 // };
 
-
-// @/actions/procurement/purchaseRequestActions.js
-
 "use server";
 
 import { connectToDatabase } from "@/lib/database";
 import PurchaseRequest from "@/lib/database/models/procurement/purchase-request.model";
 import Supplier from "@/lib/database/models/procurement/Supplier.model";
-import Module from "@/lib/database/models/procurement/Module.model";
 
-// Utility function to serialize data
+  
+
+// Utility Function for Serialization
 const serializeData = (data) => {
-  if (!data) return null;
-  return {
-    ...data,
-    _id: data._id.toString(),
-    createdAt: data.createdAt?.toISOString(),
-    updatedAt: data.updatedAt?.toISOString(),
-  };
+  if (!data || typeof data !== "object") return data;
+
+  if (Array.isArray(data)) {
+    return data.map(serializeData);
+  }
+
+  return Object.keys(data).reduce((result, key) => {
+    const value = data[key];
+
+    if (value instanceof Date) {
+      result[key] = value.toISOString();
+    } else if (value && typeof value === "object" && value._id) {
+      result[key] = serializeData({ ...value, _id: value._id.toString() });
+    } else {
+      result[key] = serializeData(value);
+    }
+
+    return result;
+  }, {});
 };
 
-// Fetch active suppliers
+// Fetch Plain JavaScript Suppliers Data
 export const getSuppliers = async () => {
-  await connectToDatabase();
-  const suppliers = await Supplier.find({ active_status: true }).lean();
-  return suppliers.map((supplier) => serializeData(supplier));
+  try {
+    await connectToDatabase();
+    const suppliers = await Supplier.find({ active_status: true }).lean();
+    // Returning plain JavaScript objects
+    return suppliers.map(serializeData);
+  } catch (error) {
+    console.error("Error fetching suppliers:", error);
+    return [];
+  }
 };
 
-// Fetch all purchase requests
+// Fetch All Purchase Requests
 export const getPurchaseRequests = async () => {
   await connectToDatabase();
   const purchaseRequests = await PurchaseRequest.find({})
@@ -301,15 +317,16 @@ export const getPurchaseRequests = async () => {
     ...serializeData(pr),
     supplier: pr.supplier?.supplier_name || "",
     products: pr.products.map((p) => ({
+      ...serializeData(p),
       product: p.product?.product_name || "",
-      quantity: p.quantity,
     })),
   }));
 };
 
-// Fetch purchase request by ID
+// Fetch Purchase Request by ID
 export const getPurchaseRequestById = async (id) => {
   await connectToDatabase();
+
   const pr = await PurchaseRequest.findById(id)
     .populate("supplier", "supplier_name email telephone_1")
     .populate({
@@ -325,19 +342,24 @@ export const getPurchaseRequestById = async (id) => {
   if (!pr) return null;
 
   const productsWithDetails = pr.products.map((product) => ({
-    ...product,
-    product: serializeData({
-      ...product.product,
+    ...serializeData(product),
+    product: {
+      ...serializeData(product.product),
       category: product.product?.category?.category_name || "",
       brand: product.product?.brand?.brand_name || "",
-    }),
+    },
   }));
 
-  return serializeData({ ...pr, products: productsWithDetails });
+  return {
+    ...serializeData(pr),
+    products: productsWithDetails,
+  };
 };
 
-// Create a new purchase request
-export const createPurchaseRequest = async (prData) => {
+// Other functions (createPurchaseRequest, updatePurchaseRequest, etc.) remain the same...
+
+// Create a Purchase Request
+export const createPurchaseRequest = async (currentStatus, prData) => {
   try {
     await connectToDatabase();
 
@@ -354,42 +376,45 @@ export const createPurchaseRequest = async (prData) => {
 
     const newPR = new PurchaseRequest(prData);
     const savedPR = await newPR.save();
-    return {
-      success: true,
-      message: "Purchase Request created successfully",
-      purchaseRequest: serializeData(savedPR.toObject()),
-    };
+
+    currentStatus.success = true;
+    currentStatus.message = "Purchase Request created successfully";
+    currentStatus.purchaseRequest = serializeData(savedPR.toObject());
+
+    return currentStatus;
   } catch (error) {
     console.error("Error creating purchase request:", error);
-    return { success: false, message: "Error creating purchase request." };
+    currentStatus.success = false;
+    currentStatus.message = "Error creating purchase request.";
+    return currentStatus;
   }
 };
 
-// Update an existing purchase request
-export const updatePurchaseRequest = async (prData) => {
+// Update a Purchase Request
+export const updatePurchaseRequest = async (currentStatus, prData) => {
   try {
     await connectToDatabase();
-    const id = prData.id;
-    const updatedPR = await PurchaseRequest.findByIdAndUpdate(id, prData, {
-      new: true,
-    });
+    const updatedPR = await PurchaseRequest.findByIdAndUpdate(prData.id, prData, { new: true });
 
     if (!updatedPR) {
-      return { success: false, message: "Purchase Request not found" };
+      currentStatus.success = false;
+      currentStatus.message = "Purchase Request not found";
+      return currentStatus;
     }
 
-    return {
-      success: true,
-      message: "Purchase Request updated successfully",
-      purchaseRequest: serializeData(updatedPR.toObject()),
-    };
+    currentStatus.success = true;
+    currentStatus.message = "Purchase Request updated successfully";
+    currentStatus.purchaseRequest = serializeData(updatedPR.toObject());
+    return currentStatus;
   } catch (error) {
     console.error("Error updating purchase request:", error);
-    return { success: false, message: "Error updating purchase request." };
+    currentStatus.success = false;
+    currentStatus.message = "Error updating purchase request.";
+    return currentStatus;
   }
 };
 
-// Advance to the next stage in the workflow
+// Advance to the Next Stage
 export const advanceToNextStage = async (prId) => {
   try {
     await connectToDatabase();
@@ -430,45 +455,12 @@ export const advanceToNextStage = async (prId) => {
   }
 };
 
-// Update stage status
-export const updateStageStatus = async (id, stageName, status, details = {}) => {
-  try {
-    await connectToDatabase();
-    const pr = await PurchaseRequest.findById(id);
-
-    if (!pr) {
-      return { success: false, message: "Purchase Request not found" };
-    }
-
-    const stage = pr.stages.find((s) => s.stage_name === stageName);
-    if (!stage) {
-      return { success: false, message: `Stage "${stageName}" not found.` };
-    }
-
-    stage.status = status;
-    stage.updated_at = new Date();
-
-    if (details.amount) stage.amount = details.amount;
-    if (details.images) stage.images = details.images;
-
-    await pr.save();
-
-    return {
-      success: true,
-      message: `Stage "${stageName}" successfully updated to "${status}".`,
-      purchaseRequest: serializeData(pr.toObject()),
-    };
-  } catch (error) {
-    console.error("Error updating stage status:", error);
-    return { success: false, message: "Error updating stage status." };
-  }
-};
-
-// Delete a purchase request
+// Delete a Purchase Request
 export const deletePurchaseRequest = async (id) => {
   try {
     await connectToDatabase();
     const deletedPR = await PurchaseRequest.findByIdAndDelete(id);
+
     if (!deletedPR) {
       return { success: false, message: "Purchase Request not found" };
     }
@@ -476,6 +468,6 @@ export const deletePurchaseRequest = async (id) => {
     return { success: true, message: "Purchase Request deleted successfully" };
   } catch (error) {
     console.error("Error deleting purchase request:", error);
-    return { success: false, message: "Error deleting purchase request." };
+    return { success: false, message: "Error deleting purchase request" };
   }
 };

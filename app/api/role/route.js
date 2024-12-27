@@ -1,6 +1,7 @@
 // app/api/role/route.js
 import { connectToDatabase } from "@/lib/database";
 import Role from "@/lib/database/models/setting/Role.model";
+import { formattedModuleAccess } from "@/lib/middleware/formattedModuleAccess";
 
 // GET all roles
 export async function GET() {
@@ -10,16 +11,17 @@ export async function GET() {
 
     // Format the roles to send proper structure in response
     const formattedRoles = roles.map((role) => {
-      const formattedModuleAccess = role.module_access.map((module) => {
-        const { module_name, ...permissions } = module;
-        return {
-          module_name,
-          permissions, // Return permissions as an object
-        };
-      });
+      // const formattedModuleAccess = role.module_access.map((module) => {
+      //   const { module_name, ...permissions } = module;
+      //   return {
+      //     module_name,
+      //     permissions, // Return permissions as an object
+      //   };
+      // });
       return {
         ...role._doc, // Spread the other fields
-        module_access: formattedModuleAccess, // Return the formatted module access
+        module_access: formattedModuleAccess(role),
+        // module_access: formattedModuleAccess, // Return the formatted module access
       };
     });
 
@@ -41,20 +43,21 @@ export async function POST(req) {
     console.log("Role data received:", roleData);
 
     // Unpack permissions and reformat them properly for saving
-    const formattedModuleAccess = roleData.module_access.map((module) => {
-      const { permissions, module_name } = module;
+    // const formattedModuleAccess = roleData.module_access.map((module) => {
+    //   const { permissions, module_name } = module;
 
-      // Explicitly extract the permission fields
-      return {
-        module_name,
-        ...permissions, // Spread permissions to separate keys like can_add, can_edit, etc.
-      };
-    });
+    //   // Explicitly extract the permission fields
+    //   return {
+    //     module_name,
+    //     ...permissions, // Spread permissions to separate keys like can_add, can_edit, etc.
+    //   };
+    // });
 
     // Create a new role with the unpacked module access
     const newRole = new Role({
       ...roleData,
-      module_access: formattedModuleAccess, // Assign the formatted module access
+      module_access: formattedModuleAccess(roleData),
+      // module_access: formattedModuleAccess, // Assign the formatted module access
     });
 
     await newRole.save();
@@ -79,19 +82,19 @@ export async function PUT(req) {
     const { id, ...updateData } = await req.json();
 
     // Unpack permissions and reformat them properly for saving
-    const formattedModuleAccess = updateData.module_access.map((module) => {
-      const { permissions, module_name } = module;
+    // const formattedModuleAccess = updateData.module_access.map((module) => {
+    //   const { permissions, module_name } = module;
 
-      // Explicitly extract the permission fields
-      return {
-        module_name,
-        ...permissions, // Spread permissions to separate keys like can_add, can_edit, etc.
-      };
-    });
+    //   // Explicitly extract the permission fields
+    //   return {
+    //     module_name,
+    //     ...permissions, // Spread permissions to separate keys like can_add, can_edit, etc.
+    //   };
+    // });
 
     const updatedRole = await Role.findByIdAndUpdate(
       id,
-      { ...updateData, module_access: formattedModuleAccess },
+      { ...updateData, module_access: formattedModuleAccess(updateData) },
       { new: true }
     );
     if (!updatedRole)

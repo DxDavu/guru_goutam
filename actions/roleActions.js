@@ -4,6 +4,7 @@
 
 import { connectToDatabase } from "@/lib/database";
 import Role from "@/lib/database/models/setting/Role.model";
+import { formattedModuleAccess } from "@/lib/middleware/formattedModuleAccess";
 
 // Get all roles
 export const getRoles = async () => {
@@ -13,6 +14,7 @@ export const getRoles = async () => {
     ...role,
     _id: role._id.toString(),
     department: role.department ? role.department._id.toString() : null,
+    module_access: formattedModuleAccess(role),
   }));
 };
 
@@ -39,19 +41,20 @@ export const getRoleById = async (id) => {
     "can_logout",
   ];
 
-  const formattedModuleAccess = (role.module_access || []).map((module) => {
-    const permissions = permissionKeys.reduce((acc, key) => {
-      acc[key] = module.permissions?.[key] ?? false; // Default to false if not present
-      return acc;
-    }, {});
-    return { module_name: module.module_name, permissions };
-  });
+  // const formattedModuleAccess = (role.module_access || []).map((module) => {
+  //   const permissions = permissionKeys.reduce((acc, key) => {
+  //     acc[key] = module.permissions?.[key] ?? false; // Default to false if not present
+  //     return acc;
+  //   }, {});
+  //   return { module_name: module.module_name, permissions };
+  // });
 
   return {
     ...role,
     _id: role._id.toString(),
     department: role.department ? role.department._id.toString() : null,
-    module_access: formattedModuleAccess,
+    // module_access: formattedModuleAccess,
+    module_access: formattedModuleAccess(role),
   };
 };
 

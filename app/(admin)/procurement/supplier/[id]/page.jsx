@@ -5,6 +5,8 @@ import SupplierForm from "@/components/procurementForms/supplierForm";
 import { getSupplierById } from '@/actions/procurement/supplierActions';
 import { useRouter } from "next/navigation";
 
+
+
 export default function EditSupplierPage({ params }) {
   const { id } = params;
   const [purchaseData, setPurchaseData] = useState(null);

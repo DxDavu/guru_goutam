@@ -11,7 +11,7 @@ import {
 
 const sidebarLinks = [
   { name: 'Products', href: '/inventory/products', icon: <FaRegAddressCard /> },
-  { name: 'Group', href: '/inventory/group', icon: <FaCity /> },
+  // { name: 'Group', href: '/inventory/group', icon: <FaCity /> },
 ];
 
 export default function Sidebar() {
