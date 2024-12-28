@@ -212,7 +212,7 @@ const PurchaseRequestForm = ({ type, data }) => {
           <div className="mt-4">
             <Input {...register("pr_id")} placeholder="Purchase Request ID" />
           </div>
-          {/* <div className="mt-4">
+          <div className="mt-4">
             <Input {...register("pr_date")} type="date" placeholder="Purchase Request Date" />
           </div>
           <div className="mt-4">
@@ -230,7 +230,7 @@ const PurchaseRequestForm = ({ type, data }) => {
                 </SelectGroup>
               </SelectContent>
             </Select>
-          </div> */}
+          </div>
           <div className="mt-4">
             <Input {...register("owner")} placeholder="Owner" />
           </div>

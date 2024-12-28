@@ -2,12 +2,12 @@
 
 "use server";
 
-import { getInventories } from "@/actions/Inventory/inventoryActions";
+import { getInventory } from "@/actions/inventory/inventoryActions";
 import { DataTable } from "@/components/DataTable";
-import { columns, CreateNewInventoryButton } from "@/components/inventoryColumns/inventoryColumn";
+import { CreateNewInventoryButton,columns } from "@/components/InventoryColumns/inventoryColumn";
 
 export default async function InventoryPage() {
-  const inventories = await getInventories();
+  const inventories = await getInventory();
 
   return (
     <div>

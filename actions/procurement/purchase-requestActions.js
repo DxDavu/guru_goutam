@@ -263,7 +263,7 @@
 "use server";
 
 import { connectToDatabase } from "@/lib/database";
-import PurchaseRequest from "@/lib/database/models/procurement/purchase-request.model";
+import PurchaseRequest from "@/lib/database/models/procurement/Purchase-request.model";
 import Supplier from "@/lib/database/models/procurement/Supplier.model";
 
   
@@ -293,16 +293,18 @@ const serializeData = (data) => {
 
 // Fetch Plain JavaScript Suppliers Data
 export const getSuppliers = async () => {
-  try {
-    await connectToDatabase();
-    const suppliers = await Supplier.find({ active_status: true }).lean();
-    // Returning plain JavaScript objects
-    return suppliers.map(serializeData);
-  } catch (error) {
-    console.error("Error fetching suppliers:", error);
-    return [];
-  }
+  await connectToDatabase();
+  
+  const suppliers = await Supplier.find({ active_status: true }, "supplier_name").lean();
+
+  // Ensure all fields, including `_id`, are plain JavaScript values
+  return suppliers.map((supplier) => ({
+    ...supplier,
+    _id: supplier._id.toString(), // Convert `_id` to a string
+  }));
 };
+
+
 
 // Fetch All Purchase Requests
 export const getPurchaseRequests = async () => {
@@ -320,8 +322,10 @@ export const getPurchaseRequests = async () => {
       ...serializeData(p),
       product: p.product?.product_name || "",
     })),
+    _id: pr._id.toString(),
   }));
 };
+
 
 // Fetch Purchase Request by ID
 export const getPurchaseRequestById = async (id) => {
@@ -348,6 +352,7 @@ export const getPurchaseRequestById = async (id) => {
       category: product.product?.category?.category_name || "",
       brand: product.product?.brand?.brand_name || "",
     },
+    _id: product._id.toString(),
   }));
 
   return {
