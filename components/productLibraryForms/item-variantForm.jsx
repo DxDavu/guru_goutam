@@ -32,6 +32,7 @@ const schema = z.object({
   active_status: z.boolean().default(true),
 });
 
+
 const ItemVariantForm = ({ type, data }) => {
   const router = useRouter();
   const [categories, setCategories] = useState([]);
@@ -99,10 +100,10 @@ const ItemVariantForm = ({ type, data }) => {
       className="w-full max-w-1xl mx-auto p-8 bg-white shadow-md rounded-lg mt-10"
       onSubmit={onSubmit}
     >    <h1 className="text-xl font-semibold">
-    {type === "create" ? "Add Item Variant " : "Edit Product Variant"}
-  </h1>
+        {type === "create" ? "Add Item Variant " : "Edit Product Variant"}
+      </h1>
       <div className="bg-gray-200 p-2 px-2 border rounded-lg shadow-lg mb-6">
-    
+
 
         <div className="mb-4 w-60">
           <label className="text-sm font-medium">Product Category</label>

@@ -632,11 +632,10 @@
 // };
 
 // export default ItemMasterForm;
-
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, useFormState } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Input } from "@/components/ui/input";
 import {
@@ -650,11 +649,10 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import {
-  createItemVariant,
-  updateItemVariant,
+  createItemMaster,
+  updateItemMaster,
   getActiveProductCategories,
-  getActiveItemMasters,
-} from "@/actions/productLibrary/item-variantActions";
+} from "@/actions/productLibrary/item-masterActions";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -663,45 +661,38 @@ import { toast } from "react-toastify";
 const schema = z.object({
   item_name: z.string().nonempty("Item Name is required!"),
   category: z.string().nonempty("Category is required!"),
+  description: z.string().optional(),
   type: z.string().nonempty("Type is required!"),
   active_status: z.boolean().default(true),
 });
 
-const ItemVariantForm = ({ type, data }) => {
+const ItemMasterForm = ({ type, data }) => {
   const router = useRouter();
   const [categories, setCategories] = useState([]);
-  const [itemMasters, setItemMasters] = useState([]);
 
   const {
     register,
     handleSubmit,
     setValue,
     watch,
+    formState: { errors },
     reset,
-    control,
   } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
       item_name: data?.item_name || "",
       category: data?.category?._id || "",
+      description: data?.description || "",
       type: data?.type || "",
       active_status: data?.active_status ?? true,
     },
   });
 
-  const { errors } = useFormState({
-    control,
-  });
-
   useEffect(() => {
     async function fetchOptions() {
       try {
-        const [categoriesData, items] = await Promise.all([
-          getActiveProductCategories(),
-          getActiveItemMasters(),
-        ]);
+        const categoriesData = await getActiveProductCategories();
         setCategories(categoriesData);
-        setItemMasters(items);
 
         if (data) {
           reset({
@@ -715,23 +706,28 @@ const ItemVariantForm = ({ type, data }) => {
     }
     fetchOptions();
   }, [data, reset]);
-
   const onSubmit = handleSubmit(async (formData) => {
     try {
       if (type === "create") {
-        await createItemVariant(formData);
-        toast.success("Item Variant created successfully!");
+        await createItemMaster(formData);
+        toast.success("Item Master created successfully!");
       } else {
-        await updateItemVariant({ ...formData, id: data?._id });
-        toast.success("Item Variant updated successfully!");
+        await updateItemMaster({ ...formData, id: data?._id });
+        toast.success("Item Master updated successfully!");
       }
-      router.push("/product-library/item-variant");
+      router.push("/product-library/item-master");
       router.refresh();
     } catch (error) {
-      console.error("Error saving item variant:", error);
-      toast.error(error.response?.data?.message || "Failed to save item variant.");
+      console.error("Error saving item master:", error); // Add detailed logging
+      // If the error is a response object, extract the message
+      if (error.response && error.response.data) {
+        toast.error(error.response.data.message || "Failed to save item master.");
+      } else {
+        toast.error("Failed to save item master.");
+      }
     }
   });
+  
 
   return (
     <form
@@ -739,7 +735,7 @@ const ItemVariantForm = ({ type, data }) => {
       onSubmit={onSubmit}
     >
       <h1 className="text-xl font-semibold">
-        {type === "create" ? "Add Item Variant" : "Edit Product Variant"}
+        {type === "create" ? "Add Item Master" : "Edit Item Master"}
       </h1>
       <div className="bg-gray-200 p-2 px-2 border rounded-lg shadow-lg mb-6">
         <div className="mb-4 w-60">
@@ -766,37 +762,33 @@ const ItemVariantForm = ({ type, data }) => {
           )}
         </div>
 
-        {/* Category Information and Active Status Side by Side */}
         <div className="flex flex-col md:flex-row gap-6 w-62">
-          {/* Category Information Fields */}
           <div className="bg-gray-50 flex-1 grid grid-cols-1 md:grid-cols-2 gap-4 p-3">
             <div>
-              <label className="text-sm font-medium">Item/Specification Name</label>
-              <Select
-                onValueChange={(value) => setValue("item_name", value)}
-                value={watch("item_name") || ""}
-              >
-                <SelectTrigger className="w-full max-w-xs border border-gray-300 rounded-md p-2">
-                  <SelectValue placeholder="Select Item Name" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    {itemMasters.map((item) => (
-                      <SelectItem key={item._id} value={item._id.toString()}>
-                        {item.item_name}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+              <label className="text-sm font-medium">Item Name</label>
+              <Input
+                {...register("item_name")}
+                placeholder="Enter Item Name"
+                className="w-full max-w-xs border border-gray-300 rounded-md p-2"
+              />
               {errors.item_name && (
                 <p className="text-red-500 text-xs">{errors.item_name.message}</p>
+              )}
+
+              <label className="text-sm font-medium">Description</label>
+              <Input
+                {...register("description")}
+                placeholder="Enter Description"
+                className="w-full max-w-xs border border-gray-300 rounded-md p-2"
+              />
+              {errors.description && (
+                <p className="text-red-500 text-xs">{errors.description.message}</p>
               )}
 
               <label className="text-sm font-medium">Type</label>
               <Input
                 {...register("type")}
-                placeholder="Enter Item Type"
+                placeholder="Enter Type"
                 className="w-full max-w-xs border border-gray-300 rounded-md p-2"
               />
               {errors.type && (
@@ -805,7 +797,6 @@ const ItemVariantForm = ({ type, data }) => {
             </div>
           </div>
 
-          {/* Active Status Section */}
           <div className="bg-gray-50 p-6 border rounded-lg shadow-lg w-full md:w-1/3">
             <h3 className="text-lg font-semibold mb-4">Control</h3>
             <div className="flex items-center gap-2">
@@ -822,7 +813,7 @@ const ItemVariantForm = ({ type, data }) => {
       <div className="flex justify-end gap-4 mt-6">
         <Button
           variant="outline"
-          onClick={() => router.push("/product-library/item-variant")}
+          onClick={() => router.push("/product-library/item-master")}
         >
           Cancel
         </Button>
@@ -834,5 +825,4 @@ const ItemVariantForm = ({ type, data }) => {
   );
 };
 
-export default ItemVariantForm;
-
+export default ItemMasterForm;

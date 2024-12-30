@@ -150,7 +150,7 @@ export const CreateNewItemButton = () => {
         className="bg-blue-500 text-white"
         onClick={() => router.push("/product-library/item-master/new")}
       >
-        Create New Item
+        Create New Item  master
       </Button>
     </div>
   );

@@ -21,7 +21,7 @@ import { Button } from "@/components/ui/button";
 import {
   createProductTemplate,
   updateProductTemplate,
-  getActiveProductCategories,
+  getProductCategories,
   getActiveBrands,
   getActiveItemVariants,
 } from "@/actions/productLibrary/product-templateActions";
@@ -78,7 +78,7 @@ const ProductTemplateForm = ({ type, data }) => {
   useEffect(() => {
     async function fetchOptions() {
       const [categoriesData, brandsData, variantsData] = await Promise.all([
-        getActiveProductCategories(),
+        getProductCategories(),
         getActiveBrands(),
         getActiveItemVariants(),
       ]);

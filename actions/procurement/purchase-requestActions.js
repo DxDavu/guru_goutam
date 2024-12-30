@@ -292,17 +292,32 @@ const serializeData = (data) => {
 };
 
 // Fetch Plain JavaScript Suppliers Data
+// export const getSuppliers = async () => {
+//   await connectToDatabase();
+  
+//   const suppliers = await Supplier.find({ active_status: true }, "supplier_name").lean();
+
+//   // Ensure all fields, including `_id`, are plain JavaScript values
+//   return suppliers.map((supplier) => ({
+//     ...supplier,
+//     _id: supplier._id.toString(), // Convert `_id` to a string
+//   }));
+// };
+
+
+// Fetch Plain JavaScript Suppliers Data
 export const getSuppliers = async () => {
   await connectToDatabase();
   
   const suppliers = await Supplier.find({ active_status: true }, "supplier_name").lean();
 
-  // Ensure all fields, including `_id`, are plain JavaScript values
-  return suppliers.map((supplier) => ({
+  // Use serializeData to ensure all fields are plain JavaScript objects
+  return suppliers.map((supplier) => serializeData({
     ...supplier,
-    _id: supplier._id.toString(), // Convert `_id` to a string
+    _id: supplier._id.toString(), // Convert `_id` to a string explicitly
   }));
 };
+
 
 
 
