@@ -133,72 +133,176 @@
 //   return { success: true, message: 'Product Template deleted successfully' };
 // };
 
+// @/actions/productLibrary/productTemplateActions.js
+
+// "use server";
+
+// import { connectToDatabase } from '@/lib/database';
+// import ProductTemplate from '@/lib/database/models/productLibrary/Product-template.model';
+// import ProductCategory from '@/lib/database/models/productLibrary/Product-category.model';
+// import Brand from '@/lib/database/models/productLibrary/Brand.model';
+// import ItemVariant from '@/lib/database/models/productLibrary/Item-variant.model';
+// import fs from "fs/promises";
+
+
+// // Fetch active Product Categories
+// export const getActiveProductCategories = async () => {
+//   await connectToDatabase();
+//   return await ProductCategory.find({ active_status: true }, 'category_name').lean();
+// };
+
+// // Fetch active Brands
+// export const getBrands = async () => {
+//   await connectToDatabase();
+//   return await Brand.find({ active_status: true }, 'brand_name').lean();
+// };
+
+// // Fetch active Item Variants
+// export const getItemVariants = async () => {
+//   await connectToDatabase();
+//   return await ItemVariant.find({ active_status: true }).lean();
+// };
+
+// // Get all product templates
+// export const getProductTemplates = async () => {
+//   await connectToDatabase();
+//   const templates = await ProductTemplate.find({})
+//     .populate('category', 'category_name')
+//     .populate('brand', 'brand_name')
+//     .populate("specifications.ram.brand", "brand_name")
+//     .populate("specifications.ram.type", "type")
+//     .populate("specifications.processor.brand", "brand_name")
+//     .populate("specifications.processor.type", "type")
+//     .populate("specifications.storage.brand", "brand_name")
+//     .populate("specifications.storage.type", "type")
+//     .populate("specifications.graphics.brand", "brand_name")
+//     .populate("specifications.graphics.type", "type")
+//     .populate("specifications.os.brand", "brand_name")
+//     .populate("specifications.os.type", "type")
+//     .lean();
+    
+    
+//   return templates.map(template => ({
+//     ...template,
+//     _id: template._id.toString(),
+//     category: template.category?.category_name || '',
+//     brand: template.brand?.brand_name || '',
+//   }));
+// };
+
+// // Get Product Template by ID
+// export const getProductTemplateById = async (id) => {
+//   await connectToDatabase();
+//   const template = await ProductTemplate.findById(id)
+//     .populate('category', 'category_name')
+//     .populate('brand', 'brand_name')
+//     .lean();
+//   if (!template) return null;
+//   return {
+//     ...template,
+//     _id: template._id.toString(),
+//   };
+// };
+
+// // Create a new product template
+// export const createProductTemplate = async (currentState, templateData) => {
+//   try {
+//     await connectToDatabase();
+//     const newTemplate = new ProductTemplate(templateData);
+//     const savedTemplate = await newTemplate.save();
+//     return { success: true, error: false, message: "Product Template created successfully", template: savedTemplate.toObject() };
+//   } catch (error) {
+//     console.error("Error creating product template:", error);
+//     return { success: false, error: true, message: "Error creating product template." };
+//   }
+// };
+
+// // Update an existing product template
+// export const updateProductTemplate = async (currentState, templateData) => {
+//   try {
+//     await connectToDatabase();
+//     const id = templateData.id;
+//     const updatedTemplate = await ProductTemplate.findByIdAndUpdate(id, templateData, { new: true });
+//     if (!updatedTemplate) {
+//       return { success: false, error: true, message: "Product Template not found" };
+//     }
+//     return { success: true, error: false, message: "Product Template updated successfully", template: updatedTemplate.toObject() };
+//   } catch (error) {
+//     console.error("Error updating product template:", error);
+//     return { success: false, error: true, message: "Error updating product template." };
+//   }
+// };
+
+// // Delete a product template
+// export const deleteProductTemplate = async (id) => {
+//   await connectToDatabase();
+//   const deletedTemplate = await ProductTemplate.findByIdAndDelete(id);
+//   if (!deletedTemplate) {   
+//     return { success: false, message: 'Product Template not found' };
+//   }
+//   return { success: true, message: 'Product Template deleted successfully' };
+// };
+
+
+
+
+
+
 
 "use server";
 
 import { connectToDatabase } from '@/lib/database';
+import mongoose from 'mongoose'; // Import mongoose
 import ProductTemplate from '@/lib/database/models/productLibrary/Product-template.model';
 import ProductCategory from '@/lib/database/models/productLibrary/Product-category.model';
 import Brand from '@/lib/database/models/productLibrary/Brand.model';
 import ItemVariant from '@/lib/database/models/productLibrary/Item-variant.model';
 import fs from "fs/promises";
 
-// Serialization function
+const { ObjectId } = mongoose.Types; // Extract ObjectId from mongoose
+
+// Helper function for serialization
 const serializeData = (data) => {
-  if (!data || typeof data !== "object") return data;
-
   if (Array.isArray(data)) {
-    return data.map(serializeData);
-  }
-
-  return Object.keys(data).reduce((result, key) => {
-    const value = data[key];
-
-    if (value instanceof Date) {
-      result[key] = value.toISOString(); // Convert Date to string
-    } else if (Buffer.isBuffer(value)) {
-      result[key] = value.toString("base64"); // Convert Buffer to string
-    } else if (value && typeof value === "object" && value._id) {
-      // Convert _id and other Mongoose objects
-      result[key] = value._id.toString();
-    } else if (value && typeof value === "object") {
-      result[key] = serializeData(value); // Recursively handle nested objects
-    } else {
-      result[key] = value; // Keep primitive values as is
+    return data.map((item) => serializeData(item));
+  } else if (data && typeof data === 'object') {
+    const serialized = {};
+    for (const key in data) {
+      if (data[key] instanceof ObjectId) {
+        serialized[key] = data[key].toString();
+      } else {
+        serialized[key] = serializeData(data[key]);
+      }
     }
-
-    return result;
-  }, {});
+    return serialized;
+  }
+  return data;
 };
 
-// Fetch active product categories
-export const getProductCategories = async () => {
+// Fetch active Product Categories
+export const getActiveProductCategories = async () => {
   await connectToDatabase();
-  const categories = await ProductCategory.find({}).lean();
-
-  // Apply serialization to each category
-  return categories.map(serializeData);
+  const categories = await ProductCategory.find({ active_status: true }, 'category_name').lean();
+  return serializeData(categories);
 };
 
 // Fetch active Brands
-export const getActiveBrands = async () => {
+export const getBrands = async () => {
   await connectToDatabase();
   const brands = await Brand.find({ active_status: true }, 'brand_name').lean();
-  return brands.map(serializeData);
+  return serializeData(brands);
 };
 
 // Fetch active Item Variants
-export const getActiveItemVariants = async () => {
+export const getItemVariants = async () => {
   await connectToDatabase();
   const variants = await ItemVariant.find({ active_status: true }).lean();
-  return variants.map(serializeData);
+  return serializeData(variants);
 };
 
 // Get all product templates
 export const getProductTemplates = async () => {
-  // getProductTemplates
   await connectToDatabase();
-
   const templates = await ProductTemplate.find({})
     .populate('category', 'category_name')
     .populate('brand', 'brand_name')
@@ -213,18 +317,14 @@ export const getProductTemplates = async () => {
     .populate("specifications.os.brand", "brand_name")
     .populate("specifications.os.type", "type")
     .lean();
-
-  // Serialize the data
-  const serializedData = templates.map(template => ({
-    ...serializeData(template), // Use the serialization function to handle nested structures
-    _id: template._id.toString(), // Ensure _id is a string
-    category: template.category?.category_name || '', // Map populated fields to plain values
+    
+  return templates.map(template => serializeData({
+    ...template,
+    _id: template._id.toString(),
+    category: template.category?.category_name || '',
     brand: template.brand?.brand_name || '',
   }));
-
-  return serializedData;
 };
-
 
 // Get Product Template by ID
 export const getProductTemplateById = async (id) => {
@@ -234,7 +334,10 @@ export const getProductTemplateById = async (id) => {
     .populate('brand', 'brand_name')
     .lean();
   if (!template) return null;
-  return serializeData(template);
+  return serializeData({
+    ...template,
+    _id: template._id.toString(),
+  });
 };
 
 // Create a new product template
@@ -247,7 +350,7 @@ export const createProductTemplate = async (currentState, templateData) => {
       success: true, 
       error: false, 
       message: "Product Template created successfully", 
-      template: serializeData(savedTemplate.toObject()) // Apply serialization
+      template: serializeData(savedTemplate.toObject()) 
     };
   } catch (error) {
     console.error("Error creating product template:", error);
@@ -268,7 +371,7 @@ export const updateProductTemplate = async (currentState, templateData) => {
       success: true, 
       error: false, 
       message: "Product Template updated successfully", 
-      template: serializeData(updatedTemplate.toObject()) // Apply serialization
+      template: serializeData(updatedTemplate.toObject()) 
     };
   } catch (error) {
     console.error("Error updating product template:", error);
@@ -280,7 +383,7 @@ export const updateProductTemplate = async (currentState, templateData) => {
 export const deleteProductTemplate = async (id) => {
   await connectToDatabase();
   const deletedTemplate = await ProductTemplate.findByIdAndDelete(id);
-  if (!deletedTemplate) {
+  if (!deletedTemplate) {   
     return { success: false, message: 'Product Template not found' };
   }
   return { success: true, message: 'Product Template deleted successfully' };

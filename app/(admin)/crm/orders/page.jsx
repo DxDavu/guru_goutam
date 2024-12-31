@@ -17,7 +17,7 @@ export default function OrdersTable() {
   const [search, setSearch] = useState('');
 
   return (
-    <div className="p-4">
+    <div className="p-4 mt-10">
       {/* Header */}
       <header className="flex justify-between items-center mb-4 bg-white p-4 rounded shadow">
         <div className="flex items-center gap-4 ml-24">

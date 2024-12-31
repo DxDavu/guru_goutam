@@ -20,9 +20,9 @@ import { Button } from "@/components/ui/button";
 import {
   createAsset,
   updateAsset,
-  getActiveItemMasters,
-  getActiveItemVariants,
-  getActiveBrands,
+  getItemMasters,
+  getItemVariants,
+  getBrands,
 } from "@/actions/productLibrary/assetActions";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -72,9 +72,9 @@ const AssetForm = ({ type, data }) => {
   useEffect(() => {
     async function fetchData() {
       const [items, variants, brandsList] = await Promise.all([
-        getActiveItemMasters(),
-        getActiveItemVariants(),
-        getActiveBrands(),
+        getItemMasters(),
+        getItemVariants(),
+        getBrands(),
       ]);
       setItemMasters(items);
       setItemVariants(variants);

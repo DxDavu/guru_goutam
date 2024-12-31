@@ -32,7 +32,7 @@ function ClientJourneyPage() {
   }
 
   return (
-    <div className="p-4">
+    <div className="p-4 mb-10">
       <h1 className="text-2xl font-bold mb-4">Client Journey</h1>
 
       <div className="border rounded-lg p-4">
