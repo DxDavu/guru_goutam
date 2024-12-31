@@ -86,7 +86,6 @@
 // };
 
 
-
 "use server";
 
 import { connectToDatabase } from "@/lib/database";
@@ -127,6 +126,8 @@ export const getActiveProductCategories = async () => {
     _id: category._id.toString(),
   }));
 };
+// category_name
+
 
 // Get all item masters
 export const getItemMasters = async () => {
@@ -158,7 +159,7 @@ export const getItemMasterById = async (id) => {
   return serializeData({
     ...item,
     _id: item._id.toString(),
-    category: item.category?.category_name || "",
+    category: item.category?._id?.toString() || "",
   });
 };
 
@@ -190,14 +191,30 @@ export const updateItemMaster = async (updateData) => {
   const { id, ...data } = updateData;
   await connectToDatabase();
 
-  const updatedItem = await ItemMaster.findByIdAndUpdate(id, data, { new: true });
+  // Ensure category is properly handled
+  if (data.category && typeof data.category === "string") {
+    const category = await ProductCategory.findById(data.category).lean();
+    if (category) {
+      data.category = category._id;
+    } else {
+      return { success: false, message: "Invalid category" };
+    }
+  }
+
+  const updatedItem = await ItemMaster.findByIdAndUpdate(id, data, { new: true })
+    .populate("category", "category_name")
+    .lean();
+
   if (!updatedItem) {
     return { success: false, message: "Item not found" };
   }
 
   return {
     success: true,
-    item: serializeData(updatedItem.toObject()),
+    item: serializeData({
+      ...updatedItem,
+      category: updatedItem.category?._id?.toString() || "",
+    }),
   };
 };
 

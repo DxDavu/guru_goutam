@@ -20,7 +20,7 @@ const schema = z.object({
   description: z.string().optional(),
   active_status: z.boolean().default(true),
 });
-
+// category_name
 const ProductCategoryForm = ({ type, data }) => {
   const {
     register,

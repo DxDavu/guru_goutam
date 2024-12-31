@@ -18,7 +18,7 @@ import {
   createItemVariant,
   updateItemVariant,
   getActiveProductCategories,
-  getActiveItemMasters,
+  getItemMasters, // Ensure this function is imported
 } from "@/actions/productLibrary/item-variantActions";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -26,17 +26,16 @@ import { toast } from "react-toastify";
 
 // Define schema for form validation
 const schema = z.object({
-  item_name: z.string().nonempty("Item Name is required!"),
+  item_name: z.string().optional(), // This makes the item_name optional
   category: z.string().nonempty("Category is required!"),
   type: z.string().nonempty("Type is required!"),
   active_status: z.boolean().default(true),
 });
 
-
 const ItemVariantForm = ({ type, data }) => {
   const router = useRouter();
   const [categories, setCategories] = useState([]);
-  const [itemMasters, setItemMasters] = useState([]);
+  const [itemMasters, setItemMasters] = useState([]); // State for ItemMasters
 
   const {
     register,
@@ -60,10 +59,10 @@ const ItemVariantForm = ({ type, data }) => {
       try {
         const [categoriesData, items] = await Promise.all([
           getActiveProductCategories(),
-          getActiveItemMasters(),
+          getItemMasters(), // Fetch ItemMasters here
         ]);
         setCategories(categoriesData);
-        setItemMasters(items);
+        setItemMasters(items); // Set ItemMasters data
 
         if (data) {
           reset({
@@ -91,7 +90,7 @@ const ItemVariantForm = ({ type, data }) => {
       router.refresh();
     } catch (error) {
       console.error("Error saving item variant:", error);
-      toast.error(error.response?.data?.message || "Failed to save item variant.");
+      toast.error(error.message || "Failed to save item variant.");
     }
   });
 
@@ -99,12 +98,12 @@ const ItemVariantForm = ({ type, data }) => {
     <form
       className="w-full max-w-1xl mx-auto p-8 bg-white shadow-md rounded-lg mt-10"
       onSubmit={onSubmit}
-    >    <h1 className="text-xl font-semibold">
-        {type === "create" ? "Add Item Variant " : "Edit Product Variant"}
+    >
+      <h1 className="text-xl font-semibold">
+        {type === "create" ? "Add Item Variant" : "Edit Item Variant"}
       </h1>
+
       <div className="bg-gray-200 p-2 px-2 border rounded-lg shadow-lg mb-6">
-
-
         <div className="mb-4 w-60">
           <label className="text-sm font-medium">Product Category</label>
           <Select
@@ -129,9 +128,7 @@ const ItemVariantForm = ({ type, data }) => {
           )}
         </div>
 
-        {/* Category Information and Active Status Side by Side */}
         <div className="flex flex-col md:flex-row gap-6 w-62">
-          {/* Category Information Fields */}
           <div className="bg-gray-50 flex-1 grid grid-cols-1 md:grid-cols-2 gap-4 p-3">
             <div>
               <label className="text-sm font-medium">Item/Specification Name</label>
