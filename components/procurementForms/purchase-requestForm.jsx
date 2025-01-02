@@ -447,6 +447,24 @@ const PurchaseRequestForm = ({ type, data }) => {
         onClose={handleCloseModal}
         onSelect={handleProductSelection}
       />
+        {/* Table Section */}
+<div className="mt-8 bg-white shadow-md rounded-lg overflow-hidden">
+  <table className="w-full text-left border-collapse">
+    <thead className="bg-gray-200 border-b-2 border-gray-300">
+      <tr>
+      <th className="p-3 font-medium text-gray-700">Product Image</th>
+
+        <th className="p-3 font-medium text-gray-700">Product Name</th>
+        <th className="p-3 font-medium text-gray-700">Category</th>
+        <th className="p-3 font-medium text-gray-700">Brand</th>
+        <th className="p-3 font-medium text-gray-700">Specification</th>
+        <th className="p-3 font-medium text-gray-700">Product Qty</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+</div>
     </form>
   );
 
