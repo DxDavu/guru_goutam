@@ -161,7 +161,7 @@ export function DataTable({ columns, data }) {
   });
 
   return (
-    <div className="ml-34 mt-6">
+    <div className="ml-52 mt-6 ">
       <div className="flex items-center py-1">
         <Input
           placeholder="Filter key fields"

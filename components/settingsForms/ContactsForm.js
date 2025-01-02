@@ -49,7 +49,7 @@ const ContactsForm = ({ type, data, setOpen }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md mt-10">
+    <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md mt-10 ml-56">
       <h2 className="text-xl font-bold mb-4">{type === "create" ? "Create Contact" : "Edit Contact"}</h2>
       <div className="mb-4">
         <label className="block text-sm font-medium mb-1">Date</label>

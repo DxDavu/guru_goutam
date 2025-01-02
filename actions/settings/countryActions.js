@@ -1,3 +1,58 @@
+// // @/actions/countryActions.js
+
+// "use server";
+
+// import { connectToDatabase } from '@/lib/database';
+// import Country from '@/lib/database/models/setting/Country.model';
+
+// // Get all countries
+// export const getCountries = async () => {
+//   await connectToDatabase();
+//   const countries = await Country.find({}).lean();
+//   return countries.map(country => ({
+//     ...country,
+//     _id: country._id.toString(),
+//   }));
+// };
+
+// // Get a single country by ID
+// export const getCountryById = async (id) => {
+//   await connectToDatabase();
+//   const country = await Country.findById(id).lean();
+//   return country ? { ...country, _id: country._id.toString() } : null;
+// };
+
+// // Create a new country
+// export const createCountry = async (currentState, countryData) => {
+//   await connectToDatabase();
+//   const newCountry = new Country(countryData);
+//   const savedCountry = await newCountry.save();
+//   return { success: true, country: savedCountry.toObject() };
+// };
+
+// // Update an existing country
+// export const updateCountry = async (currentState, updateData) => {
+//   const id = updateData.id;
+//   await connectToDatabase();
+//   const updatedCountry = await Country.findByIdAndUpdate(id, updateData, { new: true });
+//   if (!updatedCountry) {
+//     return { success: false, message: 'Country not found' };
+//   }
+//   return { success: true, country: updatedCountry.toObject() };
+// };
+
+// // Delete a country
+// export const deleteCountry = async (id) => {
+//   await connectToDatabase();
+//   const deletedCountry = await Country.findByIdAndDelete(id);
+//   if (!deletedCountry) {
+//     return { success: false, message: 'Country not found' };
+//   }
+//   return { success: true, message: 'Country deleted successfully' };
+// };
+
+
+
 // @/actions/countryActions.js
 
 "use server";
@@ -5,11 +60,19 @@
 import { connectToDatabase } from '@/lib/database';
 import Country from '@/lib/database/models/setting/Country.model';
 
+// Serialize an ObjectId to string
+const serializeObjectId = (object) => {
+  if (object && object._id) {
+    object._id = object._id.toString();
+  }
+  return object;
+};
+
 // Get all countries
 export const getCountries = async () => {
   await connectToDatabase();
   const countries = await Country.find({}).lean();
-  return countries.map(country => ({
+  return countries.map(country => serializeObjectId({
     ...country,
     _id: country._id.toString(),
   }));
@@ -19,7 +82,7 @@ export const getCountries = async () => {
 export const getCountryById = async (id) => {
   await connectToDatabase();
   const country = await Country.findById(id).lean();
-  return country ? { ...country, _id: country._id.toString() } : null;
+  return country ? serializeObjectId({ ...country, _id: country._id.toString() }) : null;
 };
 
 // Create a new country
@@ -27,7 +90,7 @@ export const createCountry = async (currentState, countryData) => {
   await connectToDatabase();
   const newCountry = new Country(countryData);
   const savedCountry = await newCountry.save();
-  return { success: true, country: savedCountry.toObject() };
+  return { success: true, country: serializeObjectId(savedCountry.toObject()) };
 };
 
 // Update an existing country
@@ -38,7 +101,7 @@ export const updateCountry = async (currentState, updateData) => {
   if (!updatedCountry) {
     return { success: false, message: 'Country not found' };
   }
-  return { success: true, country: updatedCountry.toObject() };
+  return { success: true, country: serializeObjectId(updatedCountry.toObject()) };
 };
 
 // Delete a country

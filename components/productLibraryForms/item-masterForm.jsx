@@ -662,7 +662,7 @@ const schema = z.object({
   item_name: z.string().nonempty("Item Name is required!"),
   category: z.string().nonempty("Category is required!"),
   description: z.string().optional(),
-  type: z.string().nonempty("Type is required!"),
+  // type: z.string().nonempty("Type is required!"),
   active_status: z.boolean().default(true),
 });
 
@@ -731,7 +731,7 @@ const ItemMasterForm = ({ type, data }) => {
 
   return (
     <form
-      className="w-full max-w-1xl mx-auto p-8 bg-white shadow-md rounded-lg mt-10"
+      className="w-full max-w-1xl mx-auto p-8 bg-white shadow-md rounded-lg mt-10 ml-56"
       onSubmit={onSubmit}
     >
       <h1 className="text-xl font-semibold">
@@ -785,7 +785,7 @@ const ItemMasterForm = ({ type, data }) => {
                 <p className="text-red-500 text-xs">{errors.description.message}</p>
               )}
 
-              <label className="text-sm font-medium">Type</label>
+              {/* <label className="text-sm font-medium">Type</label>
               <Input
                 {...register("type")}
                 placeholder="Enter Type"
@@ -793,7 +793,7 @@ const ItemMasterForm = ({ type, data }) => {
               />
               {errors.type && (
                 <p className="text-red-500 text-xs">{errors.type.message}</p>
-              )}
+              )} */}
             </div>
           </div>
 

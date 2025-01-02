@@ -75,7 +75,7 @@ const StockLocationForm = ({ type, data }) => {
   }, [state, router, type]);
 
   return (
-    <form className="w-full max-w-screen-2xl mx-auto p-6 sm:p-8 bg-white shadow-md rounded-lg mt-10" onSubmit={onSubmit}>
+    <form className="w-full max-w-screen-2xl mx-auto p-6 sm:p-8 bg-white shadow-md rounded-lg ml-56 mt-10" onSubmit={onSubmit}>
       <div className="flex flex-col lg:flex-row justify-between gap-8">
 
         {/* Stock Location Information Section */}

@@ -114,7 +114,7 @@ const SupplierForm = ({ type, data }) => {
   }, [state, router, type]);
 
   return (
-    <form onSubmit={onSubmit} className="space-y-6 w-full mt-20">
+    <form onSubmit={onSubmit} className="space-y-6 w-full mt-20 ml-56">
             <h1 className="text-xl font-semibold">
         {type === "create" ? "Create Suppliers " : "Edit Suppliers "}
       </h1>

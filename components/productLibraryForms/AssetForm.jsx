@@ -113,7 +113,7 @@ const AssetForm = ({ type, data }) => {
   }, [state, router, type]);
 
   return (
-    <form className="w-full max-w-screen-2xl mx-auto p-8 bg-white shadow-md rounded-lg mt-10" onSubmit={onSubmit}>
+    <form className="w-full max-w-screen-2xl mx-auto p-8 bg-white shadow-md rounded-lg mt-10 ml-56" onSubmit={onSubmit}>
       <div className="bg-gray-200 flex justify-between gap-8 p-5">
 
         {/* Asset Information Section */}

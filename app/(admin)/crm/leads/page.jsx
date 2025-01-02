@@ -87,7 +87,7 @@ const Page6 = () => {
   ];
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
+    <div className="p-6 bg-gray-100 min-h-screen ml-56">
       <header className="flex justify-between items-center mb-6 bg-white p-4 rounded shadow">
         <h1 className="text-lg font-semibold">CRM / Leads</h1>
         <div className="flex items-center gap-2">

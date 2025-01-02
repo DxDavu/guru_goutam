@@ -63,7 +63,7 @@ const GradeForm = ({ type, data }) => {
   }, [state, router, type]);
 
   return (
-    <form className="w-full max-w-1xl mx-auto p-8 bg-gray-100 shadow-md rounded-lg mt-10" onSubmit={onSubmit}>
+    <form className="w-full max-w-1xl mx-auto p-8 bg-gray-100 shadow-md rounded-lg mt-10 ml-56" onSubmit={onSubmit}>
       <h1 className="text-lg md:text-xl font-semibold mb-4">
         {type === "create" ? "Create Grade" : "Edit Grade"}
       </h1>

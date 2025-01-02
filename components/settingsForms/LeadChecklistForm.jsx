@@ -81,7 +81,7 @@ export default function LeadChecklistForm({ type, data }) {
   };
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4 mt-10">
+    <form onSubmit={onSubmit} className="space-y-4 mt-10 ml-56">
       <div className="bg-gray-50 p-6 border rounded-lg shadow-lg mb-6">
 
         <h1 className="text-xl font-semibold">

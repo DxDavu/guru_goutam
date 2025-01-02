@@ -83,7 +83,7 @@ export default function OrderChecklistForm({ type, data }) {
   };
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4 mt-10">
+    <form onSubmit={onSubmit} className="space-y-4 mt-10 ml-56">
       <h1 className="text-xl font-semibold">
         {type === "create" ? "Create Order Checklist" : "Edit Order Checklist"}
       </h1>

@@ -147,7 +147,7 @@ const ProductTemplateForm = ({ type, data }) => {
   return (
     <form
     onSubmit={onSubmit}
-    className="w-full max-w-screen-2xl mx-auto p-4 md:p-8 bg-white shadow-md rounded-lg"
+    className="w-full max-w-screen-2xl mx-auto p-4 md:p-8 bg-white shadow-md rounded-lg ml-56"
   >
     {/* Form Container */}
     <div className="flex flex-col md:flex-row gap-6">

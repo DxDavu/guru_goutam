@@ -60,7 +60,7 @@ const ProductCategoryForm = ({ type, data }) => {
 
   return (
     <form
-      className="w-full max-w-1xl mx-auto p-4 md:p-4 bg-white shadow-md rounded-lg mt-10 "
+      className="w-full max-w-1xl mx-auto p-4 md:p-4 bg-white shadow-md rounded-lg mt-10 ml-56"
       onSubmit={onSubmit}
     >
           <h1 className="text-lg md:text-xl font-semibold">

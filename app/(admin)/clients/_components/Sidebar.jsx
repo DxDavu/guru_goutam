@@ -13,30 +13,31 @@ export default function Sidebar() {
   const [activeTab, setActiveTab] = useState('');
 
   return (
-    <aside className="w-20 bg-gray-100 border-r h-full flex flex-col items-center py-4">
-      <nav className="flex flex-col space-y-4">
-        {sidebarLinks.map((link) => (
-          <Link key={link.name} href={link.href}>
-            <div
-              className={`flex flex-col items-center p-2 cursor-pointer transition-all duration-300 rounded-md ${
-                activeTab === link.name
-                  ? 'bg-black text-white'
-                  : 'hover:bg-gray-200 text-gray-700'
-              }`}
-              onClick={() => setActiveTab(link.name)}
-            >
-              <div className="text-xl">{link.icon}</div>
-              <span
-                className={`text-xs text-center ${
-                  activeTab === link.name ? 'font-bold' : ''
-                }`}
-              >
-                {link.name}
-              </span>
-            </div>
-          </Link>
-        ))}
-      </nav>
-    </aside>
+<aside className="w-56 min-w-56 max-w-56 bg-gradient-to-b from-blue-950 to-blue-950 h-full fixed top-16 left-0 flex flex-col justify-between text-white mt-0 overflow-hidden z-50">
+  {/* Sidebar Links */}
+  <nav className="flex flex-col py-4 space-y-1 flex-grow">
+    {sidebarLinks.map((link) => (
+      <Link key={link.name} href={link.href}>
+        <div
+          className={`flex items-center px-4 py-3 cursor-pointer transition-all duration-300 ${
+            activeTab === link.name
+            ? 'bg-blue-10 text-white'
+            : 'hover:bg-blue-30 hover:text-white text-gray-10'
+    } rounded-md`}
+          onClick={() => setActiveTab(link.name)}
+        >
+          <div className="text-lg mr-3">{link.icon}</div>
+          <span
+            className={`text-sm font-medium ${
+              activeTab === link.name ? 'font-bold' : ''
+            }`}
+          >
+            {link.name}
+          </span>
+        </div>
+      </Link>
+    ))}
+  </nav>
+</aside>
   );
 }

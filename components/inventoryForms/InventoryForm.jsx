@@ -147,7 +147,7 @@ const InventoryForm = ({ type, data }) => {
   return (
     <form 
   onSubmit={onSubmit} 
-  className="w-full max-w-screen-2xl mx-auto p-2 bg-white shadow-md rounded-lg mt-10">
+  className="w-full max-w-screen-2xl mx-auto p-2 bg-white shadow-md rounded-lg mt-10 ml-56">
           <h1 className="text-xl font-semibold">
         {type === "create" ? "Create Products" : "Edit Products"}
       </h1>
@@ -280,6 +280,27 @@ const InventoryForm = ({ type, data }) => {
     onClose={handleCloseModal}
     onSelect={handleProductSelection}
   />
+  {/* Table Section */}
+<div className="mt-8 bg-white shadow-md rounded-lg overflow-hidden">
+  <table className="w-full text-left border-collapse">
+    <thead className="bg-gray-200 border-b-2 border-gray-300">
+      <tr>
+        <th className="p-3 font-medium text-gray-700">Product Name</th>
+        <th className="p-3 font-medium text-gray-700">Category</th>
+        <th className="p-3 font-medium text-gray-700">Brand</th>
+        <th className="p-3 font-medium text-gray-700">Specification</th>
+        <th className="p-3 font-medium text-gray-700">Product Qty</th>
+        <th className="p-3 font-medium text-gray-700">Product Purchase Type</th>
+        <th className="p-3 font-medium text-gray-700">Stock Location</th>
+        <th className="p-3 font-medium text-gray-700">Warranty End Date</th>
+        <th className="p-3 font-medium text-gray-700">Price (30 Days)</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+</div>
+
 </form>
 
   );

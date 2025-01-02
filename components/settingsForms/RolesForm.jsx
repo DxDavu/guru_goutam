@@ -129,7 +129,7 @@ const RolesForm = ({ type, data }) => {
   }, [state, router, type]);
 
   return (
-    <form className="flex flex-col gap-4 mt-10" onSubmit={onSubmit}>
+    <form className="flex flex-col gap-4 mt-10 ml-56" onSubmit={onSubmit}>
       <h1 className="text-xl font-semibold">{type === "create" ? "Create New Role" : "Edit Role"}</h1>
 
       <div className=" bg-gray-200 p-6 border rounded-1g shadow-1g mb-6 flex  gap-40">

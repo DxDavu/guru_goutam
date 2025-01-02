@@ -80,7 +80,7 @@ export default function TaxListForm({ type, data }) {
   }, [state, router, type]);
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4 mt-10">
+    <form onSubmit={onSubmit} className="space-y-4 mt-10 ml-56">
       <h1 className="text-xl font-semibold">
         {type === "create" ? "Create Tax List" : "Edit Tax List"}
       </h1>

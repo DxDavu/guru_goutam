@@ -259,6 +259,7 @@ import Brand from '@/lib/database/models/productLibrary/Brand.model';
 import ItemVariant from '@/lib/database/models/productLibrary/Item-variant.model';
 import fs from "fs/promises";
 
+
 const { ObjectId } = mongoose.Types; // Extract ObjectId from mongoose
 
 // Helper function for serialization
@@ -285,6 +286,7 @@ export const getActiveProductCategories = async () => {
   const categories = await ProductCategory.find({ active_status: true }, 'category_name').lean();
   return serializeData(categories);
 };
+
 
 // Fetch active Brands
 export const getBrands = async () => {

@@ -1,3 +1,130 @@
+// // @/actions/settings/cityActions.js
+
+// "use server";
+
+// import { connectToDatabase } from "@/lib/database";
+// import City from "@/lib/database/models/setting/City.model";
+
+// // Get all cities
+// export const getCities = async () => {
+//   await connectToDatabase();
+//   const cities = await City.find({}).populate("state country").lean();
+//   return cities.map((city) => ({
+//     ...city,
+//     _id: city._id.toString(),
+//     state: city.state ? city.state._id.toString() : null,
+//     country: city.country ? city.country._id.toString() : null,
+//   }));
+// };
+
+// // Get a single city by ID
+// export const getCityById = async (id) => {
+//   await connectToDatabase();
+//   const city = await City.findById(id).populate("state country").lean();
+//   return city
+//     ? {
+//         ...city,
+//         _id: city._id.toString(),
+//         state: city.state?._id.toString(),
+//         country: city.country?._id.toString(),
+//       }
+//     : null;
+// };
+
+// // Create a new city with duplicate check
+// export const createCity = async (currentState, cityData) => {
+//   console.log(cityData, "cityyyyyg");
+
+//   await connectToDatabase();
+
+//   // Check if the city name already exists in the specified state and country
+//   const existingCity = await City.findOne({
+//     name: cityData.name,
+//     state: cityData.state.name,
+//     country: cityData.country.name,
+//   }).populate('state name').populate('country name'); // Populate state and country
+// console.log(existingCity, "after formmmaaa");
+
+//   if (existingCity) {
+//     return {
+//       success: false,
+//       error: true,
+//       message:
+//         "A city with this name already exists in the selected state and country.",
+//     };
+//   }
+
+//   try {
+//     const newCity = new City(cityData);
+//     const savedCity = await newCity.save();
+
+//     // Populate state and country fields for the response
+//     const populatedCity = await City.findById(savedCity._id)
+//       .populate('state')
+//       .populate('country');
+
+//     return { success: true, city: populatedCity.toObject() };
+//   } catch (error) {
+//     console.error("Error creating city:", error);
+//     return {
+//       success: false,
+//       error: true,
+//       message: "Failed to create city. Please try again.",
+//     };
+//   }
+// };
+
+
+// // Update an existing city with duplicate check
+// export const updateCity = async (currentState, updateData) => {
+//   const { id, name, state, country } = updateData;
+//   await connectToDatabase();
+
+//   // Check if another city with the same name exists in the same state and country
+//   const existingCity = await City.findOne({
+//     name,
+//     state,
+//     country,
+//     _id: { $ne: id },
+//   });
+//   if (existingCity) {
+//     return {
+//       success: false,
+//       error: true,
+//       message:
+//         "A city with this name already exists in the selected state and country.",
+//     };
+//   }
+
+//   try {
+//     const updatedCity = await City.findByIdAndUpdate(id, updateData, {
+//       new: true,
+//     });
+//     if (!updatedCity) {
+//       return { success: false, error: true, message: "City not found" };
+//     }
+//     return { success: true, city: updatedCity.toObject() };
+//   } catch (error) {
+//     return {
+//       success: false,
+//       error: true,
+//       message: "Failed to update city. Please try again.",
+//     };
+//   }
+// };
+
+// // Delete a city
+// export const deleteCity = async (id) => {
+//   await connectToDatabase();
+//   const deletedCity = await City.findByIdAndDelete(id);
+//   if (!deletedCity) {
+//     return { success: false, error: true, message: "City not found" };
+//   }
+//   return { success: true, message: "City deleted successfully" };
+// };
+
+
+
 // @/actions/settings/cityActions.js
 
 "use server";
@@ -5,29 +132,49 @@
 import { connectToDatabase } from "@/lib/database";
 import City from "@/lib/database/models/setting/City.model";
 
+// Serialize an ObjectId to string
+const serializeObjectId = (object) => {
+  if (object && object._id) {
+    object._id = object._id.toString();
+  }
+  return object;
+};
+
 // Get all cities
 export const getCities = async () => {
   await connectToDatabase();
   const cities = await City.find({}).populate("state country").lean();
-  return cities.map((city) => ({
-    ...city,
-    _id: city._id.toString(),
-    state: city.state ? city.state._id.toString() : null,
-    country: city.country ? city.country._id.toString() : null,
-  }));
+  return cities.map((city) => {
+    city = serializeObjectId(city);
+    if (city.state) city.state = serializeObjectId(city.state);
+    if (city.country) city.country = serializeObjectId(city.country);
+    return city;
+  });
 };
+
+
+// // Get all cities
+// export const getCities = async () => {
+//   await connectToDatabase();
+//   const cities = await City.find({}).populate("state country").lean();
+//   return cities.map((city) => ({
+//     ...city,
+//     _id: city._id.toString(),
+//     state: city.state ? city.state._id.toString() : null,
+//     country: city.country ? city.country._id.toString() : null,
+//   }));
+// };
 
 // Get a single city by ID
 export const getCityById = async (id) => {
   await connectToDatabase();
   const city = await City.findById(id).populate("state country").lean();
   return city
-    ? {
+    ? serializeObjectId({
         ...city,
-        _id: city._id.toString(),
-        state: city.state?._id.toString(),
-        country: city.country?._id.toString(),
-      }
+        state: city.state ? city.state._id.toString() : null,
+        country: city.country ? city.country._id.toString() : null,
+      })
     : null;
 };
 
@@ -42,8 +189,8 @@ export const createCity = async (currentState, cityData) => {
     name: cityData.name,
     state: cityData.state.name,
     country: cityData.country.name,
-  }).populate('state name').populate('country name'); // Populate state and country
-console.log(existingCity, "after formmmaaa");
+  }).populate('state name').populate('country name');
+  console.log(existingCity, "after formmmaaa");
 
   if (existingCity) {
     return {
@@ -63,7 +210,7 @@ console.log(existingCity, "after formmmaaa");
       .populate('state')
       .populate('country');
 
-    return { success: true, city: populatedCity.toObject() };
+    return { success: true, city: serializeObjectId(populatedCity.toObject()) };
   } catch (error) {
     console.error("Error creating city:", error);
     return {
@@ -73,7 +220,6 @@ console.log(existingCity, "after formmmaaa");
     };
   }
 };
-
 
 // Update an existing city with duplicate check
 export const updateCity = async (currentState, updateData) => {
@@ -103,7 +249,7 @@ export const updateCity = async (currentState, updateData) => {
     if (!updatedCity) {
       return { success: false, error: true, message: "City not found" };
     }
-    return { success: true, city: updatedCity.toObject() };
+    return { success: true, city: serializeObjectId(updatedCity.toObject()) };
   } catch (error) {
     return {
       success: false,
