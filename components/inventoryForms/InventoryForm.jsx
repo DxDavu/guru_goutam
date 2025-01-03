@@ -95,6 +95,10 @@ const InventoryForm = ({ type, data }) => {
     fetchSuppliers();
   }, [data, reset]);
 
+
+
+
+
   // Handle success or error states
   useEffect(() => {
     if (state?.success) {
@@ -126,7 +130,7 @@ const InventoryForm = ({ type, data }) => {
       const selectedProductData = product?.[0]?.product || {}; // Assuming the product comes from an array
       setValue("product", selectedProductData._id);
       setValue("productPrice", selectedProductData.price || 0);
-      setSelectedProduct(selectedProductData); // Save selected product details
+      setSelectedProduct(selectedProductData); // Save selected product details, including specifications
       handleCloseModal();
     },
     [setValue, handleCloseModal]
@@ -145,163 +149,203 @@ const InventoryForm = ({ type, data }) => {
   });
 
   return (
-    <form 
-  onSubmit={onSubmit} 
-  className="w-full max-w-screen-2xl mx-auto p-2 bg-white shadow-md rounded-lg mt-10 ml-56">
-          <h1 className="text-xl font-semibold">
+    <form
+      onSubmit={onSubmit}
+      className="w-full max-w-screen-2xl mx-auto p-2 bg-white shadow-md rounded-lg mt-10 ml-56">
+      <h1 className="text-xl font-semibold">
         {type === "create" ? "Create Products" : "Edit Products"}
       </h1>
-  
-  <div className="flex flex-col lg:flex-row bg-gray-200 p-2 border rounded-lg shadow-lg mb-6 gap-6 mt-5 w-full">
-    {/* Left Section */}
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-6 gap-y-6 w-full">
 
-        <div className="bg-white p-6 border rounded-lg shadow-lg">
-        <h3 className="font-semibold">Product Details:</h3>
+      <div className="flex flex-col lg:flex-row bg-gray-200 p-2 border rounded-lg shadow-lg mb-6 gap-6 mt-5 w-full">
+        {/* Left Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-6 gap-y-6 w-full">
 
-        <div className="w-full lg:w-auto">
+          <div className="bg-white p-6 border rounded-lg shadow-lg">
+            <h3 className="font-semibold">Product Details:</h3>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-white p-2 border rounded-lg">
-            <div>
-              <h3>Owner</h3>
-              <Input {...register("owner")} placeholder="Owner" className="border border-gray-300 rounded-md p-4 w-full" />
-              {errors.owner && <p className="text-red-500">{errors.owner.message}</p>}
+            <div className="w-full lg:w-auto">
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-white p-2 border rounded-lg">
+                <div>
+                  <h3>Owner</h3>
+                  <Input {...register("owner")} placeholder="Owner" className="border border-gray-300 rounded-md p-4 w-full" />
+                  {errors.owner && <p className="text-red-500">{errors.owner.message}</p>}
+                </div>
+                <div>
+                  <h3>Supplier</h3>
+                  {isLoadingSuppliers ? (
+                    <p>Loading suppliers...</p>
+                  ) : (
+                    <Select
+                      onValueChange={(value) => setValue("supplier", value)}
+                      value={watch("supplier") || ""}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Supplier" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          {suppliers.map((supplier) => (
+                            <SelectItem key={supplier._id} value={supplier._id}>
+                              {supplier.supplier_name}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  )}
+                </div>
+                <div className="sm:col-span-2">
+                  <h3>Supplier Mail ID</h3>
+                  <Input {...register("inventory_name")} placeholder="Supplier Mail ID" className="border border-gray-300 rounded-md p-4 w-full" />
+                  {errors.inventory_name && <p className="text-red-500">{errors.inventory_name.message}</p>}
+                </div>
+              </div>
             </div>
-            <div>
-              <h3>Supplier</h3>
-              {isLoadingSuppliers ? (
-                <p>Loading suppliers...</p>
-              ) : (
-                <Select
-                  onValueChange={(value) => setValue("supplier", value)}
-                  value={watch("supplier") || ""}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select Supplier" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      {suppliers.map((supplier) => (
-                        <SelectItem key={supplier._id} value={supplier._id}>
-                          {supplier.supplier_name}
-                        </SelectItem>
+          </div>
+
+          {/* Middle Section */}
+          <div className="bg-white p-2 border rounded-lg shadow-lg w-full lg:w-auto">
+            <h3 className="font-semibold">Price Details:</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="font-medium mb-1 text-sm md:text-xs">Price per Product:</label>
+                <Input
+                  {...register("productPrice", { valueAsNumber: true })}
+                  type="number"
+                  min="0"
+                  placeholder="Price per Product"
+                  className="w-full"
+                />
+              </div>
+              <div>
+                <label className="font-medium mb-1 text-sm md:text-xs">Total Quantity:</label>
+                <Input
+                  {...register("totalQuantity", { valueAsNumber: true })}
+                  type="number"
+                  min="1"
+                  placeholder="Total Quantity"
+                  className="w-full"
+                />
+              </div>
+              <div className="sm:col-span-2">
+                <label className="font-medium mb-1 text-sm md:text-xs">Total Price:</label>
+                <Input
+                  {...register("total_price", { valueAsNumber: true })}
+                  readOnly
+                  className="w-full"
+                  style={{ outline: "none", boxShadow: "none" }}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Right Section */}
+          <div className="mt-4 lg:mt-0 w-full lg:w-auto">
+            <div className="bg-gray-50 p-2 border rounded-lg shadow-lg">
+              <h1 className="font-extrabold">Control</h1>
+              <label className="font-medium mb-1 text-sm md:text-xs">Active Status:</label>
+              <input
+                type="checkbox"
+                checked={watch("active_status")}
+                className="mt-5"
+                onChange={(e) => setValue("active_status", e.target.checked)}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Product Details Section */}
+      <div clas>
+        <h3 className="font-medium mb-1 text-sm md:text-xs">Product Details:</h3>
+        <Button type="button" onClick={handleOpenModal}>
+          Select Product
+        </Button>
+        {/* {selectedProduct && (
+          <div className="mt-2">
+            <p className="font-medium mb-1 text-sm md:text-xs">{selectedProduct.product_name}</p>
+            <p className="text-sm text-gray-500">{selectedProduct.category}</p>
+            <p className="text-sm text-gray-400">{selectedProduct.model}</p>
+          </div>
+        )} */}
+      </div>
+
+      {/* Form Action Buttons */}
+      <div className="flex justify-end gap-4 mt-4">
+        <Button onClick={() => router.push("/inventory/products")}>Cancel</Button>
+        <Button type="submit" className="bg-blue-500 text-white">
+          {type === "create" ? "Create" : "Update"}
+        </Button>
+      </div>
+
+      <ProductSelectionModal
+        isOpen={isProductModalOpen}
+        onClose={handleCloseModal}
+        onSelect={handleProductSelection}
+      />
+
+      {/* Table Section */}
+      <div className="mt-8 bg-white shadow-md rounded-lg overflow-hidden">
+        <table className="w-full text-left border-collapse">
+          <thead className="bg-gray-200 border-b-2 border-gray-300">
+            <tr>
+              <th className="p-3 font-medium text-gray-700">Product Name</th>
+              <th className="p-3 font-medium text-gray-700">Category</th>
+              <th className="p-3 font-medium text-gray-700">Brand</th>
+              <th className="p-3 font-medium text-gray-700">Specification</th>
+              <th className="p-3 font-medium text-gray-700">Product Qty</th>
+              <th className="p-3 font-medium text-gray-700">Product Purchase Type</th>
+              <th className="p-3 font-medium text-gray-700">Stock Location</th>
+              <th className="p-3 font-medium text-gray-700">Warranty End Date</th>
+              <th className="p-3 font-medium text-gray-700">Price (30 Days)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {selectedProduct ? (
+              <tr>
+                <td className="p-3 text-sm text-gray-700">{selectedProduct.product_name}</td>
+                <td className="p-3 text-sm text-gray-500">{selectedProduct.category}</td>
+                <td className="p-3 text-sm text-gray-400">{selectedProduct.brand}</td>
+                {/* Specifications Column */}
+                <td className="p-3 text-sm text-gray-500">
+                  {selectedProduct.specifications && Object.keys(selectedProduct.specifications).length > 0 ? (
+                    <ul className="text-sm">
+                      {Object.entries(selectedProduct.specifications).map(([key, spec]) => (
+                        <li key={key} className="flex justify-between items-center">
+                          <span className="capitalize font-medium">{key}:</span>
+                          <span>
+                            {spec?.brand?.brand_name || "N/A"}{" "}
+                            {spec?.type ? `- ${spec.type}` : ""}
+                          </span>
+                        </li>
                       ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              )}
-            </div>
-            <div className="sm:col-span-2">
-              <h3>Supplier Mail ID</h3>
-              <Input {...register("inventory_name")} placeholder="Supplier Mail ID" className="border border-gray-300 rounded-md p-4 w-full" />
-              {errors.inventory_name && <p className="text-red-500">{errors.inventory_name.message}</p>}
-            </div>
-          </div>
-        </div>
+                    </ul>
+                  ) : (
+                    "No specifications available"
+                  )}
+                </td>
+
+
+                <td className="p-3 text-sm text-gray-700">{selectedProduct.product_qty}</td>
+                <td className="p-3 text-sm text-gray-500">{selectedProduct.purchase_type}</td>
+                <td className="p-3 text-sm text-gray-400">{selectedProduct.stock_location}</td>
+                <td className="p-3 text-sm text-gray-500">{selectedProduct.warranty_end_date}</td>
+                <td className="p-3 text-sm text-gray-700">{selectedProduct.price_30_days}</td>
+              </tr>
+            ) : (
+              <tr>
+                <td colSpan="9" className="p-3 text-center text-sm text-gray-500">
+                  No product selected.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
 
-      {/* Middle Section */}
-      <div className="bg-white p-2 border rounded-lg shadow-lg w-full lg:w-auto">
-        <h3 className="font-semibold">Price Details:</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label className="font-medium mb-1 text-sm md:text-xs">Price per Product:</label>
-            <Input
-              {...register("productPrice", { valueAsNumber: true })}
-              type="number"
-              min="0"
-              placeholder="Price per Product"
-              className="w-full"
-            />
-          </div>
-          <div>
-            <label className="font-medium mb-1 text-sm md:text-xs">Total Quantity:</label>
-            <Input
-              {...register("totalQuantity", { valueAsNumber: true })}
-              type="number"
-              min="1"
-              placeholder="Total Quantity"
-              className="w-full"
-            />
-          </div>
-          <div className="sm:col-span-2">
-            <label className="font-medium mb-1 text-sm md:text-xs">Total Price:</label>
-            <Input 
-              {...register("total_price", { valueAsNumber: true })} 
-              readOnly 
-              className="w-full" 
-              style={{ outline: "none", boxShadow: "none" }} 
-            />
-          </div>
-        </div>
-      </div>
 
-      {/* Right Section */}
-      <div className="mt-4 lg:mt-0 w-full lg:w-auto">
-        <div className="bg-gray-50 p-2 border rounded-lg shadow-lg">
-          <h1 className="font-extrabold">Control</h1>
-          <label className="font-medium mb-1 text-sm md:text-xs">Active Status:</label>
-          <input
-            type="checkbox"
-            checked={watch("active_status")}
-            className="mt-5"
-            onChange={(e) => setValue("active_status", e.target.checked)}
-          />
-        </div>
-      </div>
-    </div>
-  </div>
-
-  {/* Product Details Section */}
-  <div>
-    <h3 className="font-medium mb-1 text-sm md:text-xs">Product Details:</h3>
-    <Button type="button" onClick={handleOpenModal}>
-      Select Product
-    </Button>
-    {selectedProduct && (
-      <div className="mt-2">
-        <p className="font-medium mb-1 text-sm md:text-xs">{selectedProduct.product_name}</p>
-        <p className="text-sm text-gray-500">{selectedProduct.category}</p>
-        <p className="text-sm text-gray-400">{selectedProduct.model}</p>
-      </div>
-    )}
-  </div>
-
-  {/* Form Action Buttons */}
-  <div className="flex justify-end gap-4 mt-4">
-    <Button onClick={() => router.push("/inventory/products")}>Cancel</Button>
-    <Button type="submit" className="bg-blue-500 text-white">
-      {type === "create" ? "Create" : "Update"}
-    </Button>
-  </div>
-
-  <ProductSelectionModal
-    isOpen={isProductModalOpen}
-    onClose={handleCloseModal}
-    onSelect={handleProductSelection}
-  />
-  {/* Table Section */}
-<div className="mt-8 bg-white shadow-md rounded-lg overflow-hidden">
-  <table className="w-full text-left border-collapse">
-    <thead className="bg-gray-200 border-b-2 border-gray-300">
-      <tr>
-        <th className="p-3 font-medium text-gray-700">Product Name</th>
-        <th className="p-3 font-medium text-gray-700">Category</th>
-        <th className="p-3 font-medium text-gray-700">Brand</th>
-        <th className="p-3 font-medium text-gray-700">Specification</th>
-        <th className="p-3 font-medium text-gray-700">Product Qty</th>
-        <th className="p-3 font-medium text-gray-700">Product Purchase Type</th>
-        <th className="p-3 font-medium text-gray-700">Stock Location</th>
-        <th className="p-3 font-medium text-gray-700">Warranty End Date</th>
-        <th className="p-3 font-medium text-gray-700">Price (30 Days)</th>
-      </tr>
-    </thead>
-    <tbody>
-    </tbody>
-  </table>
-</div>
-
-</form>
+    </form>
 
   );
 };

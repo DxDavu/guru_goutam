@@ -38,8 +38,23 @@ export const columns = [
   { accessorKey: "product_qty", header: "Product Qty" },
   { accessorKey: "category", header: "Category " },
   { accessorKey: "brand", header: "Brand " },
-  { accessorKey: "specifications", header: "Specifications " },
-  { accessorKey: "product_status", header: "Product status " },
+  {
+    id: "specifications",
+    header: "Specifications",
+    cell: ({ row }) => {
+      const specs = row.original.specifications || {}
+      return (
+        <ul className="text-sm">
+          {Object.entries(specs).map(([key, spec]) => (
+            <li key={key}>
+              <strong className="capitalize">{key}:</strong>{" "}
+              {spec?.brand?.brand_name || "N/A"} - {spec?.type?.type || "N/A"}
+            </li>
+          ))}
+        </ul>
+      );
+    },
+  },  { accessorKey: "product_status", header: "Product status " },
   { accessorKey: "purchase_price", header: "Purchase Price  " },
   { accessorKey: "price/30days", header: "Price /30 days" },
   // { accessorKey: "supplier", header: "Supplier" },

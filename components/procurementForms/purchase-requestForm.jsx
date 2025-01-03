@@ -213,6 +213,7 @@ const PurchaseRequestForm = ({ type, data }) => {
             <Input {...register("pr_id")} placeholder="Purchase Request ID" />
           </div>
           <div className="mt-4">
+            <label>enter date</label>
             <Input {...register("pr_date")} type="date" placeholder="Purchase Request Date" />
           </div>
           <div className="mt-4">

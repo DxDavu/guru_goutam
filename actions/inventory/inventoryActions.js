@@ -93,13 +93,15 @@
 
 // @/actions/inventory/inventoryActions.js
 
-
 "use server";
 
 import { connectToDatabase } from "@/lib/database";
 import Inventory from "@/lib/database/models/inventory/Inventory.model";
+import ProductTemplate from '@/lib/database/models/productLibrary/Product-template.model';
+
 import Supplier from "@/lib/database/models/procurement/Supplier.model";
 import ProductCategory from "@/lib/database/models/productLibrary/Product-category.model";
+import Brand from "@/lib/database/models/productLibrary/Brand.model";
 import mongoose from "mongoose";
 
 // Utility function for serialization
@@ -130,64 +132,114 @@ const serializeData = (data) => {
   }, {});
 };
 
+
+
 export const getInventoryById = async (id) => {
   await connectToDatabase();
 
-  // Ensure the `id` is a valid ObjectId
   if (!mongoose.Types.ObjectId.isValid(id)) {
     throw new Error(`Invalid ObjectId: ${id}`);
   }
 
+  // Fetch inventory by ID
   const inventory = await Inventory.findById(id)
     .populate("supplier", "supplier_name")
-    .populate("product", "product_name category brand")
-    .lean(); // Lean returns plain JavaScript objects
+    .populate({
+      path: "product",
+      select: "product_name category brand",
+      populate: [
+        { path: "category", select: "category_name" },
+        { path: "brand", select: "brand_name" },
+      ],
+    })
+    .populate("brand", "brand_name")
+    .populate("specifications.ram.brand", "brand_name")
+    .populate("specifications.ram.type", "type")
+    .populate("specifications.processor.brand", "brand_name")
+    .populate("specifications.processor.type", "type")
+    .populate("specifications.storage.brand", "brand_name")
+    .populate("specifications.storage.type", "type")
+    .populate("specifications.graphics.brand", "brand_name")
+    .populate("specifications.graphics.type", "type")
+    .populate("specifications.os.brand", "brand_name")
+    .populate("specifications.os.type", "type")
+    .lean();
 
   if (!inventory) {
-    return null; // Return null if no inventory is found
+    return null;
   }
 
-  // Ensure all nested objects are plain objects
+  // Fetch specifications from ProductTemplate if linked to a product
+  const productSpecifications = inventory.product
+    ? await ProductTemplate.findOne(
+        { product: inventory.product._id },
+        "specifications"
+      ).lean()
+    : null;
+
   return serializeData({
     ...inventory,
-    _id: inventory._id.toString(), // Convert main _id to string
+    _id: inventory._id.toString(),
     supplier: inventory.supplier
       ? { ...inventory.supplier, _id: inventory.supplier._id.toString() }
-      : null, // Convert supplier's _id to string
+      : null,
     product: inventory.product
       ? {
           ...inventory.product,
-          _id: inventory.product._id.toString(), // Convert product's _id to string
-          category: inventory.product.category
-            ? inventory.product.category.toString() // Ensure category is a string
-            : null,
-          brand: inventory.product.brand
-            ? inventory.product.brand.toString() // Ensure brand is a string
-            : null,
+          _id: inventory.product._id.toString(),
+          category: inventory.product.category?.category_name || null,
+          brand: inventory.product.brand?.brand_name || null,
         }
+      : null,
+    specifications: productSpecifications
+      ? serializeData(productSpecifications.specifications)
+      : inventory.specifications
+      ? serializeData(inventory.specifications)
+      : {},
+    brand: inventory.brand
+      ? { ...inventory.brand, _id: inventory.brand._id.toString(), name: inventory.brand.brand_name }
       : null,
   });
 };
 
+// Update inventory to include specifications if available
+export const updateInventory = async (currentState, data) => {
+  try {
+    await connectToDatabase();
 
+    const updatedInventory = await Inventory.findByIdAndUpdate(
+      data.id,
+      data,
+      { new: true }
+    );
 
+    if (!updatedInventory) {
+      return { success: false, message: "Inventory not found" };
+    }
 
+    // Fetch updated specifications from ProductTemplate if product exists
+    const productSpecifications = data.product
+      ? await ProductTemplate.findOne(
+          { product: data.product },
+          "specifications"
+        ).lean()
+      : null;
 
-// Fetch active product categories
-// export const getActiveProductCategories = async () => {
-//   await connectToDatabase();
-//   const categories = await ProductCategory.find({ active_status: true }, "category_name").lean();
-//   return serializeData(categories);
-// };
-
-
-// Fetch active product categories
-export const getActiveProductCategories = async () => {
-  await connectToDatabase();
-  const categories = await ProductCategory.find({ active_status: true }, "category_name").lean();
-  return serializeData(categories);
+    return {
+      success: true,
+      message: "Inventory updated successfully!",
+      inventory: serializeData({
+        ...updatedInventory.toObject(),
+        specifications: productSpecifications
+          ? serializeData(productSpecifications.specifications)
+          : updatedInventory.specifications,
+      }),
+    };
+  } catch (error) {
+    console.error("Error updating inventory:", error);
+    return { success: false, message: "Failed to update inventory." };
+  }
 };
-
 
 
 
@@ -197,31 +249,55 @@ export const getInventory = async () => {
   const inventories = await Inventory.find({})
     .populate("supplier", "supplier_name")
     .populate("product", "product_name category brand")
-    .lean(); // Lean returns plain JavaScript objects
-
+    .populate("brand", "brand_name") // Populating the brand field
+    .populate("specifications.ram.brand", "brand_name")
+    .populate("specifications.ram.type", "type")
+    .populate("specifications.processor.brand", "brand_name")
+    .populate("specifications.processor.type", "type")
+    .populate("specifications.storage.brand", "brand_name")
+    .populate("specifications.storage.type", "type")
+    .populate("specifications.graphics.brand", "brand_name")
+    .populate("specifications.graphics.type", "type")
+    .populate("specifications.os.brand", "brand_name")
+    .populate("specifications.os.type", "type")
+    .lean();
+console.log("ggggggggeeeeeeeeeeettttt",inventories);
   return inventories.map((inventory) => ({
     ...serializeData(inventory),
-    _id: inventory._id.toString(), // Convert _id to string
-    supplier: inventory.supplier?.supplier_name || "", // Handle missing supplier gracefully
+    _id: inventory._id.toString(),
+    supplier: inventory.supplier?.supplier_name || "",
+    brand: inventory.brand?.brand_name || "", // Adding brand name
   }));
 };
 
+// Fetch active product categories
+export const getActiveProductCategories = async () => {
+  await connectToDatabase();
+  const categories = await ProductCategory.find({ active_status: true }, "category_name").lean();
+  return serializeData(categories);
+};
 
 // Fetch active suppliers
 export const getActiveSuppliers = async () => {
-    await connectToDatabase();
-    
-    const suppliers = await Supplier.find({ active_status: true }, "supplier_name").lean();
-  
-    // Ensure all fields, including `_id`, are plain JavaScript values
-    return suppliers.map((supplier) => ({
-      ...supplier,
-      _id: supplier._id.toString(), // Convert `_id` to a string
-    }));
+  await connectToDatabase();
+  const suppliers = await Supplier.find({ active_status: true }, "supplier_name").lean();
 
-  };
+  return suppliers.map((supplier) => ({
+    ...supplier,
+    _id: supplier._id.toString(),
+  }));
+};
 
+// Fetch active brands
+export const getActiveBrands = async () => {
+  await connectToDatabase();
+  const brands = await Brand.find({ active_status: true }, "brand_name").lean();
 
+  return brands.map((brand) => ({
+    ...brand,
+    _id: brand._id.toString(),
+  }));
+};
 
 // Create inventory
 export const createInventory = async (currentState, data) => {
@@ -240,23 +316,27 @@ export const createInventory = async (currentState, data) => {
   }
 };
 
-// Update inventory
-export const updateInventory = async (currentState, data) => {
-  try {
-    await connectToDatabase();
-    const updatedInventory = await Inventory.findByIdAndUpdate(data.id, data, { new: true });
-    if (!updatedInventory) return { success: false, message: "Inventory not found" };
+// export const updateInventory = async (currentState, data) => {
+//   try {
+//     await connectToDatabase();
 
-    return {
-      success: true,
-      message: "Inventory updated successfully!",
-      inventory: serializeData(updatedInventory.toObject()),
-    };
-  } catch (error) {
-    console.error("Error updating inventory:", error);
-    return { success: false, message: "Failed to update inventory." };
-  }
-};
+//     console.log("Received data for update:", data); // Debugging line
+//     console.log("uuuuuuuuuu",updatedInventory);
+
+//     const updatedInventory = await Inventory.findByIdAndUpdate(data.id, data, { new: true });
+//     if (!updatedInventory) return { success: false, message: "Inventory not found" };
+
+//     return {
+//       success: true,
+//       message: "Inventory updated successfully!",
+//       inventory: serializeData(updatedInventory.toObject()),
+//     };
+//   } catch (error) {
+//     console.error("Error updating inventory:", error);
+//     return { success: false, message: "Failed to update inventory." };
+//   }
+// };
+
 
 // Delete inventory
 export const deleteInventory = async (id) => {
