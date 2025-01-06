@@ -73,7 +73,7 @@ const ClientForm = ({ type = "create", data }) => {
   return (
     <form
       onSubmit={onSubmit}
-      className="w-full max-w-screen-lg mx-auto p-6 bg-white shadow-md rounded-lg"
+      className="w-full max-w-screen-lg mx-auto p-6 bg-white shadow-md rounded-lg ml-56"
     >
       <div className="flex flex-col gap-6">
         {/* Client Details Section */}

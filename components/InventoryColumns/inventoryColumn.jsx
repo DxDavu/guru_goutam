@@ -1,7 +1,4 @@
-// @/components/inventoryColumns/inventoryColumns.jsx
-
-"use client";
-
+'use client';
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,14 +19,12 @@ export const columns = [
     accessorKey: "z",
     header: "Product Image",
     cell: ({ row }) => (
-      row.index +1,
       <div className="flex justify-center">
         <Image
           src={row.original.image || "/avatar.png"} // Placeholder if no image
           alt="Product"
           width={60}
           height={60}
-          // className="w-16 h-16 object-cover border rounded"
         />
       </div>
     ),
@@ -38,26 +33,31 @@ export const columns = [
   { accessorKey: "product_qty", header: "Product Qty" },
   { accessorKey: "category", header: "Category " },
   { accessorKey: "brand", header: "Brand " },
+
+  // Specifications Column
   {
     id: "specifications",
     header: "Specifications",
     cell: ({ row }) => {
-      const specs = row.original.specifications || {}
+      const specs = row.original.specifications || {}; // Get the specifications from the row data
       return (
         <ul className="text-sm">
           {Object.entries(specs).map(([key, spec]) => (
-            <li key={key}>
-              <strong className="capitalize">{key}:</strong>{" "}
-              {spec?.brand?.brand_name || "N/A"} - {spec?.type?.type || "N/A"}
+            <li key={key} className="flex justify-between items-center">
+              <span className="capitalize font-medium">{key}:</span>
+              <span>
+                {spec?.brand?.brand_name || "N/A"} - {spec?.type?.type || "N/A"}
+              </span>
             </li>
           ))}
         </ul>
       );
     },
-  },  { accessorKey: "product_status", header: "Product status " },
+  },
+
+  { accessorKey: "product_status", header: "Product status " },
   { accessorKey: "purchase_price", header: "Purchase Price  " },
   { accessorKey: "price/30days", header: "Price /30 days" },
-  // { accessorKey: "supplier", header: "Supplier" },
   {
     accessorKey: "active_status",
     header: "Active Status",

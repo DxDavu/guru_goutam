@@ -1,98 +1,3 @@
-// @/actions/inventory/inventoryActions.js
-
-// "use server";
-
-// import { connectToDatabase } from "@/lib/database";
-// import Inventory from "@/lib/database/models/inventory/Inventory.model";
-// import Supplier from "@/lib/database/models/procurement/Supplier.model";
-// import ProductCategory from "@/lib/database/models/productLibrary/Product-category.model";
-
-// import "@/lib/database/models/productLibrary/Product-template.model.js";
-// import "@/lib/database/models/procurement/Supplier.model.js";
-
-
-
-// export const getActiveProductCategories = async () => {
-//   await connectToDatabase();
-//   return await ProductCategory.find({ active_status: true }, "category_name").lean();
-// };
-
-
-// // Fetch all inventories
-// export const getInventories = async () => {
-//   await connectToDatabase();
-//   const inventories = await Inventory.find({})
-//     .populate("supplier", "supplier_name")
-//     .populate("product", "product_name category brand")
-//     .lean();
-//   return inventories.map((inventory) => ({
-//     ...inventory,
-//     _id: inventory._id.toString(),
-//     supplier: inventory.supplier?.supplier_name || "",
-//   }));
-// };
-
-// // Fetch inventory by ID
-// export const getInventoryById = async (id) => {
-//   await connectToDatabase();
-//   const inventory = await Inventory.findById(id) 
-//     .populate("supplier", "supplier_name")
-//     .populate("product", "product_name category brand")
-//     .lean();
-//   if (!inventory) return null;
-//   return {
-//     ...inventory,
-//     _id: inventory._id.toString(),
-//   };
-// };
-
-// // Fetch active suppliers
-// export const getActiveSuppliers = async () => {
-//   await connectToDatabase();
-//   return await Supplier.find({ active_status: true }, "supplier_name").lean();
-// };
-
-// // Create inventory
-// export const createInventory = async (currentState, data) => {
-//   try {
-//     await connectToDatabase();
-//     const newInventory = new Inventory(data);
-//     const savedInventory = await newInventory.save();
-//     return { success: true, message: "Inventory created successfully!", inventory: savedInventory.toObject() };
-//   } catch (error) {
-//     console.error("Error creating inventory:", error);
-//     return { success: false, message: "Failed to create inventory." };
-//   }
-// };
-
-// // Update inventory
-// export const updateInventory = async (currentState, data) => {
-//   try {
-//     await connectToDatabase();
-//     const updatedInventory = await Inventory.findByIdAndUpdate(data.id, data, { new: true });
-//     if (!updatedInventory) return { success: false, message: "Inventory not found" };
-//     return { success: true, message: "Inventory updated successfully!", inventory: updatedInventory.toObject() };
-//   } catch (error) {
-//     console.error("Error updating inventory:", error);
-//     return { success: false, message: "Failed to update inventory." };
-//   }
-// };
-
-// // Delete inventory
-// export const deleteInventory = async (id) => {
-//   await connectToDatabase();
-//   const deletedInventory = await Inventory.findByIdAndDelete(id);
-//   if (!deletedInventory) return { success: false, message: "Inventory not found" };
-//   return { success: true, message: "Inventory deleted successfully" };
-// };
-
-
-
-
-
-
-// @/actions/inventory/inventoryActions.js
-
 "use server";
 
 import { connectToDatabase } from "@/lib/database";
@@ -104,7 +9,7 @@ import ProductCategory from "@/lib/database/models/productLibrary/Product-catego
 import Brand from "@/lib/database/models/productLibrary/Brand.model";
 import mongoose from "mongoose";
 
-// Utility function for serialization
+
 const serializeData = (data) => {
   if (!data || typeof data !== "object") return data;
 
@@ -114,6 +19,20 @@ const serializeData = (data) => {
 
   return Object.keys(data).reduce((result, key) => {
     const value = data[key];
+
+    // Skip serializing 'specifications' field
+    if (key === "specifications") {
+      result[key] = value;
+      // Skip serializing 'type' fields inside specifications
+      if (value && typeof value === "object") {
+        for (let specKey in value) {
+          if (value[specKey] && value[specKey].type) {
+            value[specKey].type = value[specKey].type; // Keep 'type' as is (no serialization)
+          }
+        }
+      }
+      return result;
+    }
 
     if (value instanceof Date) {
       result[key] = value.toISOString();
@@ -132,8 +51,7 @@ const serializeData = (data) => {
   }, {});
 };
 
-
-
+// Fetch inventory by ID
 export const getInventoryById = async (id) => {
   await connectToDatabase();
 
@@ -146,102 +64,111 @@ export const getInventoryById = async (id) => {
     .populate("supplier", "supplier_name")
     .populate({
       path: "product",
-      select: "product_name category brand",
+      select: "product_name category brand specifications quantity",
       populate: [
         { path: "category", select: "category_name" },
         { path: "brand", select: "brand_name" },
+        {
+          path: "specifications",
+          populate: [
+            { path: "ram.brand", select: "brand_name" },
+            { path: "ram.type", select: "type" },
+            { path: "processor.brand", select: "brand_name" },
+            { path: "processor.type", select: "type" },
+            { path: "storage.brand", select: "brand_name" },
+            { path: "storage.type", select: "type" },
+            { path: "graphics.brand", select: "brand_name" },
+            { path: "graphics.type", select: "type" },
+            { path: "os.brand", select: "brand_name" },
+            { path: "os.type", select: "type" },
+          ],
+        },
       ],
     })
-    .populate("brand", "brand_name")
-    .populate("specifications.ram.brand", "brand_name")
-    .populate("specifications.ram.type", "type")
-    .populate("specifications.processor.brand", "brand_name")
-    .populate("specifications.processor.type", "type")
-    .populate("specifications.storage.brand", "brand_name")
-    .populate("specifications.storage.type", "type")
-    .populate("specifications.graphics.brand", "brand_name")
-    .populate("specifications.graphics.type", "type")
-    .populate("specifications.os.brand", "brand_name")
-    .populate("specifications.os.type", "type")
     .lean();
+    console.log(inventory);
+    
 
   if (!inventory) {
     return null;
   }
 
-  // Fetch specifications from ProductTemplate if linked to a product
-  const productSpecifications = inventory.product
-    ? await ProductTemplate.findOne(
-        { product: inventory.product._id },
-        "specifications"
-      ).lean()
-    : null;
-
-  return serializeData({
-    ...inventory,
+  return {
+    ...serializeData(inventory), // Apply serialization to the inventory
     _id: inventory._id.toString(),
     supplier: inventory.supplier
-      ? { ...inventory.supplier, _id: inventory.supplier._id.toString() }
+      ? { ...serializeData(inventory.supplier), _id: inventory.supplier._id.toString() }
       : null,
     product: inventory.product
       ? {
-          ...inventory.product,
+          ...serializeData(inventory.product),
           _id: inventory.product._id.toString(),
           category: inventory.product.category?.category_name || null,
           brand: inventory.product.brand?.brand_name || null,
+          specifications: inventory.product.specifications || null, 
+          quantity: inventory.product.quantity || null,
         }
       : null,
-    specifications: productSpecifications
-      ? serializeData(productSpecifications.specifications)
-      : inventory.specifications
-      ? serializeData(inventory.specifications)
-      : {},
-    brand: inventory.brand
-      ? { ...inventory.brand, _id: inventory.brand._id.toString(), name: inventory.brand.brand_name }
-      : null,
-  });
+  };
 };
 
 // Update inventory to include specifications if available
 export const updateInventory = async (currentState, data) => {
+  await connectToDatabase();
+
   try {
-    await connectToDatabase();
-
-    const updatedInventory = await Inventory.findByIdAndUpdate(
-      data.id,
-      data,
-      { new: true }
-    );
-
-    if (!updatedInventory) {
-      return { success: false, message: "Inventory not found" };
+    // Validate the ObjectId
+    if (!mongoose.Types.ObjectId.isValid(data.id)) {
+      throw new Error(`Invalid ObjectId: ${data.id}`);
     }
 
+    // Fetch the current inventory
+    const existingInventory = await Inventory.findById(data.id).lean();
+
+    if (!existingInventory) {
+      return { success: false, message: "Inventory not found." };
+    }
+
+    // Merge the existing inventory with the incoming data
+    const updatedData = {
+      ...existingInventory,
+      ...data,
+      specifications: {
+        ...existingInventory.specifications,
+        ...data.specifications,
+      },
+    };
+
     // Fetch updated specifications from ProductTemplate if product exists
-    const productSpecifications = data.product
-      ? await ProductTemplate.findOne(
-          { product: data.product },
-          "specifications"
-        ).lean()
-      : null;
+    let productSpecifications = null;
+    if (data.product) {
+      const template = await ProductTemplate.findOne(
+        { product: data.product },
+        "specifications"
+      ).lean();
+      productSpecifications = template?.specifications || null;
+    }
+
+    // Update the inventory
+    const updatedInventory = await Inventory.findByIdAndUpdate(
+      data.id,
+      updatedData,
+      { new: true }
+    ).lean();
 
     return {
       success: true,
       message: "Inventory updated successfully!",
-      inventory: serializeData({
-        ...updatedInventory.toObject(),
-        specifications: productSpecifications
-          ? serializeData(productSpecifications.specifications)
-          : updatedInventory.specifications,
-      }),
+      inventory: {
+        ...serializeData(updatedInventory), // Apply serialization
+        specifications: productSpecifications || updatedInventory.specifications, // No serialization for specifications
+      },
     };
   } catch (error) {
     console.error("Error updating inventory:", error);
     return { success: false, message: "Failed to update inventory." };
   }
 };
-
-
 
 // Fetch all inventories
 export const getInventory = async () => {
@@ -261,14 +188,24 @@ export const getInventory = async () => {
     .populate("specifications.os.brand", "brand_name")
     .populate("specifications.os.type", "type")
     .lean();
-console.log("ggggggggeeeeeeeeeeettttt",inventories);
+    console.log(inventories,"gettttttttttt");
+    
+
   return inventories.map((inventory) => ({
-    ...serializeData(inventory),
+    ...serializeData(inventory), // Apply serialization
     _id: inventory._id.toString(),
     supplier: inventory.supplier?.supplier_name || "",
-    brand: inventory.brand?.brand_name || "", // Adding brand name
+    brand: inventory.brand?.brand_name || "",
+    specifications: inventory.specifications || null, // No serialization for specifications
   }));
 };
+     
+
+
+
+
+
+
 
 // Fetch active product categories
 export const getActiveProductCategories = async () => {
@@ -308,35 +245,13 @@ export const createInventory = async (currentState, data) => {
     return {
       success: true,
       message: "Inventory created successfully!",
-      inventory: serializeData(savedInventory.toObject()),
+      inventory: savedInventory.toObject(),
     };
   } catch (error) {
     console.error("Error creating inventory:", error);
     return { success: false, message: "Failed to create inventory." };
   }
 };
-
-// export const updateInventory = async (currentState, data) => {
-//   try {
-//     await connectToDatabase();
-
-//     console.log("Received data for update:", data); // Debugging line
-//     console.log("uuuuuuuuuu",updatedInventory);
-
-//     const updatedInventory = await Inventory.findByIdAndUpdate(data.id, data, { new: true });
-//     if (!updatedInventory) return { success: false, message: "Inventory not found" };
-
-//     return {
-//       success: true,
-//       message: "Inventory updated successfully!",
-//       inventory: serializeData(updatedInventory.toObject()),
-//     };
-//   } catch (error) {
-//     console.error("Error updating inventory:", error);
-//     return { success: false, message: "Failed to update inventory." };
-//   }
-// };
-
 
 // Delete inventory
 export const deleteInventory = async (id) => {
@@ -351,3 +266,4 @@ export const deleteInventory = async (id) => {
     return { success: false, message: "Failed to delete inventory." };
   }
 };
+

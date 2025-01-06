@@ -1,4 +1,3 @@
-// @/components/inventoryForms/InventoryForm.jsx
 
 "use client";
 
@@ -94,10 +93,6 @@ const InventoryForm = ({ type, data }) => {
     }
     fetchSuppliers();
   }, [data, reset]);
-
-
-
-
 
   // Handle success or error states
   useEffect(() => {
@@ -267,9 +262,11 @@ const InventoryForm = ({ type, data }) => {
             <p className="font-medium mb-1 text-sm md:text-xs">{selectedProduct.product_name}</p>
             <p className="text-sm text-gray-500">{selectedProduct.category}</p>
             <p className="text-sm text-gray-400">{selectedProduct.model}</p>
+            <p className="text-sm text-gray-400">{selectedProduct.quantity}</p>
           </div>
         )} */}
       </div>
+
 
       {/* Form Action Buttons */}
       <div className="flex justify-end gap-4 mt-4">
@@ -278,13 +275,12 @@ const InventoryForm = ({ type, data }) => {
           {type === "create" ? "Create" : "Update"}
         </Button>
       </div>
-
+      {/* Modal for selecting a product */}
       <ProductSelectionModal
         isOpen={isProductModalOpen}
         onClose={handleCloseModal}
         onSelect={handleProductSelection}
       />
-
       {/* Table Section */}
       <div className="mt-8 bg-white shadow-md rounded-lg overflow-hidden">
         <table className="w-full text-left border-collapse">
@@ -316,7 +312,7 @@ const InventoryForm = ({ type, data }) => {
                           <span className="capitalize font-medium">{key}:</span>
                           <span>
                             {spec?.brand?.brand_name || "N/A"}{" "}
-                            {spec?.type ? `- ${spec.type}` : ""}
+                            {spec?.type ? `- ${spec.type}` : "N/A"}
                           </span>
                         </li>
                       ))}
@@ -327,7 +323,7 @@ const InventoryForm = ({ type, data }) => {
                 </td>
 
 
-                <td className="p-3 text-sm text-gray-700">{selectedProduct.product_qty}</td>
+                <td className="p-3 text-sm text-gray-700">{selectedProduct.quantity}</td>
                 <td className="p-3 text-sm text-gray-500">{selectedProduct.purchase_type}</td>
                 <td className="p-3 text-sm text-gray-400">{selectedProduct.stock_location}</td>
                 <td className="p-3 text-sm text-gray-500">{selectedProduct.warranty_end_date}</td>

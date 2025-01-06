@@ -5,33 +5,6 @@ import { getProductTemplates } from "@/actions/productLibrary/product-templateAc
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-// Utility function to serialize specifications
-const serializeSpecifications = (specifications) => {
-  if (!specifications || typeof specifications !== "object") return specifications;
-
-  const serialize = (obj) => {
-    if (Array.isArray(obj)) {
-      return obj.map(item => serialize(item));
-    }
-    if (typeof obj === "object") {
-      const result = {};
-      Object.keys(obj).forEach((key) => {
-        if (obj[key] && obj[key]._id) {
-          result[key] = { ...obj[key], _id: obj[key]._id.toString() };
-        } else if (typeof obj[key] === "object") {
-          result[key] = serialize(obj[key]);
-        } else {
-          result[key] = obj[key];
-        }
-      });
-      return result;
-    }
-    return obj;
-  };
-
-  return serialize(specifications);
-};
-
 const ProductSelectionModal = ({ isOpen, onClose, onSelect }) => {
   const [products, setProducts] = useState([]);
   const [selectedProducts, setSelectedProducts] = useState({});
@@ -40,11 +13,7 @@ const ProductSelectionModal = ({ isOpen, onClose, onSelect }) => {
   useEffect(() => {
     async function fetchProducts() {
       const templates = await getProductTemplates();
-      const serializedProducts = templates.map((product) => ({
-        ...product,
-        specifications: serializeSpecifications(product.specifications),
-      }));
-      setProducts(serializedProducts);
+      setProducts(templates); // No serialization applied to specifications
     }
     fetchProducts();
   }, []);
@@ -72,6 +41,7 @@ const ProductSelectionModal = ({ isOpen, onClose, onSelect }) => {
     (product) =>
       product.product_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       product.category?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.quantity?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       JSON.stringify(product.specifications || {})
         .toLowerCase()
         .includes(searchQuery.toLowerCase()) ||
@@ -118,11 +88,12 @@ const ProductSelectionModal = ({ isOpen, onClose, onSelect }) => {
               <p className="text-xs text-gray-500">
                 <strong>Specifications:</strong>
                 <ul className="list-disc pl-4">
-                  {Object.entries(product.specifications).map(([key, value]) => (
-                    <li key={key}>
-                      <strong>{key}:</strong> {JSON.stringify(value)}
-                    </li>
-                  ))}
+                  {product.specifications &&
+                    Object.entries(product.specifications).map(([key, value]) => (
+                      <li key={key}>
+                        <strong>{key}:</strong> {value && typeof value === 'object' ? JSON.stringify(value) : value}
+                      </li>
+                    ))}
                 </ul>
               </p>
               <div className="flex items-center justify-between">
@@ -131,16 +102,18 @@ const ProductSelectionModal = ({ isOpen, onClose, onSelect }) => {
                   onChange={(e) => handleProductSelect(product, e.target.checked)}
                   checked={!!selectedProducts[product._id]}
                 />
-                <input
-                  type="number"
-                  min="1"
-                  value={selectedProducts[product._id]?.quantity || ""}
-                  onChange={(e) =>
-                    handleQuantityChange(product._id, parseInt(e.target.value, 10))
-                  }
-                  disabled={!selectedProducts[product._id]}
-                  className="w-12 text-center border rounded"
-                />
+                <div className="flex items-center justify-between">
+                  <label className="text-xs text-gray-500">
+                    <strong>Category:</strong> {product.quantity || ""}
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    value={selectedProducts[product._id]?.quantity || ""}
+                    onChange={(e) => handleQuantityChange(product._id, parseInt(e.target.value, 10))}
+                    className="w-12 text-center border rounded"
+                  />
+                </div>
               </div>
             </div>
           ))}
