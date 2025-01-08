@@ -8,7 +8,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useFormState } from "react-dom";
-import { getActiveSuppliers, createInventory, updateInventory } from "@/actions/inventory/inventoryActions";
+import { getActiveSuppliers, createInventory, updateInventory ,getProductTemplates } from "@/actions/inventory/inventoryActions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -45,6 +45,7 @@ const InventoryForm = ({ type, data }) => {
     type === "create" ? createInventory : updateInventory,
     { success: false, error: false, message: "" }
   );
+  console.log(getProductTemplates, "mmmmmmmmmmmmmmmmmmmmmmm");
 
   const {
     register,
@@ -142,6 +143,7 @@ const InventoryForm = ({ type, data }) => {
     };
     await formAction(payload);
   });
+
 
   return (
     <form
@@ -312,7 +314,8 @@ const InventoryForm = ({ type, data }) => {
                           <span className="capitalize font-medium">{key}:</span>
                           <span>
                             {spec?.brand?.brand_name || "N/A"}{" "}
-                            {spec?.type ? `- ${spec.type}` : "N/A"}
+                            {spec?.type?.type || "N/A"}{" "}
+                            {/* {spec?.type ? `- ${spec.type}` : "N/A"} */}
                           </span>
                         </li>
                       ))}

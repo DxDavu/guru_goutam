@@ -153,12 +153,12 @@ export const CreateNewUserPerformanceButton = () => {
 
   return (
     <div className="flex justify-end mt-10">
-      <Button
+      {/* <Button
         className="bg-blue-500 text-white"
         onClick={() => router.push("/user-performance/user/new")}
       >
         Create New User Performance
-      </Button>
+      </Button> */}
     </div>
   );
 };

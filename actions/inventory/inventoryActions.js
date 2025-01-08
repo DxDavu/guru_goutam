@@ -8,6 +8,8 @@ import Supplier from "@/lib/database/models/procurement/Supplier.model";
 import ProductCategory from "@/lib/database/models/productLibrary/Product-category.model";
 import Brand from "@/lib/database/models/productLibrary/Brand.model";
 import mongoose from "mongoose";
+import ItemVariantModel
+ from "@/lib/database/models/productLibrary/Item-variant.model";
 
 
 const serializeData = (data) => {
@@ -17,31 +19,49 @@ const serializeData = (data) => {
     return data.map(serializeData);
   }
 
+  const mongoObjType = data?._bsontype
+  // const mongoObjType = data?._bsontype
+
+  // Check if the data itself is of bsonType
+  if (mongoObjType) {
+    switch (mongoObjType) {
+      case "ObjectId":
+        return data._id.toString(); // Serialize ObjectId
+      case "Date":
+        return new Date(data.value).toISOString(); // Serialize BSON Date
+      default:
+        return data; // Handle other BSON types as-is
+    }
+  }
+
+  // Proceed to process the object keys
   return Object.keys(data).reduce((result, key) => {
     const value = data[key];
 
-    // Skip serializing 'specifications' field
-    if (key === "specifications") {
-      result[key] = value;
-      // Skip serializing 'type' fields inside specifications
-      if (value && typeof value === "object") {
-        for (let specKey in value) {
-          if (value[specKey] && value[specKey].type) {
-            value[specKey].type = value[specKey].type; // Keep 'type' as is (no serialization)
-          }
-        }
-      }
-      return result;
-    }
+    const mongoObjType = value?._bsontype
+    // const mongoObjType = value?._bsontype.toString()
 
-    if (value instanceof Date) {
+    // Check for bsonType in the value
+    if (value && typeof value === "object" && mongoObjType) {
+      switch (mongoObjType) {
+        case "ObjectId":
+          result[key] = value._id.toString(); // Serialize ObjectId
+          break;
+        case "Date":
+          result[key] = new Date(value.value).toISOString(); // Serialize BSON Date
+          break;
+        default:
+          result[key] = value; // Handle other BSON types as-is
+          break;
+      }
+    } else if (value instanceof Date) {
       result[key] = value.toISOString();
     } else if (value && typeof value === "object") {
       // Handle nested MongoDB documents, including ObjectId conversion
       if (value._id) {
         result[key] = { ...serializeData(value), _id: value._id.toString() };
       } else {
-        result[key] = serializeData(value);
+        result[key] = { ...serializeData(value) };
       }
     } else {
       result[key] = value;
@@ -51,66 +71,109 @@ const serializeData = (data) => {
   }, {});
 };
 
+
+// const serializeData = (data) => {
+//   if (!data || typeof data !== "object") return data;
+
+//   if (Array.isArray(data)) {
+//     return data.map(serializeData);
+//   }
+
+//   return Object.keys(data).reduce((result, key) => {
+//     const value = data[key];
+
+//     // // Skip serializing 'specifications' field
+//     // if (key === "specifications") {
+//     //   result[key] = value;
+//     //   // Skip serializing 'type' fields inside specifications
+//     //   if (value && typeof value === "object") {
+//     //     for (let specKey in value) {
+//     //       if (value[specKey] && value[specKey].type) {
+//     //         value[specKey].type = value[specKey].type; // Keep 'type' as is (no serialization)
+//     //       }
+//     //     }
+//     //   }
+//     //   return result;
+//     // }
+
+//     if (value instanceof Date) {
+//       result[key] = value.toISOString();
+//     } else if (value && typeof value === "object") {
+//       // Handle nested MongoDB documents, including ObjectId conversion
+//       if (value._id) {
+//         result[key] = { ...serializeData(value), _id: value._id.toString() };
+//       } else {
+//         result[key] = { ...serializeData(value)};
+//       }
+//     } else {
+//       result[key] = value;
+//     }
+
+//     return result;
+//   }, {});
+// };
+
 // Fetch inventory by ID
-export const getInventoryById = async (id) => {
-  await connectToDatabase();
+// export const getInventoryById = async (id) => {
+//   await connectToDatabase();
+//   if (!mongoose.Types.ObjectId.isValid(id)) {
+//     throw new Error(`Invalid ObjectId: ${id}`);
+//   }
 
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new Error(`Invalid ObjectId: ${id}`);
-  }
+//   // Fetch inventory by ID
+//   const inventory = await Inventory.findById(id)
+//     .populate("supplier", "supplier_name")
+//     .populate({
+//       path: "product",
+//       select: "product_name category brand specifications quantity",
+//       populate: [
+//         { path: "category", select: "category_name" },
+//         { path: "brand", select: "brand_name" },
+//         {
+//           path: "specifications",
+//           populate: [
+//             { path: "ram.brand", select: "brand_name" },
+//             { path: "ram.type", select: "type" },
+//             { path: "processor.brand", select: "brand_name" },
+//             { path: "processor.type", select: "type" },
+//             { path: "storage.brand", select: "brand_name" },
+//             { path: "storage.type", select: "type" },
+//             { path: "graphics.brand", select: "brand_name" },
+//             { path: "graphics.type", select: "type" },
+//             { path: "os.brand", select: "brand_name" },
+//             { path: "os.type", select: "type" },
+//           ],
+//         },
+//       ],
+//     })
+//     .lean();
+//   console.log(inventory);
 
-  // Fetch inventory by ID
-  const inventory = await Inventory.findById(id)
-    .populate("supplier", "supplier_name")
-    .populate({
-      path: "product",
-      select: "product_name category brand specifications quantity",
-      populate: [
-        { path: "category", select: "category_name" },
-        { path: "brand", select: "brand_name" },
-        {
-          path: "specifications",
-          populate: [
-            { path: "ram.brand", select: "brand_name" },
-            { path: "ram.type", select: "type" },
-            { path: "processor.brand", select: "brand_name" },
-            { path: "processor.type", select: "type" },
-            { path: "storage.brand", select: "brand_name" },
-            { path: "storage.type", select: "type" },
-            { path: "graphics.brand", select: "brand_name" },
-            { path: "graphics.type", select: "type" },
-            { path: "os.brand", select: "brand_name" },
-            { path: "os.type", select: "type" },
-          ],
-        },
-      ],
-    })
-    .lean();
-    console.log(inventory);
-    
 
-  if (!inventory) {
-    return null;
-  }
+//   if (!inventory) {
+//     return null;
+//   }
 
-  return {
-    ...serializeData(inventory), // Apply serialization to the inventory
-    _id: inventory._id.toString(),
-    supplier: inventory.supplier
-      ? { ...serializeData(inventory.supplier), _id: inventory.supplier._id.toString() }
-      : null,
-    product: inventory.product
-      ? {
-          ...serializeData(inventory.product),
-          _id: inventory.product._id.toString(),
-          category: inventory.product.category?.category_name || null,
-          brand: inventory.product.brand?.brand_name || null,
-          specifications: inventory.product.specifications || null, 
-          quantity: inventory.product.quantity || null,
-        }
-      : null,
-  };
-};
+//   return {
+//     ...serializeData(inventory), // Apply serialization to the inventory
+//     _id: inventory._id.toString(),
+//     supplier: inventory.supplier
+//       ? { ...serializeData(inventory.supplier), _id: inventory.supplier._id.toString() }
+//       : null,
+//     product: inventory.product
+//       ? {
+//         ...serializeData(inventory.product),
+//         _id: inventory.product._id.toString(),
+//         category: inventory.product.category?.category_name || null,
+//         brand: inventory.product.brand?.brand_name || null,
+//         specifications: inventory.product.specifications || null,
+//         quantity: inventory.product.quantity || null,
+//       }
+//       : null,
+//   };
+// };
+
+
 
 // Update inventory to include specifications if available
 export const updateInventory = async (currentState, data) => {
@@ -171,12 +234,45 @@ export const updateInventory = async (currentState, data) => {
 };
 
 // Fetch all inventories
-export const getInventory = async () => {
+// export const getInventory = async () => {
+//   await connectToDatabase();
+//   const inventories = await Inventory.find({})
+//     .populate("supplier", "supplier_name")
+//     .populate("product", "product_name")
+//     // .populate("product", "product_name specifications")
+//     .populate('category', 'category_name')
+//     .populate("brand", "brand_name") // Populating the brand field
+//     .populate("product.specifications.ram.brand", "brand_name")
+//     .populate("product.specifications.ram.type", "type")
+//     .populate("product.specifications.processor.brand", "brand_name")
+//     .populate("product.specifications.processor.type", "type")
+//     .populate("product.specifications.storage.brand", "brand_name")
+//     .populate("product.specifications.storage.type", "type")
+//     .populate("product.specifications.graphics.brand", "brand_name")
+//     .populate("product.specifications.graphics.type", "type")
+//     .populate("product.specifications.os.brand", "brand_name")
+//     .populate("product.specifications.os.type", "type")
+//     .lean();
+//   console.log(inventories, "gettttttttttt");
+
+//   const resultArray = inventories.map((inventory) => ({
+//     ...serializeData(inventory), // Apply serialization
+//     _id: inventory._id.toString(),
+//     supplier: inventory.supplier?.supplier_name || "",
+//     brand: inventory.brand?.brand_name || "",
+//     // specifications: { ...serializeData(inventory?.product?.specifications) } || null, // No serialization for specifications
+//   }));
+
+//   return resultArray
+// };
+
+
+// Get all product templates
+export const getProductTemplates = async () => {
   await connectToDatabase();
-  const inventories = await Inventory.find({})
-    .populate("supplier", "supplier_name")
-    .populate("product", "product_name category brand")
-    .populate("brand", "brand_name") // Populating the brand field
+  const templates = await ProductTemplate.find({})
+    .populate('category', 'category_name')
+    .populate('brand', 'brand_name')
     .populate("specifications.ram.brand", "brand_name")
     .populate("specifications.ram.type", "type")
     .populate("specifications.processor.brand", "brand_name")
@@ -188,20 +284,14 @@ export const getInventory = async () => {
     .populate("specifications.os.brand", "brand_name")
     .populate("specifications.os.type", "type")
     .lean();
-    console.log(inventories,"gettttttttttt");
     
-
-  return inventories.map((inventory) => ({
-    ...serializeData(inventory), // Apply serialization
-    _id: inventory._id.toString(),
-    supplier: inventory.supplier?.supplier_name || "",
-    brand: inventory.brand?.brand_name || "",
-    specifications: inventory.specifications || null, // No serialization for specifications
+  return templates.map(template => serializeData({
+    ...template,
+    _id: template._id.toString(),
+    category: template.category?.category_name || '',
+    brand: template.brand?.brand_name || '',
   }));
 };
-     
-
-
 
 
 
@@ -239,9 +329,11 @@ export const getActiveBrands = async () => {
 // Create inventory
 export const createInventory = async (currentState, data) => {
   try {
+
     await connectToDatabase();
     const newInventory = new Inventory(data);
     const savedInventory = await newInventory.save();
+
     return {
       success: true,
       message: "Inventory created successfully!",
@@ -267,3 +359,88 @@ export const deleteInventory = async (id) => {
   }
 };
 
+// Fetch inventory by ID
+export const getInventoryById = async (id) => {
+  await connectToDatabase();
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new Error(`Invalid ObjectId: ${id}`);
+  }
+
+  const inventory = await Inventory.findById(id)
+    .populate("supplier", "supplier_name")
+    .populate({
+      path: "product",
+      select: "product_name category brand specifications quantity",
+      populate: [
+        { path: "category", select: "category_name" },
+        { path: "brand", select: "brand_name" },
+        {
+          path: "specifications",
+          populate: [
+            { path: "ram.brand", select: "brand_name" },
+            { path: "ram.type", model: ItemVariantModel, select: "type" },
+            { path: "processor.brand", select: "brand_name" },
+            { path: "processor.type", model: ItemVariantModel, select: "type" },
+            { path: "storage.brand", select: "brand_name" },
+            { path: "storage.type", model: ItemVariantModel, select: "type" },
+            { path: "graphics.brand", select: "brand_name" },
+            { path: "graphics.type", model: ItemVariantModel, select: "type" },
+            { path: "os.brand", select: "brand_name" },
+            { path: "os.type", model: ItemVariantModel, select: "type" },
+          ],
+        },
+      ],
+    })
+    .lean();
+
+  if (!inventory) {
+    return null;
+  }
+
+  return {
+    ...serializeData(inventory),
+    _id: inventory._id.toString(),
+    supplier: inventory.supplier
+      ? { ...serializeData(inventory.supplier), _id: inventory.supplier._id.toString() }
+      : null,
+    product: inventory.product
+      ? {
+          ...serializeData(inventory.product),
+          _id: inventory.product._id.toString(),
+          category: inventory.product.category?.category_name || null,
+          brand: inventory.product.brand?.brand_name || null,
+          specifications: inventory.product.specifications || null,
+          quantity: inventory.product.quantity || null,
+        }
+      : null,
+  };
+};
+
+// Fetch all inventories
+export const getInventory = async () => {
+  await connectToDatabase();
+  const inventories = await Inventory.find({})
+    .populate("supplier", "supplier_name")
+    .populate("product", "product_name")
+    .populate("category", "category_name")
+    .populate("brand", "brand_name")
+    .populate("product.specifications.ram.brand", "brand_name")
+    .populate("product.specifications.ram.type", { model: ItemVariantModel, select: "type" })
+    .populate("product.specifications.processor.brand", "brand_name")
+    .populate("product.specifications.processor.type", { model: ItemVariantModel, select: "type" })
+    .populate("product.specifications.storage.brand", "brand_name")
+    .populate("product.specifications.storage.type", { model: ItemVariantModel, select: "type" })
+    .populate("product.specifications.graphics.brand", "brand_name")
+    .populate("product.specifications.graphics.type", { model: ItemVariantModel, select: "type" })
+    .populate("product.specifications.os.brand", "brand_name")
+    .populate("product.specifications.os.type", { model: ItemVariantModel, select: "type" })
+    .lean();
+
+  return inventories.map((inventory) => ({
+    ...serializeData(inventory),
+    _id: inventory._id.toString(),
+    supplier: inventory.supplier?.supplier_name || "",
+    brand: inventory.brand?.brand_name || "",
+  }));
+};
