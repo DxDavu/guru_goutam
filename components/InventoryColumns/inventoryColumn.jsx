@@ -30,6 +30,7 @@ export const columns = [
     ),
   },
   { accessorKey: "inventory_name", header: "Product Name" },
+  { accessorKey: "mail_id", header: "Product Name" },
   { accessorKey: "product_qty", header: "Product Qty" },
   { accessorKey: "category", header: "Category " },
   { accessorKey: "brand", header: "Brand " },

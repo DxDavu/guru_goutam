@@ -24,6 +24,7 @@ import ProductSelectionModal from "@/components/procurementModals/ProductSelecti
 // Validation schema
 const schema = z.object({
   inventory_name: z.string().min(1, "Inventory Name is required"),
+  mail_id: z.string().min(1, "Inventory Name is required"),
   owner: z.string().optional(),
   supplier: z.string().optional(),
   product: z.string().optional(),
@@ -192,9 +193,15 @@ const InventoryForm = ({ type, data }) => {
                     </Select>
                   )}
                 </div>
+              
                 <div className="sm:col-span-2">
                   <h3>Supplier Mail ID</h3>
-                  <Input {...register("inventory_name")} placeholder="Supplier Mail ID" className="border border-gray-300 rounded-md p-4 w-full" />
+                  <Input {...register("mail_id")} placeholder="Supplier Mail ID" className="border border-gray-300 rounded-md p-4 w-full" />
+                  {errors.mail_id && <p className="text-red-500">{errors.mail_id.message}</p>}
+                </div>
+                <div className="sm:col-span-2">
+                  <h3>Phone Number</h3>
+                  <Input {...register("inventory_name")} placeholder="Phone Number" className="border border-gray-300 rounded-md p-4 w-full" />
                   {errors.inventory_name && <p className="text-red-500">{errors.inventory_name.message}</p>}
                 </div>
               </div>
@@ -326,7 +333,7 @@ const InventoryForm = ({ type, data }) => {
                 </td>
 
 
-                <td className="p-3 text-sm text-gray-700">{selectedProduct.quantity}</td>
+                <td className="p-3 text-sm text-gray-700">{ProductSelectionModal.quantity}</td>
                 <td className="p-3 text-sm text-gray-500">{selectedProduct.purchase_type}</td>
                 <td className="p-3 text-sm text-gray-400">{selectedProduct.stock_location}</td>
                 <td className="p-3 text-sm text-gray-500">{selectedProduct.warranty_end_date}</td>

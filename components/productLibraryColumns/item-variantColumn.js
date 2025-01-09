@@ -103,7 +103,7 @@ export const columns = [
   { id: "sl_no", header: "Sl. No", cell: ({ row }) => row.index + 1 },
   {
     accessorKey: "type",
-    header: "Item Type",
+    header: "Item Varient Type",
   },
   {
     accessorKey: "category",

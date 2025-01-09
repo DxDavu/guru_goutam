@@ -28,7 +28,7 @@ import { toast } from "react-toastify";
 const schema = z.object({
   item_name: z.string().optional(), // This makes the item_name optional
   category: z.string().nonempty("Category is required!"),
-  type: z.string().nonempty("Type is required!"),
+  type: z.string().optional(),
   active_status: z.boolean().default(true),
 });
 
