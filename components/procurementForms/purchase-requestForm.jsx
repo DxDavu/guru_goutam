@@ -1,5 +1,3 @@
-// @/components/procurementForms/PurchaseRequestForm.jsx
-
 "use client";
 
 import { useForm } from "react-hook-form";
@@ -20,7 +18,11 @@ import {
 import { Button } from "@/components/ui/button";
 import ProductSelectionModal from "@/components/procurementModals/ProductSelectionModal";
 import { useFormState } from "react-dom";
-import { getSuppliers, createPurchaseRequest, updatePurchaseRequest } from "@/actions/procurement/purchase-requestActions";
+import {
+  getSuppliers,
+  createPurchaseRequest,
+  updatePurchaseRequest,
+} from "@/actions/procurement/purchase-requestActions";
 import { format } from "date-fns";
 import Loader from "@/components/ui/loader";
 
@@ -32,21 +34,21 @@ const schema = z.object({
   supplier: z.string().nonempty("Supplier is required!"),
   phone_number: z.string().regex(/^\+?[0-9]{10,15}$/).optional(),
   supplier_email: z.string().email().optional(),
-
   purchase_type: z.enum(["Buy", "Sell"]),
   description: z.string().optional(),
- 
 });
 
 const PurchaseRequestForm = ({ type, data }) => {
   const router = useRouter();
   const [suppliers, setSuppliers] = useState([]);
-  const [selectedProducts, setSelectedProducts] = useState([]);
+  const [selectedProduct, setSelectedProduct] = useState([]);
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [isLoadingSuppliers, setIsLoadingSuppliers] = useState(false);
   const [updatedStages, setUpdatedStages] = useState({});
   const [stages, setStages] = useState(data?.stages || []);
-  const [poQuotations, setPoQuotations] = useState(data?.stages?.find((stage) => stage.stage_name === "PO Quotations")?.quotations || []);
+  const [poQuotations, setPoQuotations] = useState(
+    data?.stages?.find((stage) => stage.stage_name === "PO Quotations")?.quotations || []
+  );
 
   const [state, formAction] = useFormState(
     type === "create" ? createPurchaseRequest : updatePurchaseRequest,
@@ -58,7 +60,6 @@ const PurchaseRequestForm = ({ type, data }) => {
     defaultValues: data || {},
   });
 
-  // Fetch suppliers and populate initial form data
   useEffect(() => {
     async function fetchSuppliers() {
       setIsLoadingSuppliers(true);
@@ -77,7 +78,7 @@ const PurchaseRequestForm = ({ type, data }) => {
             purchase_type: data.purchase_type || "",
             description: data.description || "",
           });
-          setSelectedProducts(data.products || []);
+          setSelectedProduct(data.products || []);
           setStages(data.stages || []);
         }
       } catch (error) {
@@ -98,14 +99,14 @@ const PurchaseRequestForm = ({ type, data }) => {
 
   const handleProductSelection = useCallback(
     (products) => {
-      setSelectedProducts(products);
+      setSelectedProduct(products);
       handleCloseModal();
     },
     [handleCloseModal]
   );
 
   const handleQuantityChange = (productId, quantity) => {
-    setSelectedProducts((prev) =>
+    setSelectedProduct((prev) =>
       prev.map((p) =>
         p.product._id === productId ? { ...p, quantity: Math.max(1, quantity) } : p
       )
@@ -113,7 +114,7 @@ const PurchaseRequestForm = ({ type, data }) => {
   };
 
   const handleRemoveProduct = (productId) => {
-    setSelectedProducts((prev) => prev.filter((p) => p.product._id !== productId));
+    setSelectedProduct((prev) => prev.filter((p) => p.product._id !== productId));
   };
 
   const handleStageStatusChange = (stageName, newStatus) => {
@@ -128,7 +129,7 @@ const PurchaseRequestForm = ({ type, data }) => {
       ...prev,
       {
         supplier: "",
-        products: selectedProducts.map((product) => ({
+        products: selectedProduct.map((product) => ({
           product: product.product._id,
           quantity: product.quantity,
           amount: 0,
@@ -149,11 +150,11 @@ const PurchaseRequestForm = ({ type, data }) => {
       prev.map((q, i) =>
         i === quotationIndex
           ? {
-            ...q,
-            products: q.products.map((p, j) =>
-              j === productIndex ? { ...p, [field]: value } : p
-            ),
-          }
+              ...q,
+              products: q.products.map((p, j) =>
+                j === productIndex ? { ...p, [field]: value } : p
+              ),
+            }
           : q
       )
     );
@@ -164,17 +165,17 @@ const PurchaseRequestForm = ({ type, data }) => {
   };
 
   const onSubmit = handleSubmit(async (formData) => {
-
     try {
       const stagesToUpdate = stages.map((stage) => ({
         ...stage,
         status: updatedStages[stage.stage_name] || stage.status,
-        quotations: stage.stage_name === "PO Quotations" ? poQuotations : stage.quotations,
+        quotations:
+          stage.stage_name === "PO Quotations" ? poQuotations : stage.quotations,
       }));
 
       await formAction({
         ...formData,
-        products: selectedProducts.map((p) => ({
+        products: selectedProduct.map((p) => ({
           product: p.product._id,
           quantity: p.quantity,
         })),
@@ -189,7 +190,9 @@ const PurchaseRequestForm = ({ type, data }) => {
 
   useEffect(() => {
     if (state?.success) {
-      toast.success(`Purchase Request ${type === "create" ? "created" : "updated"} successfully!`);
+      toast.success(
+        `Purchase Request ${type === "create" ? "created" : "updated"} successfully!`
+      );
       router.push("/procurement/purchase-requests");
       router.refresh();
     } else if (state?.error) {
@@ -352,9 +355,9 @@ const PurchaseRequestForm = ({ type, data }) => {
               </SelectContent>
             </Select>
             {quotation.products.map((product, productIndex) => {
-              // Match the product with selectedProducts or fallback to fetch data
+              // Match the product with selectedProduct or fallback to fetch data
               const matchedProduct =
-                selectedProducts.find((p) => p.product._id === product.product) || product;
+                selectedProduct.find((p) => p.product._id === product.product) || product;
 
               return (
                 <div key={product.product} className="flex items-center gap-4 mt-2">
@@ -401,7 +404,7 @@ const PurchaseRequestForm = ({ type, data }) => {
         <Button type="button" onClick={handleOpenModal}>
           Select Product
         </Button>
-        {selectedProducts.map((product) => (
+        {selectedProduct.map((product) => (
           <div key={product.product._id} className="flex items-center gap-4 mt-2">
             <img
               src={product.product.image || "/placeholder.png"}
@@ -447,24 +450,121 @@ const PurchaseRequestForm = ({ type, data }) => {
         onClose={handleCloseModal}
         onSelect={handleProductSelection}
       />
-        {/* Table Section */}
-<div className="mt-8 bg-white shadow-md rounded-lg overflow-hidden">
-  <table className="w-full text-left border-collapse">
-    <thead className="bg-gray-200 border-b-2 border-gray-300">
-      <tr>
-      <th className="p-3 font-medium text-gray-700">Product Image</th>
 
-        <th className="p-3 font-medium text-gray-700">Product Name</th>
-        <th className="p-3 font-medium text-gray-700">Category</th>
-        <th className="p-3 font-medium text-gray-700">Brand</th>
-        <th className="p-3 font-medium text-gray-700">Specification</th>
-        <th className="p-3 font-medium text-gray-700">Product Qty</th>
-      </tr>
-    </thead>
-    <tbody>
-    </tbody>
-  </table>
-</div>
+        {/* Table Section */}
+        <div className="mt-8 bg-white shadow-md rounded-lg overflow-hidden">
+        <table className="w-full text-left border-collapse">
+          <thead className="bg-gray-200 border-b-2 border-gray-300">
+            <tr>
+              <th className="p-3 font-medium text-gray-700">Product Name</th>
+              <th className="p-3 font-medium text-gray-700">Category</th>
+              <th className="p-3 font-medium text-gray-700">Brand</th>
+              <th className="p-3 font-medium text-gray-700">Specification</th>
+              <th className="p-3 font-medium text-gray-700">Product Qty</th>
+              <th className="p-3 font-medium text-gray-700">Product Purchase Type</th>
+              <th className="p-3 font-medium text-gray-700">Stock Location</th>
+              <th className="p-3 font-medium text-gray-700">Warranty End Date</th>
+              <th className="p-3 font-medium text-gray-700">Price (30 Days)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {selectedProduct ? (
+              <tr>
+                <td className="p-3 text-sm text-gray-700">{selectedProduct.product_name}</td>
+                <td className="p-3 text-sm text-gray-500">{selectedProduct.category}</td>
+                <td className="p-3 text-sm text-gray-400">{selectedProduct.brand}</td>
+                {/* Specifications Column */}
+                <td className="p-3 text-sm text-gray-500">
+                  {selectedProduct.specifications && Object.keys(selectedProduct.specifications).length > 0 ? (
+                    <ul className="text-sm">
+                      {Object.entries(selectedProduct.specifications).map(([key, spec]) => (
+                        <li key={key} className="flex justify-between items-center">
+                          <span className="capitalize font-medium">{key}:</span>
+                          <span>
+                            {spec?.brand?.brand_name || "N/A"}{" "}
+                            {spec?.type?.type || "N/A"}{" "}
+                            {/* {spec?.type ? `- ${spec.type}` : "N/A"} */}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    "No specifications available"
+                  )}
+                </td>
+
+
+                <td className="p-3 text-sm text-gray-700">{ProductSelectionModal.quantity}</td>
+                <td className="p-3 text-sm text-gray-500">{selectedProduct.purchase_type}</td>
+                <td className="p-3 text-sm text-gray-400">{selectedProduct.stock_location}</td>
+                <td className="p-3 text-sm text-gray-500">{selectedProduct.warranty_end_date}</td>
+                <td className="p-3 text-sm text-gray-700">{selectedProduct.price_30_days}</td>
+              </tr>
+            ) : (
+              <tr>
+                <td colSpan="9" className="p-3 text-center text-sm text-gray-500">
+                  No product selected.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="my-6">
+      <h3 className="text-lg font-semibold">Selected Products</h3>
+      <Button type="button" onClick={handleOpenModal} className="mb-4">
+        Add Product
+      </Button>
+      {selectedProduct.length > 0 ? (
+        <table className="table-auto w-full border border-gray-200">
+          <thead>
+            <tr className="bg-gray-100 text-left">
+              <th className="px-4 py-2 border">#</th>
+              <th className="px-4 py-2 border">Product Name</th>
+              <th className="px-4 py-2 border">Brand</th>
+              <th className="px-4 py-2 border">Category</th>
+              <th className="px-4 py-2 border">Quantity</th>
+              <th className="px-4 py-2 border">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {selectedProduct.map((product, index) => (
+              <tr key={product.product._id} className="hover:bg-gray-50">
+                <td className="px-4 py-2 border">{index + 1}</td>
+                <td className="px-4 py-2 border">{product.product.name}</td>
+                <td className="px-4 py-2 border">{product.product.brand?.name || "N/A"}</td>
+                <td className="px-4 py-2 border">{product.product.category?.name || "N/A"}</td>
+                <td className="px-4 py-2 border">
+                  <Input
+                    type="number"
+                    min="1"
+                    value={product.quantity}
+                    onChange={(e) =>
+                      handleQuantityChange(product.product._id, +e.target.value)
+                    }
+                    className="w-20"
+                  />
+                </td>
+                <td className="px-4 py-2 border">
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    onClick={() => handleRemoveProduct(product.product._id)}
+                  >
+                    Remove
+                  </Button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <p className="text-gray-500">No products selected. Click "Add Product" to select.</p>
+      )}
+    </div>
+
+
     </form>
   );
 
