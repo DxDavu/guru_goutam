@@ -150,11 +150,11 @@ const PurchaseRequestForm = ({ type, data }) => {
       prev.map((q, i) =>
         i === quotationIndex
           ? {
-              ...q,
-              products: q.products.map((p, j) =>
-                j === productIndex ? { ...p, [field]: value } : p
-              ),
-            }
+            ...q,
+            products: q.products.map((p, j) =>
+              j === productIndex ? { ...p, [field]: value } : p
+            ),
+          }
           : q
       )
     );
@@ -203,7 +203,7 @@ const PurchaseRequestForm = ({ type, data }) => {
   return (
     <form onSubmit={onSubmit} className="w-full max-w-screen-2xl mx-auto p-4 sm:p-6 md:p-4 bg-white shadow-md rounded-lg mt-10 ml-56">
 
-            <h1 className="text-xl font-semibold">
+      <h1 className="text-xl font-semibold">
         {type === "create" ? "Create purchase request" : "Edit  purchase request"}
       </h1>
 
@@ -285,7 +285,7 @@ const PurchaseRequestForm = ({ type, data }) => {
               <SelectGroup>
                 <SelectItem value="Buy">Buy</SelectItem>
                 <SelectItem value="Rent">Rent</SelectItem>
-              </SelectGroup> 
+              </SelectGroup>
             </SelectContent>
           </Select>
           <div className="mt-4">
@@ -445,14 +445,15 @@ const PurchaseRequestForm = ({ type, data }) => {
         </Button>
       </div>
 
+
       <ProductSelectionModal
         isOpen={isProductModalOpen}
         onClose={handleCloseModal}
         onSelect={handleProductSelection}
       />
 
-        {/* Table Section */}
-        <div className="mt-8 bg-white shadow-md rounded-lg overflow-hidden">
+      {/* Table Section */}
+      <div className="mt-8 bg-white shadow-md rounded-lg overflow-hidden">
         <table className="w-full text-left border-collapse">
           <thead className="bg-gray-200 border-b-2 border-gray-300">
             <tr>
@@ -460,111 +461,80 @@ const PurchaseRequestForm = ({ type, data }) => {
               <th className="p-3 font-medium text-gray-700">Category</th>
               <th className="p-3 font-medium text-gray-700">Brand</th>
               <th className="p-3 font-medium text-gray-700">Specification</th>
-              <th className="p-3 font-medium text-gray-700">Product Qty</th>
-              <th className="p-3 font-medium text-gray-700">Product Purchase Type</th>
+              <th className="px-4 py-2 font-medium text-gray-700">Quantity</th>
+              <th className="p-3 font-medium text-gray-700">Purchase Type</th>
               <th className="p-3 font-medium text-gray-700">Stock Location</th>
               <th className="p-3 font-medium text-gray-700">Warranty End Date</th>
               <th className="p-3 font-medium text-gray-700">Price (30 Days)</th>
+              <th className="p-3 font-medium text-gray-700">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {selectedProduct ? (
-              <tr>
-                <td className="p-3 text-sm text-gray-700">{selectedProduct.product_name}</td>
-                <td className="p-3 text-sm text-gray-500">{selectedProduct.category}</td>
-                <td className="p-3 text-sm text-gray-400">{selectedProduct.brand}</td>
-                {/* Specifications Column */}
-                <td className="p-3 text-sm text-gray-500">
-                  {selectedProduct.specifications && Object.keys(selectedProduct.specifications).length > 0 ? (
-                    <ul className="text-sm">
-                      {Object.entries(selectedProduct.specifications).map(([key, spec]) => (
-                        <li key={key} className="flex justify-between items-center">
-                          <span className="capitalize font-medium">{key}:</span>
-                          <span>
-                            {spec?.brand?.brand_name || "N/A"}{" "}
-                            {spec?.type?.type || "N/A"}{" "}
-                            {/* {spec?.type ? `- ${spec.type}` : "N/A"} */}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    "No specifications available"
-                  )}
-                </td>
-
-
-                <td className="p-3 text-sm text-gray-700">{ProductSelectionModal.quantity}</td>
-                <td className="p-3 text-sm text-gray-500">{selectedProduct.purchase_type}</td>
-                <td className="p-3 text-sm text-gray-400">{selectedProduct.stock_location}</td>
-                <td className="p-3 text-sm text-gray-500">{selectedProduct.warranty_end_date}</td>
-                <td className="p-3 text-sm text-gray-700">{selectedProduct.price_30_days}</td>
-              </tr>
+            {selectedProduct.length > 0 ? (
+              selectedProduct.map((product, index) => (
+                <tr
+                  key={product.product._id}
+                  className={`${index % 2 === 0 ? "bg-gray-50" : "bg-white"
+                    } border-b`}
+                >
+                  <td className="p-3">{product.product.product_name}</td>
+                  <td className="p-3">{product.product.category}</td>
+                  <td className="p-3">{product.product.brand}</td>
+                  {/* Specifications Column */}
+                  <td className="p-3 text-sm text-gray-500">
+                    {selectedProduct.specifications && Object.keys(selectedProduct.specifications).length > 0 ? (
+                      <ul className="text-sm">
+                        {Object.entries(selectedProduct.specifications).map(([key, spec]) => (
+                          <li key={key} className="flex justify-between items-center">
+                            <span className="capitalize font-medium">{key}:</span>
+                            <span>
+                              {spec?.brand?.brand_name || "N/A"}{" "}
+                              {spec?.type?.type || "N/A"}{" "}
+                              {/* {spec?.type ? `- ${spec.type}` : "N/A"} */}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      "No specifications available"
+                    )}
+                  </td>
+                  <td className="p-3">
+                    <Input
+                      type="number"
+                      min="1"
+                      value={product.quantity}
+                      onChange={(e) =>
+                        handleQuantityChange(product.product._id, parseInt(e.target.value, 10))
+                      }
+                      className="w-16"
+                    />
+                  </td>
+                  <td className="p-3">{product.product.purchase_type}</td>
+                  <td className="p-3">{product.product.stock_location || "N/A"}</td>
+                  <td className="p-3">{product.product.warranty_end_date || "N/A"}</td>
+                  <td className="p-3">{product.product.price || "N/A"}</td>
+                  <td className="p-3">
+                    <Button
+                      type="button"
+                      onClick={() => handleRemoveProduct(product.product._id)}
+                      className="bg-red-500 text-white"
+                    >
+                      Remove
+                    </Button>
+                  </td>
+                </tr>
+              ))
             ) : (
               <tr>
-                <td colSpan="9" className="p-3 text-center text-sm text-gray-500">
-                  No product selected.
+                <td colSpan="10" className="p-3 text-center text-gray-500">
+                  No products selected.
                 </td>
               </tr>
             )}
           </tbody>
         </table>
       </div>
-
-      <div className="my-6">
-      <h3 className="text-lg font-semibold">Selected Products</h3>
-      <Button type="button" onClick={handleOpenModal} className="mb-4">
-        Add Product
-      </Button>
-      {selectedProduct.length > 0 ? (
-        <table className="table-auto w-full border border-gray-200">
-          <thead>
-            <tr className="bg-gray-100 text-left">
-              <th className="px-4 py-2 border">#</th>
-              <th className="px-4 py-2 border">Product Name</th>
-              <th className="px-4 py-2 border">Brand</th>
-              <th className="px-4 py-2 border">Category</th>
-              <th className="px-4 py-2 border">Quantity</th>
-              <th className="px-4 py-2 border">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {selectedProduct.map((product, index) => (
-              <tr key={product.product._id} className="hover:bg-gray-50">
-                <td className="px-4 py-2 border">{index + 1}</td>
-                <td className="px-4 py-2 border">{product.product.name}</td>
-                <td className="px-4 py-2 border">{product.product.brand?.name || "N/A"}</td>
-                <td className="px-4 py-2 border">{product.product.category?.name || "N/A"}</td>
-                <td className="px-4 py-2 border">
-                  <Input
-                    type="number"
-                    min="1"
-                    value={product.quantity}
-                    onChange={(e) =>
-                      handleQuantityChange(product.product._id, +e.target.value)
-                    }
-                    className="w-20"
-                  />
-                </td>
-                <td className="px-4 py-2 border">
-                  <Button
-                    type="button"
-                    variant="destructive"
-                    onClick={() => handleRemoveProduct(product.product._id)}
-                  >
-                    Remove
-                  </Button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      ) : (
-        <p className="text-gray-500">No products selected. Click "Add Product" to select.</p>
-      )}
-    </div>
-
-
     </form>
   );
 

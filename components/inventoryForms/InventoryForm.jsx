@@ -8,7 +8,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useFormState } from "react-dom";
-import { getActiveSuppliers, createInventory, updateInventory ,getProductTemplates } from "@/actions/inventory/inventoryActions";
+import { getActiveSuppliers, createInventory, updateInventory } from "@/actions/inventory/inventoryActions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -46,7 +46,6 @@ const InventoryForm = ({ type, data }) => {
     type === "create" ? createInventory : updateInventory,
     { success: false, error: false, message: "" }
   );
-  console.log(getProductTemplates, "mmmmmmmmmmmmmmmmmmmmmmm");
 
   const {
     register,
@@ -193,7 +192,7 @@ const InventoryForm = ({ type, data }) => {
                     </Select>
                   )}
                 </div>
-              
+
                 <div className="sm:col-span-2">
                   <h3>Supplier Mail ID</h3>
                   <Input {...register("mail_id")} placeholder="Supplier Mail ID" className="border border-gray-300 rounded-md p-4 w-full" />

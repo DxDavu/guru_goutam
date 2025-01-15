@@ -32,7 +32,7 @@ export const columns = [
   },
   { accessorKey: "owner", header: "PR Owner" },
   { accessorKey: "supplier", header: "Supplier" },
-  { accessorKey: "total_quantity", header: "Total Product QTY" },
+  { accessorKey: "quantity", header: "Total Product QTY" },
   {
     id: "current_stage",
     header: "Current Stage",
