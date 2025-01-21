@@ -31,6 +31,18 @@ const serializeData = (data) => {
   }, {});
 };
 
+// Fetch active brands
+export const getActiveBrands = async () => {
+  await connectToDatabase();
+  const brands = await Brand.find({ active_status: true }, "brand_name").lean();
+
+  return brands.map((brand) => ({
+    ...brand,
+    _id: brand._id.toString(),
+  }));
+};
+
+
 // Fetch Plain JavaScript Suppliers Data
 export const getSuppliers = async () => {
   await connectToDatabase();
@@ -47,9 +59,22 @@ export const getSuppliers = async () => {
 // Fetch All Purchase Requests
 export const getPurchaseRequests = async () => {
   await connectToDatabase();
+  
   const purchaseRequests = await PurchaseRequest.find({})
     .populate("supplier", "supplier_name")
     .populate("products.product", "product_name")
+    .populate("category", "category_name")
+    .populate("brand", "brand_name")
+    .populate("product.specifications.ram.brand", "brand_name")
+    .populate("product.specifications.ram.type", { model: ItemVariantModel, select: "type" })
+    .populate("product.specifications.processor.brand", "brand_name")
+    .populate("product.specifications.processor.type", { model: ItemVariantModel, select: "type" })
+    .populate("product.specifications.storage.brand", "brand_name")
+    .populate("product.specifications.storage.type", { model: ItemVariantModel, select: "type" })
+    .populate("product.specifications.graphics.brand", "brand_name")
+    .populate("product.specifications.graphics.type", { model: ItemVariantModel, select: "type" })
+    .populate("product.specifications.os.brand", "brand_name")
+    .populate("product.specifications.os.type", { model: ItemVariantModel, select: "type" })
     .lean()
     .sort({ createdAt: -1 });
 
@@ -64,8 +89,9 @@ export const getPurchaseRequests = async () => {
   }));
 };
 
+
 // Fetch Purchase Request by ID
-export const getPurchaseRequestById = async (id) => {
+export const getPurchaseRequestById = async (id, inventory) => {
   await connectToDatabase();
 
   const pr = await PurchaseRequest.findById(id)
@@ -76,6 +102,21 @@ export const getPurchaseRequestById = async (id) => {
       populate: [
         { path: "category", select: "category_name" },
         { path: "brand", select: "brand_name" },
+        {
+          path: "specifications",
+          populate: [
+            { path: "ram.brand", select: "brand_name" },
+            { path: "ram.type", model: ItemVariantModel, select: "type" },
+            { path: "processor.brand", select: "brand_name" },
+            { path: "processor.type", model: ItemVariantModel, select: "type" },
+            { path: "storage.brand", select: "brand_name" },
+            { path: "storage.type", model: ItemVariantModel, select: "type" },
+            { path: "graphics.brand", select: "brand_name" },
+            { path: "graphics.type", model: ItemVariantModel, select: "type" },
+            { path: "os.brand", select: "brand_name" },
+            { path: "os.type", model: ItemVariantModel, select: "type" },
+          ],
+        },
       ],
     })
     .lean();
@@ -95,8 +136,19 @@ export const getPurchaseRequestById = async (id) => {
   return {
     ...serializeData(pr),
     products: productsWithDetails,
+    product: inventory?.product
+      ? {
+          ...serializeData(inventory.product),
+          _id: inventory.product._id.toString(),
+          category: inventory.product.category?.category_name || null,
+          brand: inventory.product.brand?.brand_name || null,
+          specifications: inventory.product.specifications || null,
+          quantity: inventory.product.quantity || null,
+        }
+      : null,
   };
 };
+
 
 // Other functions (createPurchaseRequest, updatePurchaseRequest, etc.) remain the same...
 
@@ -154,6 +206,16 @@ export const updatePurchaseRequest = async (currentStatus, prData) => {
     currentStatus.message = "Error updating purchase request.";
     return currentStatus;
   }
+
+     // Fetch updated specifications from ProductTemplate if product exists
+      let productSpecifications = null;
+      if (data.product) {
+        const template = await ProductTemplate.findOne(
+          { product: data.product },
+          "specifications"
+        ).lean();
+        productSpecifications = template?.specifications || null;
+      }
 };
 
 // Advance to the Next Stage

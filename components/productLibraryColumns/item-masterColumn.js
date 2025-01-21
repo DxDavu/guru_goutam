@@ -130,8 +130,8 @@ export const columns = [
     ),
   },
   {
-    header: "Action",
-    id: "actions",
+    header: "Action",     
+    id: "actions",          
     cell: ({ row }) => <Actions row={row} />,
   },
 ];

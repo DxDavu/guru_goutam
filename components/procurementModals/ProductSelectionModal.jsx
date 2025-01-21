@@ -144,6 +144,10 @@
 
 // export default ProductSelectionModal;
 
+
+
+
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -195,8 +199,8 @@ const ProductSelectionModal = ({ isOpen, onClose, onSelect }) => {
   );
 
   return isOpen ? (
-<div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 overflow-y-auto">
-<div className="bg-white rounded-lg w-full max-w-5xl p-4 sm:p-6 md:p-8 lg:p-10 mt-8 sm:mt-10 md:mt-16 lg:mt-24 xl:mt-32 mb-16 sm:mb-20">
+    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-2 overflow-y-auto">
+      <div className="bg-white rounded-lg w-full max-w-5xl p-2 sm:p-2 md:p-2 lg:p-2 mt-64 sm:mt-96 md:mt-128 lg:mt-160 xl:mt-192 mb-16 sm:mb-20">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-semibold">Select Products</h2>
           <button onClick={onClose} className="text-gray-500 hover:text-black">

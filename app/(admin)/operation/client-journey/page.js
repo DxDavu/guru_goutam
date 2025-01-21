@@ -125,7 +125,7 @@ export default function ClientJourney() {
   ];
 
   return (
-    <div className="flex h-screen mt-10">
+    <div className="flex h-screen mt-10 ml-56">
       {/* Sidebar */}
       {/* <div className="w-1/5 bg-gray-100 p-4">
         {["Client", "Leads", "Quotation", "Orders", "DC", "GRN"].map(

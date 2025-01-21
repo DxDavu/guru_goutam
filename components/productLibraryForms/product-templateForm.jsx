@@ -153,7 +153,7 @@ const ProductTemplateForm = ({ type, data }) => {
     <div className="flex flex-col md:flex-row gap-6">
       {/* Product Category Section */}
       <div className="bg-gray-50 p-6 border rounded-lg shadow-lg flex-1">
-        <h3 className="text-lg font-semibold mb-4">Choose Product Category</h3>
+        <h3 className="text-lg font-semibold mb-4">Choose Product Template</h3>
         <div className="mb-4">
           <label className="text-sm font-medium">Product Category</label>
           <Select

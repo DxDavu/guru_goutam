@@ -34,9 +34,11 @@ const schema = z.object({
   supplier: z.string().nonempty("Supplier is required!"),
   phone_number: z.string().regex(/^\+?[0-9]{10,15}$/).optional(),
   supplier_email: z.string().email().optional(),
-  purchase_type: z.enum(["Buy", "Sell"]),
+  // purchase_type: z.enum(["Buy", "Sell"]),
   description: z.string().optional(),
 });
+
+
 
 const PurchaseRequestForm = ({ type, data }) => {
   const router = useRouter();
@@ -50,15 +52,18 @@ const PurchaseRequestForm = ({ type, data }) => {
     data?.stages?.find((stage) => stage.stage_name === "PO Quotations")?.quotations || []
   );
 
+
   const [state, formAction] = useFormState(
     type === "create" ? createPurchaseRequest : updatePurchaseRequest,
     { success: false, error: false, message: "" }
   );
 
+
   const { register, handleSubmit, setValue, reset, watch } = useForm({
     resolver: zodResolver(schema),
     defaultValues: data || {},
   });
+
 
   useEffect(() => {
     async function fetchSuppliers() {
@@ -75,7 +80,7 @@ const PurchaseRequestForm = ({ type, data }) => {
             pr_date: format(new Date(data.pr_date), "yyyy-MM-dd"),
             order_type: data.order_type || "",
             owner: data.owner || "",
-            purchase_type: data.purchase_type || "",
+            // purchase_type: data.purchase_type || "",
             description: data.description || "",
           });
           setSelectedProduct(data.products || []);
@@ -88,6 +93,7 @@ const PurchaseRequestForm = ({ type, data }) => {
     }
     fetchSuppliers();
   }, [data, reset]);
+
 
   const handleOpenModal = useCallback(() => {
     setIsProductModalOpen(true);
@@ -274,7 +280,7 @@ const PurchaseRequestForm = ({ type, data }) => {
         {/* Additional Information */}
         <div className="bg-gray-50 p-4 sm:p-6 border rounded-lg shadow-lg">
           <h3 className="font-medium">Additional Information :</h3>
-          <Select
+          {/* <Select
             onValueChange={(value) => setValue("purchase_type", value)}
             value={watch("purchase_typesssssssssssss") || ""}
           >
@@ -287,7 +293,7 @@ const PurchaseRequestForm = ({ type, data }) => {
                 <SelectItem value="Rent">Rent</SelectItem>
               </SelectGroup>
             </SelectContent>
-          </Select>
+          </Select> */}
           <div className="mt-4">
             <Input {...register("description")} placeholder="description" />
           </div>
@@ -510,19 +516,11 @@ const PurchaseRequestForm = ({ type, data }) => {
                       className="w-16"
                     />
                   </td>
-                  <td className="p-3">{product.product.purchase_type}</td>
+                  {/* <td className="p-3">{product.product.purchase_type}</td> */}
                   <td className="p-3">{product.product.stock_location || "N/A"}</td>
                   <td className="p-3">{product.product.warranty_end_date || "N/A"}</td>
                   <td className="p-3">{product.product.price || "N/A"}</td>
-                  <td className="p-3">
-                    <Button
-                      type="button"
-                      onClick={() => handleRemoveProduct(product.product._id)}
-                      className="bg-red-500 text-white"
-                    >
-                      Remove
-                    </Button>
-                  </td>
+
                 </tr>
               ))
             ) : (

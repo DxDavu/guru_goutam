@@ -9,7 +9,7 @@ import ProductCategory from "@/lib/database/models/productLibrary/Product-catego
 import Brand from "@/lib/database/models/productLibrary/Brand.model";
 import mongoose from "mongoose";
 import ItemVariantModel
- from "@/lib/database/models/productLibrary/Item-variant.model";
+  from "@/lib/database/models/productLibrary/Item-variant.model";
 
 
 const serializeData = (data) => {
@@ -284,7 +284,7 @@ export const getProductTemplates = async () => {
     .populate("specifications.os.brand", "brand_name")
     .populate("specifications.os.type", "type")
     .lean();
-    
+
   return templates.map(template => serializeData({
     ...template,
     _id: template._id.toString(),
@@ -406,13 +406,13 @@ export const getInventoryById = async (id) => {
       : null,
     product: inventory.product
       ? {
-          ...serializeData(inventory.product),
-          _id: inventory.product._id.toString(),
-          category: inventory.product.category?.category_name || null,
-          brand: inventory.product.brand?.brand_name || null,
-          specifications: inventory.product.specifications || null,
-          quantity: inventory.product.quantity || null,
-        }
+        ...serializeData(inventory.product),
+        _id: inventory.product._id.toString(),
+        category: inventory.product.category?.category_name || null,
+        brand: inventory.product.brand?.brand_name || null,
+        specifications: inventory.product.specifications || null,
+        quantity: inventory.product.quantity || null,
+      }
       : null,
   };
 };
