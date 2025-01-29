@@ -91,29 +91,29 @@
 import { connectToDatabase } from "@/lib/database";
 import ItemMaster from "@/lib/database/models/productLibrary/Item-master.model";
 import ProductCategory from "@/lib/database/models/productLibrary/Product-category.model";
+import serializeData from '@/components/serialization/serializationdata';
 
 // Serialization function
-const serializeData = (data) => {
-  if (!data || typeof data !== "object") return data;
+// const serializeData = (data) => {
+//   if (!data || typeof data !== "object") return data;
 
-  if (Array.isArray(data)) {
-    return data.map(serializeData);
-  }
+//   if (Array.isArray(data)) {
+//     return data.map(serializeData);
+//   }
+//   return Object.keys(data).reduce((result, key) => {
+//     const value = data[key];
 
-  return Object.keys(data).reduce((result, key) => {
-    const value = data[key];
+//     if (value instanceof Date) {
+//       result[key] = value.toISOString();
+//     } else if (value && typeof value === "object" && value._id) {
+//       result[key] = serializeData({ ...value, _id: value._id.toString() });
+//     } else {
+//       result[key] = serializeData(value);
+//     }
 
-    if (value instanceof Date) {
-      result[key] = value.toISOString();
-    } else if (value && typeof value === "object" && value._id) {
-      result[key] = serializeData({ ...value, _id: value._id.toString() });
-    } else {
-      result[key] = serializeData(value);
-    }
-
-    return result;
-  }, {});
-};
+//     return result;
+//   }, {});
+// };
 
 // Fetch active Product Categories with selected fields
 export const getActiveProductCategories = async () => {
@@ -144,6 +144,7 @@ export const getItemMasters = async () => {
     }))
   );
 };
+
 
 // Get a single item master by ID
 export const getItemMasterById = async (id) => {

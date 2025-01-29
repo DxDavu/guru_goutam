@@ -123,60 +123,30 @@
 //   return { success: true, message: "City deleted successfully" };
 // };
 
-
-
 // @/actions/settings/cityActions.js
+
+
+
 
 "use server";
 
 import { connectToDatabase } from "@/lib/database";
 import City from "@/lib/database/models/setting/City.model";
-
-// Serialize an ObjectId to string
-const serializeObjectId = (object) => {
-  if (object && object._id) {
-    object._id = object._id.toString();
-  }
-  return object;
-};
+import serializeData from "@/components/serialization/serializationdata"; // Import serializeData
 
 // Get all cities
 export const getCities = async () => {
   await connectToDatabase();
   const cities = await City.find({}).populate("state country").lean();
-  return cities.map((city) => {
-    city = serializeObjectId(city);
-    if (city.state) city.state = serializeObjectId(city.state);
-    if (city.country) city.country = serializeObjectId(city.country);
-    return city;
-  });
+  return cities.map((city) => serializeData(city)); // Use serializeData
 };
-
-
-// // Get all cities
-// export const getCities = async () => {
-//   await connectToDatabase();
-//   const cities = await City.find({}).populate("state country").lean();
-//   return cities.map((city) => ({
-//     ...city,
-//     _id: city._id.toString(),
-//     state: city.state ? city.state._id.toString() : null,
-//     country: city.country ? city.country._id.toString() : null,
-//   }));
-// };
 
 // Get a single city by ID
 export const getCityById = async (id) => {
   await connectToDatabase();
   const city = await City.findById(id).populate("state country").lean();
-  return city
-    ? serializeObjectId({
-        ...city,
-        state: city.state ? city.state._id.toString() : null,
-        country: city.country ? city.country._id.toString() : null,
-      })
-    : null;
-};
+  return city ? serializeData(city) : null; // Use serializeData
+}; 
 
 // Create a new city with duplicate check
 export const createCity = async (currentState, cityData) => {
@@ -189,7 +159,9 @@ export const createCity = async (currentState, cityData) => {
     name: cityData.name,
     state: cityData.state.name,
     country: cityData.country.name,
-  }).populate('state name').populate('country name');
+  })
+    .populate("state name")
+    .populate("country name");
   console.log(existingCity, "after formmmaaa");
 
   if (existingCity) {
@@ -207,10 +179,13 @@ export const createCity = async (currentState, cityData) => {
 
     // Populate state and country fields for the response
     const populatedCity = await City.findById(savedCity._id)
-      .populate('state')
-      .populate('country');
+      .populate("state")
+      .populate("country");
 
-    return { success: true, city: serializeObjectId(populatedCity.toObject()) };
+    return {
+      success: true,
+      city: serializeData(populatedCity.toObject()), // Use serializeData
+    };
   } catch (error) {
     console.error("Error creating city:", error);
     return {
@@ -249,7 +224,10 @@ export const updateCity = async (currentState, updateData) => {
     if (!updatedCity) {
       return { success: false, error: true, message: "City not found" };
     }
-    return { success: true, city: serializeObjectId(updatedCity.toObject()) };
+    return {
+      success: true,
+      city: serializeData(updatedCity.toObject()), // Use serializeData
+    };
   } catch (error) {
     return {
       success: false,

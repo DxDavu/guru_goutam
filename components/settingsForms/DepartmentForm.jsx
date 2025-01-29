@@ -85,7 +85,7 @@ export default function DepartmentForm({ type, data }) {
         {type === "create" ? "Create Department" : "Edit Department"}
       </h1>
 
-      <div className="bg-gray-200 p-6 border rounded-lg shadow-lg mb-6 flex gap-28">
+      <div className="bg-gray-50 p-6 border rounded-lg shadow-lg mb-6 flex gap-28">
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 max-w-md flex-1">
           <h2 className="text-lg font-medium mb-4">Create Department:</h2>
           <div className="grid grid-cols-1 gap-4">

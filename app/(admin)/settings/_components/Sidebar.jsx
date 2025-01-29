@@ -21,6 +21,7 @@ import {
   FaGlobe,
 } from 'react-icons/fa';
 
+
 const sidebarLinks = [
   { name: 'User', href: '/settings/user', icon: <FaUser /> },
   { name: 'Roles', href: '/settings/roles', icon: <FaRegAddressCard /> },
@@ -30,7 +31,7 @@ const sidebarLinks = [
   { name: 'Countries', href: '/settings/countries', icon: <FaGlobe /> },
   { name: 'Lead Checklists', href: '/settings/lead-checklist', icon: <FaClipboardCheck /> },
   { name: 'Lead Statuses', href: '/settings/lead-status', icon: <FaListAlt /> },
-  { name: 'Locations', href: '/settings/cities', icon: <FaMapMarkerAlt /> },
+  // { name: 'Locations', href: '/settings/cities', icon: <FaMapMarkerAlt /> },
   //change cities to locations
   { name: 'Order Checklists', href: '/settings/order-checklist', icon: <FaClipboardList /> },
   { name: 'Service Priority', href: '/settings/service-priority-level', icon: <FaTasks /> },

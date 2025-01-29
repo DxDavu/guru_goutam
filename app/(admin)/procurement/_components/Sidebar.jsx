@@ -10,8 +10,8 @@ import {
 
 const sidebarLinks = [
   { name: 'Purchase Request', href: '/procurement/purchase-requests', icon: <FaCartPlus /> },
-  // { name: 'PO Quotation', href: '/procurement/po_quotation', icon: <FaRegNewspaper /> },
-  // { name: 'Purchase Order', href: '/procurement/purchase_order', icon: <FaJediOrder /> },
+  { name: 'PO Quotation', href: '/procurement/po_quotation', icon: <FaRegNewspaper /> },
+  { name: 'Purchase Order', href: '/procurement/purchase_order', icon: <FaJediOrder /> },
   { name: 'Supplier', href: '/procurement/supplier', icon: <FaAlipay /> },
 ];
 

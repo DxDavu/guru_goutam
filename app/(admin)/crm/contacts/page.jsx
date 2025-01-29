@@ -158,7 +158,9 @@ const ContactsPage = () => {
           </tbody>
         </table>
       </div>
+
     </div>
+    
   );
 };
 

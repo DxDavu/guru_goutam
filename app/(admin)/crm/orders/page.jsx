@@ -106,5 +106,64 @@ export default function OrdersTable() {
         </tbody>
       </table>
     </div>
-  );
+  );f
 }
+
+
+
+// 'use client'
+
+
+// import React, { useEffect, useState } from 'react'
+
+// const DependentDropdown = () => {
+//   const [parent, setparent] = useState('');
+//   const [child, setchild] =  useState([]);
+
+
+//   const varients = {
+//     fruits: ['grapes','guava','pineapple','mango'],
+//     veggies: ['binsi' ,'carrot','shangar'],
+//   };
+
+//   const handledropdownchange = (e) => {
+//     const parentvalue = e.target.value;
+//     setparent(parentvalue);
+//   };
+
+//   useEffect(() => {
+//     setchild(varients[parent] || []);
+
+//   }, [parent]);
+
+
+
+
+
+
+//   return (
+//     <div className='ml-56 mt-20 grid frid-cols-1'>
+//       <h1 className='font-semibold'>dependency dropdown</h1>
+
+//       <div className=' '>
+//         <select onChange={handledropdownchange}>
+
+//           <option value="fruits">select</option>
+//           <option value="fruits">fruits</option>
+//           <option value="veggies">veggies</option>
+//         </select>
+//       </div>
+//       <div>
+//         <select>
+
+//           <option value="fruits">select option</option>
+//           {child.map((option, index) => (
+//             <option key={index} value={option}>{option}</option>
+//           ))}
+//         </select>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default DependentDropdown;

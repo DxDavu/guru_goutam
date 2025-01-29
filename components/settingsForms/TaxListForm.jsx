@@ -84,7 +84,7 @@ export default function TaxListForm({ type, data }) {
       <h1 className="text-xl font-semibold">
         {type === "create" ? "Create Tax List" : "Edit Tax List"}
       </h1>
-      <div className=" bg-gray-200 p-4 border rounded-1g shadow-1g mb-6 flex  gap-40">
+      <div className=" bg-gray-50 p-4 border rounded-1g shadow-1g mb-6 flex  gap-40">
         <div className="bg-white p-6  rounded-lg shadow-sm border border-gray-100 max-w-md flex-1">
           {/* Branch ID and Branch Name */}
           <div className="grid grid-cols-1 gap-4 mb-4">

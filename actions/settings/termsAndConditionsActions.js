@@ -4,12 +4,13 @@
 
 import { connectToDatabase } from '@/lib/database';
 import TermsandConditions from '@/lib/database/models/setting/TermsandConditions.model';
+import serializeData from '@/components/serialization/serializationdata';
 
 // Fetch all terms and conditions
 export const getTermsAndConditions = async () => {
   await connectToDatabase();
   const terms = await TermsandConditions.find({}).lean();
-  return terms.map(term => ({
+  return terms.map(term => serializeData({
     ...term,
     _id: term._id.toString(),
   }));
@@ -22,7 +23,7 @@ export const getTermById = async (id) => {
   if (!term) {
     return { success: false, error: true, message: 'Term not found' };
   }
-  return { ...term, _id: term._id.toString() };
+  return serializeData({ ...term, _id: term._id.toString() });
 };
 
 // Create a new term
@@ -31,7 +32,7 @@ export const createTerm = async (currentStatus, termData) => {
   try {
     const newTerm = new TermsandConditions(termData);
     const savedTerm = await newTerm.save();
-    return { success: true, term: savedTerm.toObject() };
+    return { success: true, term: serializeData(savedTerm.toObject()) };
   } catch (error) {
     return { success: false, error: true, message: error.message || 'Failed to create term' };
   }
@@ -43,7 +44,7 @@ export const updateTerm = async (currentStatus, updateData) => {
   const id = updateData.id;
   try {
     const updatedTerm = await TermsandConditions.findByIdAndUpdate(id, updateData, { new: true });
-    return { success: true, term: updatedTerm.toObject() };
+    return { success: true, term: serializeData(updatedTerm.toObject()) };
   } catch (error) {
     return { success: false, error: true, message: 'Failed to update term' };
   }

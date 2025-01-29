@@ -84,7 +84,7 @@ export default function LeadStatusForm({ type, data }) {
         {type === "create" ? "Create Lead Status" : "Edit Lead Status"}
       </h1>
 
-      <div className="bg-gray-200 p-6 border rounded-lg shadow-lg mb-6 flex  gap-x-40">
+      <div className="bg-gray-50 p-6 border rounded-lg shadow-lg mb-6 flex  gap-x-40">
       <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 max-w-md flex-1">     
      <div className="grid col-2  gap-4 ">
         <div>

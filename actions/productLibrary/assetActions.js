@@ -186,30 +186,31 @@ import Asset from '@/lib/database/models/productLibrary/Asset.model';
 import ItemMaster from '@/lib/database/models/productLibrary/Item-master.model';
 import ItemVariant from '@/lib/database/models/productLibrary/Item-variant.model';
 import Brand from '@/lib/database/models/productLibrary/Brand.model';
+import serializeData from '@/components/serialization/serializationdata';
 
 // Serialization function
-const serializeData = (data, excludeFields = []) => {
-  if (!data || typeof data !== "object") return data;
+// const serializeData = (data, excludeFields = []) => {
+//   if (!data || typeof data !== "object") return data;
 
-  if (Array.isArray(data)) {
-    return data.map((item) => serializeData(item, excludeFields));
-  }
+//   if (Array.isArray(data)) {
+//     return data.map((item) => serializeData(item, excludeFields));
+//   }
 
-  const serializedData = Object.keys(data).reduce((result, key) => {
-    if (excludeFields.includes(key)) return result;
-    const value = data[key];
-    result[key] = value instanceof Date
-      ? value.toISOString()
-      : value?._id
-        ? value._id.toString()
-        : serializeData(value, excludeFields);
-    return result;
-  }, {});
+//   const serializedData = Object.keys(data).reduce((result, key) => {
+//     if (excludeFields.includes(key)) return result;
+//     const value = data[key];
+//     result[key] = value instanceof Date
+//       ? value.toISOString()
+//       : value?._id
+//         ? value._id.toString()
+//         : serializeData(value, excludeFields);
+//     return result;
+//   }, {});
 
-  if (data._id) serializedData._id = data._id.toString();
+//   if (data._id) serializedData._id = data._id.toString();
 
-  return serializedData;
-};
+//   return serializedData;
+// };
 
 // Fetch active Item Masters
 export const getItemMasters = async () => {

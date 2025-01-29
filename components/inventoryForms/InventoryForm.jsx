@@ -23,9 +23,10 @@ import ProductSelectionModal from "@/components/procurementModals/ProductSelecti
 
 // Validation schema
 const schema = z.object({
-  inventory_name: z.string().min(1, "Inventory Name is required"),
-  mail_id: z.string().min(1, "Inventory Name is required"),
-  owner: z.string().optional(),
+  inventory_name: z.string().min(1, " Number is required"),
+  owner: z.string().min(1, "owner Name is required"),
+  supplier_mail: z.string().min(1, "mail  is required"),
+  // owner: z.string().optional(),
   supplier: z.string().optional(),
   product: z.string().optional(),
   productPrice: z.number().min(0, "Price per product must be non-negative").optional(),
@@ -67,6 +68,7 @@ const InventoryForm = ({ type, data }) => {
       active_status: data?.active_status || false,
     },
   });
+  
 
   // Fetch suppliers
   useEffect(() => {
@@ -195,8 +197,8 @@ const InventoryForm = ({ type, data }) => {
 
                 <div className="sm:col-span-2">
                   <h3>Supplier Mail ID</h3>
-                  <Input {...register("mail_id")} placeholder="Supplier Mail ID" className="border border-gray-300 rounded-md p-4 w-full" />
-                  {errors.mail_id && <p className="text-red-500">{errors.mail_id.message}</p>}
+                  <Input {...register("supplier_mail")} placeholder="Supplier Mail ID" className="border border-gray-300 rounded-md p-4 w-full" />
+                  {errors.supplier_mail && <p className="text-red-500">{errors.supplier_mail.message}</p>}
                 </div>
                 <div className="sm:col-span-2">
                   <h3>Phone Number</h3>

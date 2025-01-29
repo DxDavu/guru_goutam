@@ -162,8 +162,8 @@ export function DataTable({ columns, data }) {
   });
 
   return (
-    <div className="ml-52 mt-6 ">
-      <div className="flex items-center py-1">
+    <div className="ml-52 mt-72 sm:mt-72 md:mt-10">
+      <div className="flex items-center py-1 mb-2">
         <Input
           placeholder="Filter key fields"
           value={globalFilter ?? ""}
@@ -187,9 +187,9 @@ export function DataTable({ columns, data }) {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   ))}
                 </TableRow>

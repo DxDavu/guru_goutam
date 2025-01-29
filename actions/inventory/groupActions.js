@@ -60,6 +60,7 @@ export const createGroup = async (groupData) => {
     return { success: false, error: true, message: "Error creating group." };
   }
 };
+ 
 
 export const updateGroup = async (groupData) => {
   try {
@@ -76,6 +77,7 @@ export const updateGroup = async (groupData) => {
   }
 };
 
+
 // Delete a group
 export const deleteGroup = async (id) => {
   await connectToDatabase();
@@ -85,3 +87,5 @@ export const deleteGroup = async (id) => {
   }
   return { success: true, message: 'Group deleted successfully' };
 };
+
+//

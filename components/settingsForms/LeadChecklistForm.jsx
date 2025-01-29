@@ -88,7 +88,7 @@ export default function LeadChecklistForm({ type, data }) {
           {type === "create" ? "Create Lead Checklist" : "Edit Lead Checklist"}
         </h1>
 
-        <div className=" bg-gray-200 p-6 border rounded-1g shadow-1g mb-6 flex gap-40">
+        <div className=" bg-gray-50 p-6 border rounded-1g shadow-1g mb-6 flex gap-40">
           {/* Department Form Section */}
           <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 max-w-md flex-1">
             <div className="grid grid-cols-1 gap-4">

@@ -122,7 +122,7 @@ export default function BranchForm({ type, data }) {
       </h1>
 
       {/* <div className="flex flex-wrap gap-8 justify-between mb-3"> */}
-      <div className=" bg-gray-200 p-6 border rounded-1g shadow-1g mb-6 flex  gap-8">
+      <div className=" bg-gray-50 p-6 border rounded-1g shadow-1g mb-6 flex  gap-8">
 
        
         <div className="bg-white p-6 rounded-lg shadow border w-full max-w-md flex-1">

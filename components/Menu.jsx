@@ -40,8 +40,9 @@ export default function Menu({ isOpen }) {
 
       {/* Mobile Menu (only visible when isOpen is true) */}  
       {isOpen && (
-        <div className="flex flex-col space-y-1 lg:hidden ">
+        <div className="flex flex-col space-y-1 lg:hidden ml-56 ">
           {menuItems.map((menuItem, index) => (
+            
             <Link
               key={index}
               href={menuItem.href}

@@ -37,11 +37,13 @@ export const getUsersByLoginId = async (loginId) => {
   return null;
 };
 
+
 // Fetch all roles
 export const getAllRoles = async () => {
   await connectToDatabase();
   return await Role.find().lean();
 };
+
 
 // Fetch all departments
 export const getAllDepartments = async () => {

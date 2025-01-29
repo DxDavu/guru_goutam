@@ -84,7 +84,7 @@ export default function ServiceStatusForm({ type, data }) {
         {type === "create" ? "Create Service Status" : "Edit Service Status"}
       </h1>
 
-      <div className=" bg-gray-200 p-4 md:p-4 border rounded-1g shadow-1g mb-6 flex  gap-40">
+      <div className=" bg-gray-50 p-4 md:p-4 border rounded-1g shadow-1g mb-6 flex  gap-40">
       {/* Department Form Section */}
     <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 max-w-md flex-1">
       <div className="grid grid-cols-1 gap-4">

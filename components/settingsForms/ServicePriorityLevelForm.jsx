@@ -79,7 +79,7 @@ export default function ServicePriorityLevelForm({ type, data }) {
     <form onSubmit={onSubmit} className="space-y- mt-10 ml-56">
       <h1 className="text-xl font-semibold">{type === "create" ? "Add Priority Level" : "Edit Priority Level"}</h1>
 
-      <div className=" bg-gray-200 p-6 border rounded-1g shadow-1g mb-6 flex  gap-40 ">
+      <div className=" bg-gray-50 p-6 border rounded-1g shadow-1g mb-6 flex  gap-40 ">
         {/* Department Form Section */}
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 max-w-md flex-1">
           <div className="grid grid-cols-1 gap-4">

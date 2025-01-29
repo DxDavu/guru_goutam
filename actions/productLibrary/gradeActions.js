@@ -69,28 +69,29 @@
 
 import { connectToDatabase } from '@/lib/database';
 import Grade from '@/lib/database/models/productLibrary/Grade.model';
+import serializeData from '@/components/serialization/serializationdata';
 
-const serializeData = (data) => {
-  if (!data || typeof data !== "object") return data;
+// const serializeData = (data) => {
+//   if (!data || typeof data !== "object") return data;
 
-  if (Array.isArray(data)) {
-    return data.map(serializeData);
-  }
+//   if (Array.isArray(data)) {
+//     return data.map(serializeData);
+//   }
 
-  return Object.keys(data).reduce((result, key) => {
-    const value = data[key];
+//   return Object.keys(data).reduce((result, key) => {
+//     const value = data[key];
 
-    if (value instanceof Date) {
-      result[key] = value.toISOString();
-    } else if (value && typeof value === "object" && value._id) {
-      result[key] = serializeData({ ...value, _id: value._id.toString() });
-    } else {
-      result[key] = serializeData(value);
-    }
+//     if (value instanceof Date) {
+//       result[key] = value.toISOString();
+//     } else if (value && typeof value === "object" && value._id) {
+//       result[key] = serializeData({ ...value, _id: value._id.toString() });
+//     } else {
+//       result[key] = serializeData(value);
+//     }
 
-    return result;
-  }, {});
-};
+//     return result;
+//   }, {});
+// };
 
 // Get all grades
 export const getGrades = async () => {
@@ -147,3 +148,6 @@ export const deleteGrade = async (id) => {
   }
   return { success: true, message: 'Grade deleted successfully' };
 };
+
+
+

@@ -67,7 +67,7 @@ export default function CountryForm({ type, data }) {
         {type === "create" ? "Add Country" : "Edit Country"}
       </h1>
 
-      <div className=" bg-gray-200 p-6 border rounded-1g shadow-1g h-64 mb-6 flex  gap-40">
+      <div className=" bg-gray-50 p-6 border rounded-1g shadow-1g h-64 mb-6 flex  gap-40">
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 max-w-md flex-1">
           <div>
             <label className="text-sm font-medium">Country Name</label>

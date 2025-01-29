@@ -113,7 +113,7 @@ export default function TermsForm({ type, data }) {
           : "Edit Terms and Condition"}
       </h1>
       {/* bg-gray-50 p-6 border rounded-lg shadow-lg mb-6 */}
-      <div className=" bg-gray-200 p-6 border rounded-1g shadow-1g mb-6 flex  gap-40">
+      <div className=" bg-gray-50 p-6 border rounded-1g shadow-1g mb-6 flex  gap-40">
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 max-w-md flex-1">
           <div className="grid grid-cols-1 gap-4">
             <div>

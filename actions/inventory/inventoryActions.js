@@ -10,66 +10,67 @@ import Brand from "@/lib/database/models/productLibrary/Brand.model";
 import mongoose from "mongoose";
 import ItemVariantModel
   from "@/lib/database/models/productLibrary/Item-variant.model";
+  import serializeData from '@/components/serialization/serializationdata';
 
 
-const serializeData = (data) => {
-  if (!data || typeof data !== "object") return data;
+// const serializeData = (data) => {
+//   if (!data || typeof data !== "object") return data;
 
-  if (Array.isArray(data)) {
-    return data.map(serializeData);
-  }
+//   if (Array.isArray(data)) {
+//     return data.map(serializeData);
+//   }
 
-  const mongoObjType = data?._bsontype
-  // const mongoObjType = data?._bsontype
+//   const mongoObjType = data?._bsontype
+//   // const mongoObjType = data?._bsontype
 
-  // Check if the data itself is of bsonType
-  if (mongoObjType) {
-    switch (mongoObjType) {
-      case "ObjectId":
-        return data._id.toString(); // Serialize ObjectId
-      case "Date":
-        return new Date(data.value).toISOString(); // Serialize BSON Date
-      default:
-        return data; // Handle other BSON types as-is
-    }
-  }
+//   // Check if the data itself is of bsonType
+//   if (mongoObjType) {
+//     switch (mongoObjType) {
+//       case "ObjectId":
+//         return data._id.toString(); // Serialize ObjectId
+//       case "Date":
+//         return new Date(data.value).toISOString(); // Serialize BSON Date
+//       default:
+//         return data; // Handle other BSON types as-is
+//     }
+//   }
 
-  // Proceed to process the object keys
-  return Object.keys(data).reduce((result, key) => {
-    const value = data[key];
+//   // Proceed to process the object keys
+//   return Object.keys(data).reduce((result, key) => {
+//     const value = data[key];
 
-    const mongoObjType = value?._bsontype
-    // const mongoObjType = value?._bsontype.toString()
+//     const mongoObjType = value?._bsontype
+//     // const mongoObjType = value?._bsontype.toString()
 
-    // Check for bsonType in the value
-    if (value && typeof value === "object" && mongoObjType) {
-      switch (mongoObjType) {
-        case "ObjectId":
-          result[key] = value._id.toString(); // Serialize ObjectId
-          break;
-        case "Date":
-          result[key] = new Date(value.value).toISOString(); // Serialize BSON Date
-          break;
-        default:
-          result[key] = value; // Handle other BSON types as-is
-          break;
-      }
-    } else if (value instanceof Date) {
-      result[key] = value.toISOString();
-    } else if (value && typeof value === "object") {
-      // Handle nested MongoDB documents, including ObjectId conversion
-      if (value._id) {
-        result[key] = { ...serializeData(value), _id: value._id.toString() };
-      } else {
-        result[key] = { ...serializeData(value) };
-      }
-    } else {
-      result[key] = value;
-    }
+//     // Check for bsonType in the value
+//     if (value && typeof value === "object" && mongoObjType) {
+//       switch (mongoObjType) {
+//         case "ObjectId":
+//           result[key] = value._id.toString(); // Serialize ObjectId
+//           break;
+//         case "Date":
+//           result[key] = new Date(value.value).toISOString(); // Serialize BSON Date
+//           break;
+//         default:
+//           result[key] = value; // Handle other BSON types as-is
+//           break;
+//       }
+//     } else if (value instanceof Date) {
+//       result[key] = value.toISOString();
+//     } else if (value && typeof value === "object") {
+//       // Handle nested MongoDB documents, including ObjectId conversion
+//       if (value._id) {
+//         result[key] = { ...serializeData(value), _id: value._id.toString() };
+//       } else {
+//         result[key] = { ...serializeData(value) };
+//       }
+//     } else {
+//       result[key] = value;
+//     }
 
-    return result;
-  }, {});
-};
+//     return result;
+//   }, {});
+// };
 
 
 // const serializeData = (data) => {

@@ -112,9 +112,10 @@
 //     return { success: false, error: true, message: "Failed to delete branch" };
 //   }
 // };
-
-
 // @/actions/settings/branchActions.js
+
+
+
 "use server";
 
 import { connectToDatabase } from "@/lib/database";
@@ -122,22 +123,7 @@ import Branch from "@/lib/database/models/setting/Branch.model";
 import Country from "@/lib/database/models/setting/Country.model";
 import State from "@/lib/database/models/setting/State.model";
 import City from "@/lib/database/models/setting/City.model";
-
-// Serialize an ObjectId to string
-const serializeObjectId = (object) => {
-  if (object && object._id) {
-    object._id = object._id.toString();
-  }
-  return object;
-};
-
-// Serialize nested objects for country, state, and city
-const serializeNestedObjects = (branch) => {
-  if (branch.country) branch.country = serializeObjectId(branch.country);
-  if (branch.state) branch.state = serializeObjectId(branch.state);
-  if (branch.city) branch.city = serializeObjectId(branch.city);
-  return branch;
-};
+import serializeData from '@/components/serialization/serializationdata';
 
 // Get all branches
 export const getBranches = async () => {
@@ -148,10 +134,7 @@ export const getBranches = async () => {
     .populate({ path: "city", model: City, strictPopulate: false })
     .lean();
 
-  return branches.map((branch) => {
-    branch = serializeObjectId(branch);
-    return serializeNestedObjects(branch); // Apply serialization to nested fields
-  });
+  return serializeData(branches); // Apply serialization
 };
 
 // Get a single branch by ID
@@ -167,18 +150,15 @@ export const getBranchById = async (id) => {
     return { success: false, error: true, message: "Branch not found" };
   }
 
-  return serializeNestedObjects(serializeObjectId(branch)); // Apply serialization to nested fields
+  return serializeData(branch); // Apply serialization
 };
 
 // Create a new branch
 export const createBranch = async (currentState, branchData) => {
-  console.log("==branchData==sa===");
-  console.log(branchData); // Debugging: Check the received data
-  console.log("====branchData======");
+  console.log("==branchData==sa===", branchData);
 
   await connectToDatabase();
 
-  // Check if branch_id is provided
   if (!branchData.branch_id) {
     return {
       success: false,
@@ -187,10 +167,7 @@ export const createBranch = async (currentState, branchData) => {
     };
   }
 
-  // Check for existing branch with the same ID
-  const existingBranch = await Branch.findOne({
-    branch_id: branchData.branch_id,
-  });
+  const existingBranch = await Branch.findOne({ branch_id: branchData.branch_id });
   if (existingBranch) {
     return { success: false, error: true, message: "Branch ID already exists" };
   }
@@ -198,9 +175,9 @@ export const createBranch = async (currentState, branchData) => {
   try {
     const newBranch = new Branch(branchData);
     const savedBranch = await newBranch.save();
-    return { success: true, branch: serializeObjectId(savedBranch.toObject()) };
+    return { success: true, branch: serializeData(savedBranch.toObject()) };
   } catch (error) {
-    console.error("Error creating branch:", error); // Log the error for debugging
+    console.error("Error creating branch:", error);
     return {
       success: false,
       error: true,
@@ -213,9 +190,8 @@ export const createBranch = async (currentState, branchData) => {
 export const updateBranch = async (currentState, updateData) => {
   await connectToDatabase();
   const id = updateData.id;
-  console.log("==updateData=====");
-  console.log(updateData);
-  console.log("==updateData====");
+
+  console.log("==updateData=====", updateData);
 
   try {
     const updatedBranch = await Branch.findByIdAndUpdate(id, updateData, {
@@ -224,7 +200,7 @@ export const updateBranch = async (currentState, updateData) => {
     if (!updatedBranch) {
       return { success: false, error: true, message: "Branch not found" };
     }
-    return { success: true, branch: serializeObjectId(updatedBranch.toObject()) };
+    return { success: true, branch: serializeData(updatedBranch.toObject()) };
   } catch (error) {
     return { success: false, error: true, message: "Failed to update branch" };
   }
@@ -243,3 +219,4 @@ export const deleteBranch = async (id) => {
     return { success: false, error: true, message: "Failed to delete branch" };
   }
 };
+

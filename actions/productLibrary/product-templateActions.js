@@ -258,27 +258,28 @@ import ProductCategory from '@/lib/database/models/productLibrary/Product-catego
 import Brand from '@/lib/database/models/productLibrary/Brand.model';
 import ItemVariant from '@/lib/database/models/productLibrary/Item-variant.model';
 import fs from "fs/promises";
+import serializeData from '@/components/serialization/serializationdata';
 
 
 const { ObjectId } = mongoose.Types; // Extract ObjectId from mongoose
 
 // Helper function for serialization
-const serializeData = (data) => {
-  if (Array.isArray(data)) {
-    return data.map((item) => serializeData(item));
-  } else if (data && typeof data === 'object') {
-    const serialized = {};
-    for (const key in data) {
-      if (data[key] instanceof ObjectId) {
-        serialized[key] = data[key].toString();
-      } else {
-        serialized[key] = serializeData(data[key]);
-      }
-    }
-    return serialized;
-  }
-  return data;
-};
+// const serializeData = (data) => {
+//   if (Array.isArray(data)) {
+//     return data.map((item) => serializeData(item));
+//   } else if (data && typeof data === 'object') {
+//     const serialized = {};
+//     for (const key in data) {
+//       if (data[key] instanceof ObjectId) {
+//         serialized[key] = data[key].toString();
+//       } else {
+//         serialized[key] = serializeData(data[key]);
+//       }
+//     }
+//     return serialized;
+//   }
+//   return data;
+// };
 
 // Fetch active Product Categories
 export const getActiveProductCategories = async () => {

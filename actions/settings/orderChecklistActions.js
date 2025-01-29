@@ -87,7 +87,10 @@
 
 // @/actions/settings/orderChecklistActions.js
 
+
+
 "use server";
+import serializeData from '@/components/serialization/serializationdata'; // Correct import
 
 import { connectToDatabase } from '@/lib/database';
 import OrderChecklist from '@/lib/database/models/setting/OrderChecklist.model';
@@ -96,10 +99,7 @@ import OrderChecklist from '@/lib/database/models/setting/OrderChecklist.model';
 export const getOrderChecklists = async () => {
   await connectToDatabase();
   const checklists = await OrderChecklist.find({}).lean();
-  return checklists.map(checklist => ({
-    ...checklist,
-    _id: checklist._id.toString(),  // Serialize ObjectId to string
-  }));
+  return checklists.map((checklist) => serializeData(checklist)); // Ensure correct usage of serializeData
 };
 
 // Get a single order checklist by ID
@@ -109,10 +109,7 @@ export const getOrderChecklistById = async (id) => {
   if (!checklist) {
     return { success: false, error: true, message: 'Order Checklist not found' };
   }
-  return { 
-    ...checklist, 
-    _id: checklist._id.toString(),  // Serialize ObjectId to string
-  };
+  return serializeData(checklist); // Serialize and return the found checklist
 };
 
 // Create a new order checklist
@@ -125,7 +122,9 @@ export const createOrderChecklist = async (currentState, checklistData) => {
   }
 
   // Check for existing checklist with the same name
-  const existingChecklist = await OrderChecklist.findOne({ checklist_name: checklistData.checklist_name });
+  const existingChecklist = await OrderChecklist.findOne({
+    checklist_name: checklistData.checklist_name,
+  });
   if (existingChecklist) {
     return { success: false, error: true, message: 'Checklist already exists' };
   }
@@ -134,10 +133,8 @@ export const createOrderChecklist = async (currentState, checklistData) => {
     const newChecklist = new OrderChecklist(checklistData);
     const savedChecklist = await newChecklist.save();
     return {
-      _id: savedChecklist._id.toString(),  // Serialize ObjectId to string
-      checklistName: savedChecklist.checklist_name,
       success: true,
-      error: false,
+      checklist: serializeData(savedChecklist.toObject()), // Serialize the saved checklist
     };
   } catch (error) {
     return { success: false, error: true, message: error.message || 'Failed to create checklist' };
@@ -155,11 +152,8 @@ export const updateOrderChecklist = async (currentState, updateData) => {
       return { success: false, error: true, message: 'Checklist not found' };
     }
     return {
-      success: true, 
-      checklist: {
-        ...updatedChecklist.toObject(), 
-        _id: updatedChecklist._id.toString(),  // Serialize ObjectId to string
-      },
+      success: true,
+      checklist: serializeData(updatedChecklist.toObject()), // Serialize the updated checklist
     };
   } catch (error) {
     return { success: false, error: true, message: error.message || 'Failed to update checklist' };

@@ -19,6 +19,7 @@ export const getContacts = async () => {
   }));
 };
 
+
 // Get a single contact by ID
 export const getContactById = async (id) => {
   await connectToDatabase();
